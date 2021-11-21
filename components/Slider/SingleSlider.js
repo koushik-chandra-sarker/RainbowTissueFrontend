@@ -26,7 +26,7 @@ const SingleSlider = () => {
                     < div className={customCss.inner}>
                         <h1> {item.title} </ h1>
                         <p> {item.description} </ p>
-                        <button> {item.button} </ button>
+                        <button className={"bg-primary"}> {item.button} </ button>
                     </ div>
                 < / div>
             ))}

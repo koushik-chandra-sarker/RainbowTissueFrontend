@@ -283,7 +283,7 @@ const ContentSlider = () => {
                                      className={classnames(styles.panel_item, 'animate__animated ', activePanel === i ? `${styles.active} ` : " ")}
                                 >
                                     <div className={'flex flex-row justify-between items-center py-8'}>
-                                        <h4 className={classnames('text-gray-900 h-auto text-center uppercase text-4xl')}>Tissue
+                                        <h4 className={classnames('text-gray-900 h-auto text-center uppercase text-2xl sm:text-4xl')}>Tissue
                                             Paper {i}</h4>
                                         <img className={classnames('h-16')} src="static/image/rain-logo.png" alt=""/>
                                     </div>

@@ -36,7 +36,6 @@ const Header = () => {
                         <ul className={classnames("display-flex justify-content-center align-items-center")}>
                             <li className={styles.active}><Link href="/"><a>Home</a></Link></li>
                             <li><a href="#">Dealership</a></li>
-                            {/*<li><a href="#">Media Center</a></li>*/}
                             <li><Link href="/career"><a>Career</a></Link></li>
                             <li><Link href="/about"><a>How we are</a></Link></li>
                             <li><Link href="/missionVision"><a>Mission&Vision</a></Link></li>

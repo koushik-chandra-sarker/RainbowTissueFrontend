@@ -30,7 +30,7 @@ export default function Home() {
                 </svg>
 
             </div>
-            <div className="container  xl:w-2/3 md:px-0 px-8 my-12 mx-auto text-center">
+            <div className="container  1/12 sm:w-3/4 mx-auto md:px-0 px-8 my-12 mx-auto text-center">
                 <h4 className="uppercase text-4xl text-primary">Tissue Paper</h4>
                 <p className={classnames('mt-7 text-lg text-description')}>
                     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
@@ -42,7 +42,7 @@ export default function Home() {
                     but also the leap into electronic typesetting, remaining essentially unchanged.
                 </p>
             </div>
-            <div className={`container w-3/4 mx-auto`}>
+            <div className={`w-11/12 sm:w-3/4 mx-auto`}>
                 <ContentSlider/>
             </div>
         </div>

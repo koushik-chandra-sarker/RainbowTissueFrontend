@@ -15,10 +15,10 @@ module.exports = {
         extend: {
             colors: {
 
-                'primary': '#F77426',
-                'primary-dark': '#fc5d19',
+                'primary': '#1993e7',
+                'primary-dark': '#196be7',
                 'secondary': '#ecc94b',
-                "description": "#db804a",
+                "description": "#1475b7",
 
             },
             spacing: {
