@@ -1,0 +1,32 @@
+.tabs {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.tabs .tab {
+  padding: 10px 30px;
+  margin: 1px;
+  flex: auto;
+  text-align: center;
+}
+
+.tab_panel {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.tab_panel .panel_item {
+  width: 100%;
+  color: white;
+  transform: translateX(100%);
+  position: absolute;
+  transition: all 1s linear;
+  overflow: hidden;
+}
+.tab_panel .active {
+  position: unset;
+  transform: translateX(0);
+}
+
+/*# sourceMappingURL=ContentSlider.module.css.map */

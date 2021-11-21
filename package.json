@@ -1,0 +1,33 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next build && next export"
+  },
+  "dependencies": {
+    "@svgr/webpack": "^5.5.0",
+    "animate.css": "^4.1.1",
+    "lodash": "^4.17.21",
+    "next": "11.1.2",
+    "next-images": "^1.8.1",
+    "react": "17.0.2",
+    "react-animated-slider": "^2.0.0",
+    "react-dom": "17.0.2",
+    "react-inner-image-zoom": "^2.1.0",
+    "sass": "^1.39.2",
+    "splide-nextjs": "^2.4.23"
+  },
+  "devDependencies": {
+    "@headlessui/react": "^1.4.1",
+    "@heroicons/react": "^1.0.4",
+    "autoprefixer": "^10.3.4",
+    "eslint": "7.32.0",
+    "eslint-config-next": "11.1.2",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.15"
+  }
+}

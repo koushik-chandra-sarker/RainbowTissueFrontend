@@ -1,0 +1,14 @@
+.slider_area {
+  position: relative;
+  width: 100%;
+}
+.slider_area div {
+  z-index: 0;
+}
+.slider_area svg {
+  position: absolute;
+  z-index: 1;
+  bottom: -1px;
+}
+
+/*# sourceMappingURL=Home.module.css.map */
