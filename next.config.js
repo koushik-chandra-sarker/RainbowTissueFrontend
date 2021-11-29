@@ -16,6 +16,7 @@ module.exports = {
   }
 };
 // next.config.js
+/*
 module.exports = {
   async rewrites() {
     return [
@@ -25,4 +26,4 @@ module.exports = {
       },
     ]
   },
-};
+};*/

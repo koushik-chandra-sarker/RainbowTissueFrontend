@@ -6,7 +6,7 @@ const initialState = {
     error: ""
 }
 
-const JobReducer = (state = initialState, action) => {
+const JobSingleReducer = (state = initialState, action) => {
     switch (action.type) {
         case JOBSINGLE_LOADING:
             return {
@@ -31,4 +31,4 @@ const JobReducer = (state = initialState, action) => {
     }
 }
 
-export default JobReducer;
+export default JobSingleReducer;

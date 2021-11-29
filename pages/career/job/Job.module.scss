@@ -1,0 +1,21 @@
+
+.style_init{
+  ul{
+    display: block;
+    list-style-type: disc;
+    margin: 1em 0 1em;
+    padding-left: 40px;
+  }
+  ol{
+    display: block;
+    list-style-type: decimal;
+    margin: 1em 0 1em;
+  }
+  p{
+    display: block;
+    margin: 1em 0 1em;
+  }
+  li{
+    display: list-item;
+  }
+}

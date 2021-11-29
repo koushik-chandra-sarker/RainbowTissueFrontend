@@ -4,12 +4,12 @@ import "animate.css"
 import Layout from "../components/layout/Layout";
 import 'splide-nextjs/splide/dist/css/themes/splide-skyblue.min.css';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css'
-import {Provider} from 'react-redux'
 import store from "../services/Store";
-import withRedux from "next-redux-wrapper"
 import {getWebsiteDetails} from "../services/website/WebsiteAction";
-import {useSelector, useDispatch} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import { useEffect } from 'react'
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({Component, pageProps, theme}) {
     const dispatch = useDispatch()
@@ -19,6 +19,7 @@ function MyApp({Component, pageProps, theme}) {
     return (
         <Layout>
             <Component {...pageProps} />
+            <ToastContainer />
         </Layout>
     )
 }

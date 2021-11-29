@@ -3,10 +3,7 @@ import SingleSlider from "../components/Slider/SingleSlider";
 import styles from '../styles/Home.module.scss'
 import ContentSlider from "../components/ContentSlider/ContentSlider";
 import classnames from 'classnames'
-import store from '../services/Store'
-import {getWebsiteDetails} from "../services/website/WebsiteAction";
 import {useSelector, useDispatch} from 'react-redux'
-import { useEffect } from 'react'
 import Skeleton from '@mui/material/Skeleton';
 import _ from 'lodash';
 function Home() {

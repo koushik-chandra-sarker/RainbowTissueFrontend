@@ -2,10 +2,11 @@ import React, {useState} from 'react';
 import styles from "./Header.module.scss"
 import classnames from 'classnames';
 import Link from "next/link";
+import {useRouter} from "next/router";
 
 const Header = () => {
     const [openMenu, setOpenMenu] = useState(false)
-
+    const router = useRouter();
     function handleMenu(checked) {
         setOpenMenu(checked)
         if (openMenu) {
