@@ -6,6 +6,7 @@ import {Splide, SplideSlide} from 'splide-nextjs/react-splide';
 
 import 'splide-nextjs/splide/dist/css/themes/splide-skyblue.min.css';
 import {createSlides} from "splide-nextjs/react-splide/dist/js/utils/slides";
+import {useSelector} from "react-redux";
 const products = [
     {
         src: "static/image/product/2-2-2.jpg",
@@ -249,7 +250,7 @@ const tabs = [
 
 
 const ContentSlider = () => {
-
+    const productCat = useSelector(state => state.category);
     const [activePanel, setActivePanel] = useState(0)
 
     function handleTab(i) {
@@ -260,8 +261,8 @@ const ContentSlider = () => {
         <div>
             <section className={classnames(styles.tabs, '')}>
                 {
-                    !_.isEmpty(tabs) ?
-                        tabs.map((item, i) => (
+                    !_.isEmpty(productCat.data) ?
+                        productCat.data.map((item, i) => (
                             <span
                                 key={i}
                                 onClick={() => handleTab(i)}
@@ -276,15 +277,14 @@ const ContentSlider = () => {
             </section>
             <section className={classnames(styles.tab_panel, 'mt-8')}>
                 {
-                    !_.isEmpty(tabs) ?
-                        tabs.map((item, i) => (
+                    !_.isEmpty(productCat.data) ?
+                        productCat.data.map((item, i) => (
                             <>
                                 <div key={i}
                                      className={classnames(styles.panel_item, 'animate__animated ', activePanel === i ? `${styles.active} ` : " ")}
                                 >
                                     <div className={'flex flex-row justify-between items-center py-8'}>
-                                        <h4 className={classnames('text-gray-900 h-auto text-center uppercase text-2xl sm:text-4xl')}>Tissue
-                                            Paper {i}</h4>
+                                        <h4 className={classnames('text-gray-900 h-auto text-center uppercase text-2xl sm:text-4xl')}>{item.name}</h4>
                                         <img className={classnames('h-16')} src="static/image/rain-logo.png" alt=""/>
                                     </div>
                                     <p className={'bg-primary p-8'}>
@@ -294,6 +294,7 @@ const ContentSlider = () => {
                                         automated machines at our state-of-the-art factory that ensures maximum quality
                                         and
                                         zero environmental impact.
+                                        {item.description}
                                     </p>
                                     <img className={'-mt-0.5'} src="static/image/wave-small-height.svg" alt=""/>
                                     <section className="text-gray-600 body-font">

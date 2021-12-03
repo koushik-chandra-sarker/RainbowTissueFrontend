@@ -10,11 +10,13 @@ import {useDispatch} from 'react-redux'
 import { useEffect } from 'react'
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {getCategoryList} from "../services/store/category/CategoryAction";
 
 function MyApp({Component, pageProps, theme}) {
     const dispatch = useDispatch()
     useEffect(()=>{
         dispatch(getWebsiteDetails());
+        dispatch(getCategoryList());
     },[dispatch])
     return (
         <Layout>

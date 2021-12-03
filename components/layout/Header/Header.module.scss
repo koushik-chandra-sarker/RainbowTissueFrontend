@@ -32,37 +32,36 @@
         width: 100%;
         padding: 0;
         margin: 0;
-        z-index: 6;
+        z-index: 10000;
         text-align: center;
         transform: translateY(-50%);
         list-style: none;
         li {
           padding: 20px 0 20px 0;
+          a{
+            color: #ececee;
+            &:before {
+              height: 5px;
+              width: 100%;
+              bottom: 5px;
+              background-color: #1993e7;
+              transform: translateX(-101%);
+            }
 
-          &:before {
-            height: 5px;
-            width: 100%;
-            bottom: 5px;
-            background-color: #1993e7;
-            transform: translateX(-101%);
+            &:hover {
+              transform: translateX(0);
+            }
           }
-
-          &:hover {
-            transform: translateX(0);
-          }
-
         }
       }
 
       .active {
+        color: #1993e7;
+        font-weight: bold;
         &:before {
-          transform: translateX(0);
+          transform: translateX(0) !important;
         }
 
-        a {
-          color: #1993e7;
-          font-weight: bold;
-        }
       }
     }
 
@@ -76,30 +75,31 @@
         text-decoration: none;
         color: #1d1d1d;
         text-transform: uppercase;
-      }
-
-      &:before {
-        content: "";
-        position: absolute;
-        height: 5px;
-        width: 95%;
-        bottom: 6px;
-        background-color: #1993e7;
-        transform: translateY(18px);
-        transition: all .3s linear;
-      }
-
-      &:hover {
         &:before {
-          transform: translateY(0);
+          content: "";
+          position: absolute;
+          height: 5px;
+          width: 95%;
+          bottom: 6px;
+          background-color: #1993e7;
+          transform: translateY(18px);
+          transition: all .3s linear;
+        }
+
+        &:hover {
+          &:before {
+            transform: translateY(0);
+          }
         }
       }
+
+
 
     }
 
 
     @media (max-width: 991px) {
-      position: fixed;
+      position: absolute;
       top: 12px;
       right: 15px;
       display: unset;
@@ -107,7 +107,7 @@
       height: 60px;
       padding: 20px;
       margin: 0;
-      z-index: 9;
+      z-index: 100;
       box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.3);
       background-color: #353746;
       //animation: border-transform 7s linear infinite;
@@ -169,7 +169,7 @@
 
     @media (max-width: 991px) {
       & + label {
-        position: fixed;
+        position: absolute;
         top: 30px;
         right: 30px;
         display: block;
@@ -178,7 +178,7 @@
         padding: 0;
         margin: 0;
         cursor: pointer;
-        z-index: 10;
+        z-index: 1000;
       }
 
       &:checked, &:not(:checked) {

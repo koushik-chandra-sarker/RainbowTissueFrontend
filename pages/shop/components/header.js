@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Link from "next/link";
 const Header = () => {
     return (
         <>
@@ -9,8 +9,8 @@ const Header = () => {
                     {/* logo */}
                     <div className={'border border-3 border-primary p-2 rounded text-primary'}>
                         <a href="#" className="block text-2xl">
-                        Rainbow E-Shop
-                    </a>
+                            Rainbow E-Shop
+                        </a>
                     </div>
 
                     {/* logo end */}
@@ -48,13 +48,15 @@ const Header = () => {
                             </div>
                             <div className="text-xs leading-3">Cart</div>
                         </a>
-                        <a href="account.html"
-                           className="block text-center text-gray-700 hover:text-primary transition">
-                            <div className="text-2xl">
-                                <i className="far fa-user"/>
-                            </div>
-                            <div className="text-xs leading-3">Account</div>
-                        </a>
+                        <Link href="/shop/login">
+                            <a href="account.html"
+                               className="block text-center text-gray-700 hover:text-primary transition">
+                                <div className="text-2xl">
+                                    <i className="far fa-user"/>
+                                </div>
+                                <div className="text-xs leading-3">Account</div>
+                            </a>
+                        </Link>
                     </div>
                     {/* navicons end */}
                 </div>

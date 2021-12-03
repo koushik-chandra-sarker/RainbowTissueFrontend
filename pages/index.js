@@ -8,6 +8,7 @@ import Skeleton from '@mui/material/Skeleton';
 import _ from 'lodash';
 function Home() {
     const website = useSelector(state => state.website);
+
     return (
         <div>
             {website.loading?
