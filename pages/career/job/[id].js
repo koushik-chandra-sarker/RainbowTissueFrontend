@@ -12,7 +12,6 @@ const JobDescription = () => {
     let id = router.query.id
     const dispatch = useDispatch()
     const job = useSelector(s => s.jobSingle)
-    console.log(job)
     useEffect(() => {
         dispatch(getJob(id))
     }, [id])

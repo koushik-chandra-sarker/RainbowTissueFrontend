@@ -3,15 +3,17 @@ import SingleSlider from "../components/Slider/SingleSlider";
 import styles from '../styles/Home.module.scss'
 import ContentSlider from "../components/ContentSlider/ContentSlider";
 import classnames from 'classnames'
-import {useSelector, useDispatch} from 'react-redux'
+import {useSelector} from 'react-redux'
 import Skeleton from '@mui/material/Skeleton';
+import 'animate.css';
 import _ from 'lodash';
 function Home() {
     const website = useSelector(state => state.website);
 
     return (
         <div>
-            {website.loading?
+            {
+                website.loading?
                 <>
                     <Skeleton variant="rectangular" height={600}  animation="wave" />
                     <div className="container  1/12 sm:w-3/4 mx-auto md:px-0 px-8 my-12 mx-auto text-center">

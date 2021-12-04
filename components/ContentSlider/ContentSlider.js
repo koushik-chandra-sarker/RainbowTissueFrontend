@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import _ from 'lodash'
 import styles from './ContentSlider.module.scss'
 import classnames from "classnames"
@@ -7,6 +7,9 @@ import {Splide, SplideSlide} from 'splide-nextjs/react-splide';
 import 'splide-nextjs/splide/dist/css/themes/splide-skyblue.min.css';
 import {createSlides} from "splide-nextjs/react-splide/dist/js/utils/slides";
 import {useSelector} from "react-redux";
+import {Popover, Transition} from '@headlessui/react'
+import {ChevronDownIcon} from '@heroicons/react/solid'
+
 const products = [
     {
         src: "static/image/product/2-2-2.jpg",
@@ -156,98 +159,23 @@ const products = [
 
 ]
 
-const tabs = [
+const solutions = [
     {
-        name: "All Products",
-        active: true,
-        contents: [
-            {
-                title: ""
-            },
-            {
-                title: ""
-            }
-        ]
+        name: 'Insights',
+        description: 'Measure actions your users take',
+        href: '##',
     },
     {
-        name: "Hand Towel",
-        active: false,
-        contents: [
-            {
-                title: ""
-            }
-        ]
+        name: 'Automations',
+        description: 'Create your own targeted content',
+        href: '##',
     },
     {
-        name: "Kitchen Roll",
-        active: false,
-        contents: [
-            {
-                title: ""
-            }
-        ]
+        name: 'Reports',
+        description: 'Keep track of your growth',
+        href: '##',
     },
-    {
-        name: "Paper Napkin",
-        active: false,
-        contents: [
-            {
-                title: ""
-            }
-        ]
-    },
-    {
-        name: "Pocket Tissue",
-        active: false,
-        contents: [
-            {
-                title: ""
-            }
-        ]
-    },
-    {
-        name: "Toilet Roll",
-        active: false,
-        contents: [
-            {
-                title: ""
-            }
-        ]
-    },
-
-    {
-        name: "WALLET TISSUE",
-        active: false,
-        contents: [
-            {
-                title: ""
-            }
-        ]
-    },
-
-    {
-        name: "Pocket Tissue",
-        active: false,
-        contents: [
-            {
-                title: ""
-            }
-        ]
-    },
-
-    {
-        name: "Kitchen Roll",
-        active: false,
-        contents: [
-            {
-                title: ""
-            }
-        ]
-    },
-
-
 ]
-
 
 const ContentSlider = () => {
     const productCat = useSelector(state => state.category);
@@ -287,48 +215,194 @@ const ContentSlider = () => {
                                         <h4 className={classnames('text-gray-900 h-auto text-center uppercase text-2xl sm:text-4xl')}>{item.name}</h4>
                                         <img className={classnames('h-16')} src="static/image/rain-logo.png" alt=""/>
                                     </div>
-                                    <p className={'bg-primary p-8'}>
-                                        The most desired features in facial tissues are comfort and softness. Fresh
-                                        facial
-                                        tissue ensures these at the best value. Fresh facial tissue is made in fully
-                                        automated machines at our state-of-the-art factory that ensures maximum quality
-                                        and
-                                        zero environmental impact.
-                                        {item.description}
-                                    </p>
+                                    <div className={'bg-primary p-8'} dangerouslySetInnerHTML={{__html: item.description}}/>
                                     <img className={'-mt-0.5'} src="static/image/wave-small-height.svg" alt=""/>
                                     <section className="text-gray-600 body-font">
                                         <div className="container px-5 py-24 mx-auto">
                                             <div className="flex flex-wrap -m-4 text-center">
                                                 <div className="p-4 sm:w-1/4 w-1/2 leading-8">
-                                                    <span
-                                                        className="material-icons text-6xl text-primary">emoji_events</span>
-                                                    <p className="leading-relaxed uppercase font-bold text-primary">Milestone</p>
+                                                    <Popover className="relative">
+                                                        {({open}) => (
+                                                            <>
+                                                                <Popover.Button>
+                                                                    <span
+                                                                        className="material-icons text-6xl text-primary">emoji_events</span>
+                                                                    <p className="leading-relaxed uppercase font-bold text-primary">Milestone</p>
+                                                                </Popover.Button>
+                                                                <Transition
+                                                                    as={Fragment}
+                                                                    enter="transition ease-out duration-200"
+                                                                    enterFrom="opacity-0 translate-y-1"
+                                                                    enterTo="opacity-100 translate-y-0"
+                                                                    leave="transition ease-in duration-150"
+                                                                    leaveFrom="opacity-100 translate-y-0"
+                                                                    leaveTo="opacity-0 translate-y-1"
+                                                                >
+
+                                                                    {
+                                                                        !_.isEmpty(item.milestone) ?
+                                                                            <Popover.Panel
+                                                                                className="absolute z-10 w-screen max-w-sm px-4 mt-3 transform -translate-x-1/4 sm:-translate-x-0 left-1/2 sm ">
+                                                                                <ul
+                                                                                    className="overflow-hidden list-outside pl-8 list-disc p-4 text-left  rounded-lg shadow-lg bg-primary ring-1 ring-black ring-opacity-5">
+                                                                                        {item.milestone.map((item ,i) => (
+                                                                                            <li key={i} className="text-gray-50 text-sm">
+                                                                                                {item.title}
+                                                                                            </li>
+                                                                                        ))}
+                                                                                </ul>
+                                                                            </Popover.Panel>
+                                                                            :
+
+                                                                            <></>
+                                                                    }
+
+                                                                </Transition>
+                                                            </>
+                                                        )}
+                                                    </Popover>
+
+                                                </div>
+
+                                                <div className="p-4 sm:w-1/4 w-1/2 leading-8">
+
+                                                    <Popover className="relative">
+                                                        {({open}) => (
+                                                            <>
+                                                                <Popover.Button>
+                                                                   <span
+                                                                       className="material-icons text-6xl text-primary">home_repair_service</span>
+                                                                    <p className="leading-relaxed uppercase font-bold text-primary">
+                                                                        UNIQUE FEATURES
+                                                                    </p>
+                                                                </Popover.Button>
+                                                                <Transition
+                                                                    as={Fragment}
+                                                                    enter="transition ease-out duration-200"
+                                                                    enterFrom="opacity-0 translate-y-1"
+                                                                    enterTo="opacity-100 translate-y-0"
+                                                                    leave="transition ease-in duration-150"
+                                                                    leaveFrom="opacity-100 translate-y-0"
+                                                                    leaveTo="opacity-0 translate-y-1"
+                                                                >
+
+                                                                    {
+                                                                        !_.isEmpty(item.uniqueFeature) ?
+                                                                            <Popover.Panel
+                                                                                className="absolute z-50 w-screen max-w-sm px-4 mt-3 transform -translate-x-3/4 sm:translate-x-0 left-1/2  ">
+                                                                                <ul
+                                                                                    className=" bg-scroll  list-outside pl-8 pb-8 list-disc p-4 text-left  rounded-lg shadow-lg bg-primary ring-1 ring-black ring-opacity-5">
+                                                                                    {item.uniqueFeature.map((item ,i) => (
+                                                                                        <li key={i} className="text-white text-sm">
+                                                                                            {item.title}
+                                                                                        </li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            </Popover.Panel>
+                                                                            :
+
+                                                                            <></>
+                                                                    }
+
+                                                                </Transition>
+                                                            </>
+                                                        )}
+                                                    </Popover>
                                                 </div>
                                                 <div className="p-4 sm:w-1/4 w-1/2 leading-8">
-                                                    <span
-                                                        className="material-icons text-6xl text-primary">home_repair_service</span>
-                                                    <p className="leading-relaxed uppercase font-bold text-primary">
-                                                        UNIQUE FEATURES
-                                                    </p>
+
+                                                    <Popover className="relative">
+                                                        {({open}) => (
+                                                            <>
+                                                                <Popover.Button>
+                                                                    <span className="material-icons text-6xl text-primary">source</span>
+                                                                    <p className="leading-relaxed uppercase font-bold text-primary">SOURCE
+                                                                        OF RAW MATERIAL</p>
+                                                                </Popover.Button>
+                                                                <Transition
+                                                                    as={Fragment}
+                                                                    enter="transition ease-out duration-200"
+                                                                    enterFrom="opacity-0 translate-y-1"
+                                                                    enterTo="opacity-100 translate-y-0"
+                                                                    leave="transition ease-in duration-150"
+                                                                    leaveFrom="opacity-100 translate-y-0"
+                                                                    leaveTo="opacity-0 translate-y-1"
+                                                                >
+
+                                                                    {
+                                                                        !_.isEmpty(item.rawMaterial) ?
+                                                                            <Popover.Panel
+                                                                                className="absolute z-50  max-w-xs px-4 mt-3 transform   ">
+                                                                                <ul
+                                                                                    className=" bg-scroll  list-outside pl-8 pb-8 list-disc p-4 text-left  rounded-lg shadow-lg bg-primary ring-1 ring-black ring-opacity-5">
+                                                                                    {item.rawMaterial.map((item ,i) => (
+                                                                                        <li key={i} className="text-white text-sm">
+                                                                                            {item.title}
+                                                                                        </li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            </Popover.Panel>
+                                                                            :
+
+                                                                            <></>
+                                                                    }
+
+                                                                </Transition>
+                                                            </>
+                                                        )}
+                                                    </Popover>
                                                 </div>
                                                 <div className="p-4 sm:w-1/4 w-1/2 leading-8">
-                                                    <span className="material-icons text-6xl text-primary">source</span>
-                                                    <p className="leading-relaxed uppercase font-bold text-primary">SOURCE
-                                                        OF RAW MATERIAL</p>
-                                                </div>
-                                                <div className="p-4 sm:w-1/4 w-1/2 leading-8">
-                                                    <span
-                                                        className="material-icons text-6xl text-primary">language</span>
-                                                    <p className="leading-relaxed uppercase font-bold text-primary ">EXPORT
-                                                        MARKET</p>
+
+                                                    <Popover className="relative">
+                                                        {({open}) => (
+                                                            <>
+                                                                <Popover.Button>
+                                                                     <span
+                                                                         className="material-icons text-6xl text-primary">language</span>
+                                                                    <p className="leading-relaxed uppercase font-bold text-primary ">EXPORT
+                                                                        MARKET</p>
+                                                                </Popover.Button>
+                                                                <Transition
+                                                                    as={Fragment}
+                                                                    enter="transition ease-out duration-200"
+                                                                    enterFrom="opacity-0 translate-y-1"
+                                                                    enterTo="opacity-100 translate-y-0"
+                                                                    leave="transition ease-in duration-150"
+                                                                    leaveFrom="opacity-100 translate-y-0"
+                                                                    leaveTo="opacity-0 translate-y-1"
+                                                                >
+
+                                                                    {
+                                                                        !_.isEmpty(item.exportMarket) ?
+                                                                            <Popover.Panel
+                                                                                className="absolute z-50 w-screen max-w-xs px-4 mt-3 transform -translate-x-3/4 sm:transform-x-0 left-1/2  ">
+                                                                                <ul
+                                                                                    className=" bg-scroll  list-outside pl-8 pb-8 list-disc p-4 text-left  rounded-lg shadow-lg bg-primary ring-1 ring-black ring-opacity-5">
+                                                                                    {item.exportMarket.map((item ,i) => (
+                                                                                        <li key={i} className="text-white text-sm">
+                                                                                            {item.title}
+                                                                                        </li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            </Popover.Panel>
+                                                                            :
+
+                                                                            <></>
+                                                                    }
+
+                                                                </Transition>
+                                                            </>
+                                                        )}
+                                                    </Popover>
                                                 </div>
                                             </div>
                                         </div>
                                     </section>
                                     <section className={'flex-col-reverse md:flex mb-8'}>
                                         <section className={'flex flex-col-reverse md:flex-row'}>
-                                            <div className={' w-full md:w-3/12 p-3 md:px-8 md:border-r  border-primary'}>
+                                            <div
+                                                className={' w-full md:w-3/12 p-3 md:px-8 md:border-r  border-primary'}>
                                                 <h3 className={'uppercase text-xl text-gray-50 md:text-sm text-center md:text-left text-primary font-bold mb-2'}>Related
                                                     Products</h3>
                                                 <Splide
@@ -419,11 +493,14 @@ const ContentSlider = () => {
                                                 >
                                                     {products.map(slide => (
                                                         <SplideSlide key={slide.src}>
-                                                            <img className={classnames('cursor-pointer ')} src={slide.src} alt={slide.alt}/>
-                                                            <div className={classnames( 'w-full h-full flex flex-col items-center slider_content justify-center bg-primary bg-opacity-70')}>
+                                                            <img className={classnames('cursor-pointer ')}
+                                                                 src={slide.src} alt={slide.alt}/>
+                                                            <div
+                                                                className={classnames('w-full h-full flex flex-col items-center slider_content justify-center bg-primary bg-opacity-70')}>
                                                                 <h5 className={'text-white  text-center mt-2 '}> Cum
                                                                     secula velum, </h5>
-                                                                <a className={'text-center py-2 px-3 mt-1 bg-primary transition ease-linear hover:bg-secondary'} href="#">
+                                                                <a className={'text-center py-2 px-3 mt-1 bg-primary transition ease-linear hover:bg-secondary'}
+                                                                   href="#">
                                                                     <button>Details</button>
                                                                 </a>
                                                             </div>
