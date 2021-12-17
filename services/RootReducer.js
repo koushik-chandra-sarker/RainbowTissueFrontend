@@ -7,6 +7,7 @@ import JobSingleReducer from "./job/JobSingleReducer";
 import CategoryReducer from "./store/category/CategoryReducer";
 import ProductsReducer from "./store/product/ProductsReducer";
 import ProductReducer from "./store/product/ProductReducer";
+import IsLoginReducer from "./login/IsLoginReducer";
 
 const RootReducer = combineReducers({
     website:WebsiteReducer,
@@ -16,6 +17,7 @@ const RootReducer = combineReducers({
     language: LanguageReducer,
     category: CategoryReducer,
     product: ProductReducer,
+    IsLoggedIn: IsLoginReducer,
     products: ProductsReducer,
 })
 

@@ -46,11 +46,10 @@ const Product = () => {
                                         {/* product image */}
                                         <div>
                                             <div
-                                                className={'w-full  border border-primary flex  items-center justify-center overflow-hidden'}>
-                                                {/*<img id="main-img" src={productBigImage}/>*/}
+                                                className={'w-full max-h-100  border border-primary flex  items-center justify-center overflow-hidden'}>
                                                 <InnerImageZoom src={productBigImage} zoomSrc={productBigImage}
-                                                                zoomScale={1.5} hasSpacer={true}/>
-                                                {/*<img id="main-img" src="/static/image/product/1_1.jpg"/>*/}
+                                                                zoomPreload={true}/>
+
                                             </div>
                                             <div className="mt-4 mb-6 product_details">
                                                 <Splide

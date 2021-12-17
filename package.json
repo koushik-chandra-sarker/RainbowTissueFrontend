@@ -32,7 +32,8 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.0",
     "sass": "^1.39.2",
-    "splide-nextjs": "^2.4.23"
+    "splide-nextjs": "^2.4.23",
+    "sweetalert2": "^11.3.0"
   },
   "devDependencies": {
     "@headlessui/react": "^1.4.1",

@@ -4,6 +4,7 @@ import {toast} from "react-toastify";
 import _ from "lodash"
 import {apply} from "../../../../services/jobApplication/JobApplicationAction";
 import {useRouter} from "next/router";
+
 const validateData = data => {
     const errors = {};
     errors.valid = true
@@ -36,7 +37,6 @@ const validateData = data => {
 
     return errors;
 };
-
 const Application = () => {
     const router = useRouter();
     let id = router.query.id

@@ -1,8 +1,10 @@
 import React from 'react';
+import Header from "../components/header";
 
 const Index = () => {
     return (
         <div>
+            <Header/>
             {/* cart wrapper */}
             <div className="container lg:grid grid-cols-12 gap-6 items-start pb-16 pt-4">
                 {/* product cart */}
