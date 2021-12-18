@@ -8,6 +8,7 @@ import CategoryReducer from "./store/category/CategoryReducer";
 import ProductsReducer from "./store/product/ProductsReducer";
 import ProductReducer from "./store/product/ProductReducer";
 import IsLoginReducer from "./login/IsLoginReducer";
+import CartListReducer from "./store/cart/CartListReducer";
 
 const RootReducer = combineReducers({
     website:WebsiteReducer,
@@ -19,6 +20,7 @@ const RootReducer = combineReducers({
     product: ProductReducer,
     IsLoggedIn: IsLoginReducer,
     products: ProductsReducer,
+    cartList: CartListReducer,
 })
 
 export default RootReducer;

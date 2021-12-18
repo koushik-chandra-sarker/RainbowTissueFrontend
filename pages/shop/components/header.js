@@ -8,19 +8,21 @@ import {useRouter} from "next/router";
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
+
 const Header = () => {
     const loggedIn = useSelector(store => store.IsLoggedIn)
     const dispatch = useDispatch()
     const router = useRouter()
-    console.log(loggedIn)
     useEffect(() => {
         dispatch(isLoggedIn())
-    },[dispatch])
+    }, [dispatch])
+
     function logoutHandle() {
         logout();
         router.push('/shop')
         dispatch(isLoggedIn())
     }
+
     return (
         <>
             {/* header */}
@@ -28,9 +30,11 @@ const Header = () => {
                 <div className="sm:w-4/5 w-full mx-auto flex items-center justify-between">
                     {/* logo */}
                     <div className={'border border-3 border-primary p-2 rounded text-primary'}>
-                        <a href="#" className="block text-2xl">
-                            Rainbow E-Shop
-                        </a>
+                        <Link href={'/shop'}>
+                            <a className="block text-2xl">
+                                Rainbow E-Shop
+                            </a>
+                        </Link>
                     </div>
 
                     {/* logo end */}
@@ -60,15 +64,15 @@ const Header = () => {
                             <div className="text-xs leading-3">Wish List</div>
                         </a>
                         <Link href="/shop/cart">
-                        <a
-                           className="lg:block text-center text-gray-700 hover:text-primary transition hidden relative">
+                            <a
+                                className="lg:block text-center text-gray-700 hover:text-primary transition hidden relative">
                             <span
                                 className="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">3</span>
-                            <div className="text-2xl">
-                                <i className="fas fa-shopping-bag"/>
-                            </div>
-                            <div className="text-xs leading-3">Cart</div>
-                        </a>
+                                <div className="text-2xl">
+                                    <i className="fas fa-shopping-bag"/>
+                                </div>
+                                <div className="text-xs leading-3">Cart</div>
+                            </a>
                         </Link>
                         <div className="ml-4 flex items-center md:ml-6">
                             {/*<button*/}
@@ -133,7 +137,7 @@ const Header = () => {
                                                 <Menu.Item>
                                                     {({active}) => (
                                                         <Link href="/shop/login">
-                                                            <a  className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 ')}> Login</a>
+                                                            <a className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 ')}> Login</a>
 
                                                         </Link>
 

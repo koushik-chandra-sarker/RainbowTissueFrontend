@@ -1,7 +1,73 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from "../components/header";
+import {useDispatch, useSelector} from "react-redux";
+import {getCartList} from "../../../services/store/cart/Action";
+import Card from "./components/Card";
+import _ from "lodash";
+import {getDeliveryFee} from "../../../services/store/deliveryFee/Action";
 
 const Index = () => {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(getCartList())
+    }, [dispatch])
+    const cartList = useSelector(store => store.cartList)
+    const [summary, setSummary] = useState({
+        subTotal: 0,
+        deliveryFee: 0,
+        total: 0,
+        totalQuantity: 0
+    })
+    useEffect(() => {
+        summaryCalculate()
+    }, [cartList])
+
+    function summaryCalculate() {
+        let totalQuantity = 0
+        let total = 0
+        if (!_.isEmpty(cartList.data)) {
+            total = cartList.data.reduce(function (a, b) {
+                return a + b.total;
+            }, 0)
+            totalQuantity = cartList.data.reduce(function (a, b) {
+                return a + b.quantity;
+            }, 0)
+        }
+        getDeliveryFee(totalQuantity).then(res => {
+            let deliveryFee = 0
+            if (!_.isEmpty(res.data)){
+                deliveryFee = res.data[0].fees
+            }
+            setSummary({
+                ...summary,
+                subTotal: total,
+                deliveryFee: deliveryFee,
+                total: total + deliveryFee,
+                totalQuantity: totalQuantity
+            })
+            console.log(res )
+        }).catch(reason => {
+            console.log(reason)
+
+        })
+    }
+
+    function summaryCalculateFromChild(amount, quantity) {
+        getDeliveryFee(summary.totalQuantity+quantity).then(res => {
+            let deliveryFee = 0
+            if (!_.isEmpty(res.data)){
+                deliveryFee = res.data[0].fees
+            }
+            setSummary({
+                ...summary,
+                subTotal: summary.subTotal + amount,
+                deliveryFee: deliveryFee,
+                total: summary.subTotal + amount + deliveryFee,
+                totalQuantity: summary.totalQuantity+quantity
+            })
+        })
+    }
+
     return (
         <div>
             <Header/>
@@ -15,16 +81,28 @@ const Index = () => {
                         <p className="text-gray-600 text-center ml-auto mr-16 xl:mr-24">Quantity</p>
                         <p className="text-gray-600 text-center">Total</p>
                     </div>
-                    {/* cart title end */} {/* shipping carts */}
+                    {/* cart title end */}
+                    {/* shipping carts */}
                     <div className="space-y-4">
                         {/* single cart */}
-                        <div
+                        {
+                            cartList.loading ?
+                                <></>
+                                :
+                                !_.isEmpty(cartList.data) ?
+                                    cartList.data.map((cart, i) => (
+                                        <Card key={i} cart={cart} summaryCalc={summaryCalculateFromChild}/>
+                                    )) :
+                                    <></>
+                        }
+
+                        {/*<div
                             className="flex items-center md:justify-between gap-4 md:gap-6 p-4 border border-gray-200 rounded flex-wrap md:flex-nowrap">
-                            {/* cart image */}
+                             cart image
                             <div className="w-32 flex-shrink-0">
                                 <img src="/static/image/product/5_1.jpg" className="w-full"/>
                             </div>
-                            {/* cart image end */} {/* cart content */}
+                             cart image end   cart content
                             <div className="md:w-1/3 w-full">
                                 <h2 className="text-gray-800 mb-3 xl:text-lg text-sm font-medium uppercase">
                                    Rainbow 200 Sheet Facial Tissue Box
@@ -32,7 +110,7 @@ const Index = () => {
                                 <p className="text-primary font-semibold">$45.00</p>
                                 <p className="text-gray-500">Size: 100 pcs</p>
                             </div>
-                            {/* cart content end */} {/* cart quantity */}
+                             cart content end   cart quantity
                             <div className="flex border border-gray-300 text-gray-600 divide-x divide-gray-300">
                                 <div
                                     className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">-
@@ -42,7 +120,7 @@ const Index = () => {
                                     className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">+
                                 </div>
                             </div>
-                            {/* cart quantity end */}
+                             cart quantity end
                             <div className="ml-auto md:ml-0">
                                 <p className="text-primary text-lg font-semibold">$320.00</p>
                             </div>
@@ -50,15 +128,15 @@ const Index = () => {
                                 <i className="fas fa-trash"/>
                             </div>
                         </div>
-                        {/* single cart end */}
-                        {/* single cart */}
+                         single cart end
+                         single cart
                         <div className="flex items-center md:justify-between gap-4 md:gap-6 p-4 border border-gray-200
                             rounded flex-wrap md:flex-nowrap">
-                            {/* cart image */}
+                             cart image
                             <div className="w-32 flex-shrink-0">
                                 <img src="/static/image/product/1_1.jpg" className="w-full"/>
                             </div>
-                            {/* cart image end */} {/* cart content */}
+                             cart image end   cart content
                             <div className="md:w-1/3 w-full">
                                 <h2 className="text-gray-800 mb-3 xl:text-lg text-sm font-medium uppercase">
                                     Rainbow 200 Sheet Facial Tissue Box
@@ -66,7 +144,7 @@ const Index = () => {
                                 <p className="text-primary font-semibold">$45.00</p>
                                 <p className="text-gray-500">Size: 50 pcs</p>
                             </div>
-                            {/* cart content end */} {/* cart quantity */}
+                             cart content end   cart quantity
                             <div className="flex border border-gray-300 text-gray-600 divide-x divide-gray-300">
                                 <div
                                     className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">-
@@ -76,38 +154,40 @@ const Index = () => {
                                     className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">+
                                 </div>
                             </div>
-                            {/* cart quantity end */}
+                             cart quantity end
                             <div className="ml-auto md:ml-0">
                                 <p className="text-primary text-lg font-semibold">$320.00</p>
                             </div>
                             <div className="text-gray-600 hover:text-primary cursor-pointer">
                                 <i className="fas fa-trash"/>
                             </div>
-                        </div>
+                        </div>*/}
                         {/* single cart end */}
                     </div>
                     {/* shipping carts end */}
                 </div>
-                {/* product cart end */} {/* order summary */}
+                {/* product cart end */}
+                {/* order summary */}
                 <div className="xl:col-span-3 lg:col-span-4 border border-gray-200 px-4 py-4 rounded mt-6 lg:mt-0">
                     <h4 className="text-gray-800 text-lg mb-4 font-medium uppercase">ORDER SUMMARY</h4>
                     <div className="space-y-1 text-gray-600 pb-3 border-b border-gray-200">
                         <div className="flex justify-between font-medium">
                             <p>Subtotal</p>
-                            <p>$320</p>
+                            <p>{summary.subTotal}</p>
                         </div>
                         <div className="flex justify-between">
                             <p>Delivery</p>
-                            <p>Free</p>
+                            <p>{summary.deliveryFee}</p>
+                            {/*<p>Free</p>*/}
                         </div>
-                        <div className="flex justify-between">
-                            <p>Tax</p>
-                            <p>Free</p>
-                        </div>
+                        {/*<div className="flex justify-between">*/}
+                        {/*    <p>Tax</p>*/}
+                        {/*    <p>Free</p>*/}
+                        {/*</div>*/}
                     </div>
                     <div className="flex justify-between my-3 text-gray-800 font-semibold uppercase">
                         <h4>Total</h4>
-                        <h4>$320</h4>
+                        <h4>{summary.total}</h4>
                     </div>
                     {/* searchbar */}
                     <div className="flex mb-5">

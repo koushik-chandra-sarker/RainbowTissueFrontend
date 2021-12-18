@@ -118,3 +118,9 @@
     }
   }
 }
+
+.cart_quantity::-webkit-inner-spin-button,
+.cart_quantity::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

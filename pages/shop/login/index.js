@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Link from "next/link";
 import {isLoggedIn, login} from "../../../services/login/Action";
 import {useDispatch, useSelector} from "react-redux";
-import {CircularProgress} from "@mui/material";
+import {Alert, CircularProgress} from "@mui/material";
 import classnames from 'classnames'
 import {useRouter} from "next/router";
 const Index = () => {
@@ -53,6 +53,11 @@ const Index = () => {
                     <div  className={classnames( !showLoading? 'hidden':"", `absolute top-0 left-0 right-0 bottom-0 bg-gray-300 blurry_bg flex justify-center items-center`)}>
                         <CircularProgress className={'z-50'}/>
                     </div>
+                    {
+                        error.status?
+                            <Alert className={'mb-5'}  variant="filled" severity="error">{error.message}</Alert>
+                            :<></>
+                    }
                     <h2 className="text-2xl uppercase font-medium mb-1">
                         LOGIN
                     </h2>

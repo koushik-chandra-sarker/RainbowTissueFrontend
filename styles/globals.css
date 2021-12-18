@@ -1,108 +1,88 @@
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap");
 * {
-  font-family: "Sora", sans-serif;
-}
+  font-family: 'Sora', sans-serif; }
+
+.blurry_bg {
+  background-color: rgba(0, 0, 0, 0.22); }
 
 .display-flex {
-  display: flex;
-}
+  display: flex; }
 
 .flex-row {
-  flex-direction: row;
-}
+  flex-direction: row; }
 
 .flex-column {
-  flex-direction: column;
-}
+  flex-direction: column; }
 
 .justify-content-center {
-  justify-content: center;
-}
+  justify-content: center; }
 
 .align-items-center {
-  align-items: center;
-}
+  align-items: center; }
 
 .mt-1 {
-  margin-top: 8px;
-}
+  margin-top: 8px; }
 
 .mt-2 {
-  margin-top: 16px;
-}
+  margin-top: 16px; }
 
 .mt-3 {
-  margin-top: 24px;
-}
+  margin-top: 24px; }
 
 .mt-4 {
-  margin-top: 32px;
-}
+  margin-top: 32px; }
 
 .mt-5 {
-  margin-top: 40px;
-}
+  margin-top: 40px; }
 
 .mb-1 {
-  margin-bottom: 8px;
-}
+  margin-bottom: 8px; }
 
 .mb-2 {
-  margin-bottom: 16px;
-}
+  margin-bottom: 16px; }
 
 .mb-3 {
-  margin-bottom: 24px;
-}
+  margin-bottom: 24px; }
 
 .mb-4 {
-  margin-bottom: 32px;
-}
+  margin-bottom: 32px; }
 
 .mb-5 {
-  margin-bottom: 40px;
-}
+  margin-bottom: 40px; }
 
 .title {
-  color: #581b98;
-}
+  color: #581b98; }
 
 .text_uppercase {
-  text-transform: uppercase;
-}
+  text-transform: uppercase; }
 
 .splide__slide .slider_content {
   transform: translateY(-100%);
-  transition: all 0.3s ease;
-}
+  transition: all .3s ease; }
 .splide__slide:hover .slider_content {
-  transform: translateY(0);
-}
+  transform: translateY(0); }
 
 .contact_map {
-  height: 100%;
-}
+  height: 100%; }
 
 .product_details .splide__arrow--prev {
-  left: -2em;
-}
+  left: -2em; }
 .product_details .splide__arrow--next {
-  right: -2em;
-}
+  right: -2em; }
 .product_details .is-active {
-  border: none !important;
-}
+  border: none !important; }
 .product_details .active {
   border: 3px solid #00bfff !important;
-  opacity: 1 !important;
-}
+  opacity: 1 !important; }
 @media (max-width: 991px) {
   .product_details .splide__arrow--prev {
-    display: none;
-  }
+    display: none; }
   .product_details .splide__arrow--next {
-    display: none;
-  }
-}
+    display: none; } }
+
+.cart_quantity::-webkit-inner-spin-button,
+.cart_quantity::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0; }
 
 /*# sourceMappingURL=globals.css.map */

@@ -11,9 +11,6 @@ import {useEffect} from "react";
 import {verifyToken} from "../services/login/Action";
 function Home() {
     const website = useSelector(state => state.website);
-    useEffect(() => {
-        // verifyToken().then(r => r)
-    },[])
     return (
         <div>
             {
