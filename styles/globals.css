@@ -85,4 +85,7 @@
   -webkit-appearance: none;
   margin: 0; }
 
+.splide_hide_arrow .splide__arrows {
+  display: none !important; }
+
 /*# sourceMappingURL=globals.css.map */
