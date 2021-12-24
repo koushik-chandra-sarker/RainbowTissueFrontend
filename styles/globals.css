@@ -56,11 +56,13 @@
 .text_uppercase {
   text-transform: uppercase; }
 
-.splide__slide .slider_content {
-  transform: translateY(-100%);
-  transition: all .3s ease; }
-.splide__slide:hover .slider_content {
-  transform: translateY(0); }
+.splide__slide {
+  background-size: contain !important; }
+  .splide__slide .slider_content {
+    transform: translateY(-100%);
+    transition: all .3s ease; }
+  .splide__slide:hover .slider_content {
+    transform: translateY(0); }
 
 .contact_map {
   height: 100%; }

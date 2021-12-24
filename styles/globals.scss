@@ -75,6 +75,7 @@
 }
 
 .splide__slide {
+  background-size: contain !important;
   .slider_content {
     transform: translateY(-100%);
     transition: all .3s ease;

@@ -9,7 +9,7 @@ import {createSlides} from "splide-nextjs/react-splide/dist/js/utils/slides";
 import {useDispatch, useSelector} from "react-redux";
 import {Popover, Transition} from '@headlessui/react'
 import {ChevronDownIcon} from '@heroicons/react/solid'
-import {getProductList} from "../../services/store/product/ProductAction";
+import {getProductList, getSimilarProductList} from "../../services/store/product/ProductAction";
 import {store_base_url} from "../../constants";
 import Link from "next/link";
 
@@ -190,9 +190,11 @@ const ContentSlider = () => {
             initialCatId = productCat.data[0].id
         }
         dispatch(getProductList(`${store_base_url}/product/?&active=true&category=${initialCatId}`));
+        dispatch(getSimilarProductList())
     }, [dispatch])
     const products = useSelector(state => state.products);
-    console.log(products)
+    const similarProducts = useSelector(state => state.similarProducts);
+    console.log(similarProducts)
 
     function handleTab(catId, i) {
         setActivePanel(i)
@@ -201,6 +203,7 @@ const ContentSlider = () => {
 
     const getProducts = (catId) => {
         dispatch(getProductList(`${store_base_url}/product/?active=true&category=${catId}`))
+
     }
     return (
         <div>
@@ -427,7 +430,7 @@ const ContentSlider = () => {
                                     <section className={'flex flex-col-reverse md:flex-row'}>
                                         {/*left section:start*/}
                                         <div
-                                            className={classnames(products.data.length===0?"hidden":"",' w-full md:w-3/12 p-3 md:px-8 md:border-r  border-primary')}>
+                                            className={classnames(' w-full md:w-3/12 p-3 md:px-8 md:border-r  border-primary')}>
                                             <h3 className={'uppercase text-xl text-gray-50 md:text-sm text-center md:text-left text-primary font-bold mb-2'}>Related
                                                 Products</h3>
                                             <Splide
@@ -468,19 +471,19 @@ const ContentSlider = () => {
                                                 // hasAutoplayProgress
                                             >
                                                 {
-                                                    !_.isEmpty(products.data) ?
-                                                        products.data.map((slide, i) => (
+                                                    !_.isEmpty(similarProducts.data.results) ?
+                                                        similarProducts.data.results.map((slide, i) => (
                                                             <SplideSlide key={`slide!!-${i}`}>
                                                                 <img src={slide.thumbnail} />
                                                             </SplideSlide>
                                                         )) :
-                                                        <div className={'text-primary h-40 -ml-64 flex justify-center items-center'}>Not Product available</div>
+                                                        <div className={'text-primary h-40 -ml-64 flex justify-center items-center'}> Product Not Available</div>
                                                 }
                                             </Splide>
                                         </div>
                                         {/*left section:end*/}
                                         {/*right section:start*/}
-                                        <div className={classnames(products.data.length===0?"hidden":"",'w-full md:w-9/12 p-3')}>
+                                        <div className={classnames('w-full md:w-9/12 p-3')}>
                                             <h3 className={'uppercase  text-primary font-bold text-xl md:text-sm text-center md:text-left  mb-2'}>Products</h3>
                                             <Splide
                                                 options={{
@@ -545,7 +548,7 @@ const ContentSlider = () => {
                                                             </SplideSlide>
                                                         ))
                                                         :
-                                                        <div className={'text-primary h-40 flex justify-center items-center'}>Not Product available</div>
+                                                        <div className={'text-primary h-40 flex justify-center items-center'}> Product Not Available</div>
                                                 }
 
                                             </Splide>

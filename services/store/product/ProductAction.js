@@ -25,7 +25,7 @@ export const getProductList = (url) => async dispatch => {
         })
     }
 }
-export const getSimilarProductList = (url = `${store_base_url}/products/?limit=8&random=true`) => async dispatch => {
+export const getSimilarProductList = (url = `${store_base_url}/product/?active=true&limit=8&random=true`) => async dispatch => {
     try {
         dispatch({
             type: SIMILAR_PRODUCTS_LOADING
