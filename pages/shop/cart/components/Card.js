@@ -56,7 +56,7 @@ const Card = ({cart, summaryCalc}) => {
             className="flex items-center md:justify-between gap-4 md:gap-6 p-4 border border-gray-200 rounded flex-wrap md:flex-nowrap">
             {/* cart image */}
             <div className="w-32 flex-shrink-0">
-                <img src={cartItem.product.thumbnail} className="w-full"/>
+                <img src={!_.isEmpty(cartItem.product)? cartItem.product.thumbnail:""} className="w-full"/>
             </div>
             {/* cart image end */} {/* cart content */}
             <div className="md:w-1/3 w-full">

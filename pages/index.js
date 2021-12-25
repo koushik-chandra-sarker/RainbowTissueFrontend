@@ -7,8 +7,6 @@ import {useSelector} from 'react-redux'
 import Skeleton from '@mui/material/Skeleton';
 import 'animate.css';
 import _ from 'lodash';
-import {useEffect} from "react";
-import {verifyToken} from "../services/login/Action";
 function Home() {
     const website = useSelector(state => state.website);
     return (
