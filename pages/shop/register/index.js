@@ -47,7 +47,6 @@ const Register = () => {
         setError(error)
         if (error.valid) {
             createProfile(formData).then(r => {
-                console.log(r)
                 if (r.status === 201) {
                     if (r.data.message === 'success') {
                         e.target.phone.value = ''
