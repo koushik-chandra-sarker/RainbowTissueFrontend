@@ -7,26 +7,80 @@ import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
 import {getProduct} from "../../../services/store/product/ProductAction";
 import _ from "lodash";
+import {toast} from "react-toastify";
+import {addCart, updateCart} from "../../../services/store/cart/Action";
+import {getUserFromLocalStorage} from "../../../services/common/Action";
+
 const Product = () => {
     const router = useRouter();
     let id = router.query.id
     const dispatch = useDispatch()
     const product = useSelector(store => store.product)
+    const [cartItem, setCartItem] = useState({
+        quantity: 1,
+
+    })
     useEffect(() => {
         dispatch(getProduct(id))
     }, [id])
+
     useEffect(() => {
-        if (!_.isEmpty(product.data.images)){
+        if (!_.isEmpty(product.data.images)) {
             setProductBigImage(product.data.images[0].image)
         }
-    },[product])
-    console.log(product)
+        if (!_.isEmpty(product.data)) {
+            setCartItem({
+                ...cartItem, product: product.data.id,
+                total: product.data.discount_price !== 0 ? product.data.discount_price : product.data.price
+            })
+        }
+
+    }, [product])
     const [productBigImage, setProductBigImage] = useState('')
     const [activeThumbnail, setActiveThumbnail] = useState(0)
 
     function handleSliderClick(key, src) {
         setActiveThumbnail(key)
         setProductBigImage(src)
+    }
+
+
+    function handleQuantity(value){
+
+        let q = Number(cartItem.quantity)+(value)
+        if (q>product.data.stock){
+            toast.error(`Product Available ${cartItem.product.stock}`, {autoClose: 10000, theme:"colored"});
+            return
+        }
+        let total = product.data.discount_price !==0 ? product.data.discount_price*q: product.data.price*q
+        if (q>0){
+            setCartItem({...cartItem, quantity:q, total:total})
+        }
+    }
+
+    function handleQuantityByInput(value) {
+        if (value > product.data.stock) {
+            toast.error(`Product Available ${product.data.stock}`, {autoClose: 10000, theme: "colored"});
+            return
+        }
+        if (value > 0) {
+            let total = product.data.discount_price !== 0 ? product.data.discount_price * value : product.data.price * value
+            setCartItem({...cartItem, quantity: value, total: total})
+            // const quantity = value-cartItem.quantity
+            // summaryCalc(product.data.discount_price !==0 ? product.data.discount_price*(quantity): product.data.price*(quantity),quantity)
+        }
+    }
+
+    function handleCart() {
+        const user = getUserFromLocalStorage();
+        let cart = cartItem;
+        if (user !== null) {
+            cart.user = user.pk
+            console.log(cart)
+            addCart(cart).then(response => {
+                console.log(response)
+            })
+        }
     }
 
     return (
@@ -157,7 +211,8 @@ const Product = () => {
                                                             className="text-gray-500 text-base line-through">{product.data.currency} {product.data.price}</span>
                                                 }
                                             </div>
-                                            <div className="mt-4" dangerouslySetInnerHTML={{__html:product.data.shortDescription}}/>
+                                            <div className="mt-4"
+                                                 dangerouslySetInnerHTML={{__html: product.data.shortDescription}}/>
                                             {/* size */}
                                             {/*<div className="mt-4">
                                                 <h3 className="text-base text-gray-800 mb-1">Size</h3>
@@ -229,12 +284,21 @@ const Product = () => {
                                             <div className="mt-4">
                                                 <h3 className="text-base text-gray-800 mb-1">Quantity</h3>
                                                 <div
-                                                    className="flex border border-gray-300 text-gray-600 divide-x divide-gray-300 w-max">
+                                                    className="flex w-max border border-gray-300 text-gray-600 divide-x divide-gray-300">
                                                     <div
+                                                        onClick={() => handleQuantity(-1)}
                                                         className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">-
                                                     </div>
-                                                    <div className="h-8 w-10 flex items-center justify-center">4</div>
+                                                    <input
+                                                        onChange={(e) => handleQuantityByInput(e.target.value)}
+                                                        type={'number'}
+                                                        className="h-8 w-16 focus:outline-none text-center flex items-center justify-center cart_quantity"
+                                                        value={cartItem.quantity}
+                                                        min="1" max={product.data.stock}
+                                                        maxLength={product.data.stock.length}
+                                                    />
                                                     <div
+                                                        onClick={() => handleQuantity(1)}
                                                         className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">+
                                                     </div>
                                                 </div>
@@ -242,15 +306,17 @@ const Product = () => {
                                             {/* quantity end */}
                                             {/* add to cart button */}
                                             <div className="flex gap-3 border-b border-gray-200 pb-5 mt-6">
-                                                <a href="#" className="bg-primary border border-primary text-white px-8 py-2 font-medium rounded uppercase
+                                                <div
+                                                    onClick={handleCart}
+                                                    className="cursor-pointer bg-primary border border-primary text-white px-8 py-2 font-medium rounded uppercase
                                                                      hover:bg-transparent hover:text-primary transition text-sm flex items-center">
                                                     <span className="mr-2"><i
                                                         className="fas fa-shopping-bag"/></span> Add to cart
-                                                </a>
-                                                <a href="#" className="border border-gray-300 text-gray-600 px-8 py-2 font-medium rounded uppercase
+                                                </div>
+                                                {/* <a href="#" className="border border-gray-300 text-gray-600 px-8 py-2 font-medium rounded uppercase
                                                                         hover:bg-transparent hover:text-primary transition text-sm">
                                                     <span className="mr-2"><i className="far fa-heart"/></span> Wishlist
-                                                </a>
+                                                </a>*/}
                                             </div>
                                             {/* add to cart button end */}
                                             {/* product share icons */}
@@ -281,7 +347,8 @@ const Product = () => {
                                         </h3>
                                         {/* details button end */} {/* details content */}
                                         <div className="w-full pt-6">
-                                            <div className={' text-base text-gray-600'} dangerouslySetInnerHTML={{__html:product.data.description}}/>
+                                            <div className={' text-base text-gray-600'}
+                                                 dangerouslySetInnerHTML={{__html: product.data.description}}/>
                                             {/* details table */}
                                             {/*<table
                                                 className="table-auto border-collapse w-full text-left text-gray-600 text-sm mt-6">

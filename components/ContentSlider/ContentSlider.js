@@ -13,173 +13,6 @@ import {getProductList, getSimilarProductList} from "../../services/store/produc
 import {store_base_url} from "../../constants";
 import Link from "next/link";
 
-const products = [
-    {
-        src: "static/image/product/2-2-2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-
-    {
-        src: "static/image/product/2_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/2_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/3_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/3_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/4_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/3_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/4-2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/4-1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/4_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/4-1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/5_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/5_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/6_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/6_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/7_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/7_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/8_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/9_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/9_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/10_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/10_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/11_1.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-    {
-        src: "static/image/product/11_2.jpg",
-        title: 'Rainbow 200 Sheet Facial Tissue Box',
-        price: '40',
-        category: 'Facial Tissue'
-    },
-
-]
-
-const solutions = [
-    {
-        name: 'Insights',
-        description: 'Measure actions your users take',
-        href: '##',
-    },
-    {
-        name: 'Automations',
-        description: 'Create your own targeted content',
-        href: '##',
-    },
-    {
-        name: 'Reports',
-        description: 'Keep track of your growth',
-        href: '##',
-    },
-]
-
 const ContentSlider = () => {
     const productCat = useSelector(state => state.category);
     const [activePanel, setActivePanel] = useState(0)
@@ -191,10 +24,11 @@ const ContentSlider = () => {
         }
         dispatch(getProductList(`${store_base_url}/product/?&active=true&category=${initialCatId}`));
         dispatch(getSimilarProductList())
-    }, [dispatch])
+        console.log("call")
+    }, [])
     const products = useSelector(state => state.products);
     const similarProducts = useSelector(state => state.similarProducts);
-    console.log(similarProducts)
+    console.log(products)
 
     function handleTab(catId, i) {
         setActivePanel(i)
@@ -426,7 +260,7 @@ const ContentSlider = () => {
                                 </section>
                                 {/*category description section:end*/}
                                 {/*product  section:start*/}
-                                <section className={classnames('flex-col-reverse md:flex mb-8')}>
+                                <section className={classnames('product_slider flex-col-reverse md:flex mb-8')}>
                                     <section className={'flex flex-col-reverse md:flex-row'}>
                                         {/*left section:start*/}
                                         <div

@@ -1,5 +1,6 @@
 import 'tailwindcss/tailwind.css'
 import '../styles/globals.scss'
+import '../styles/preloader.scss'
 import "animate.css"
 import Layout from "../components/layout/Layout";
 import 'splide-nextjs/splide/dist/css/themes/splide-skyblue.min.css';

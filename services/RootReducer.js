@@ -10,6 +10,8 @@ import ProductReducer from "./store/product/ProductReducer";
 import IsLoginReducer from "./login/IsLoginReducer";
 import CartListReducer from "./store/cart/CartListReducer";
 import SimilarProductReducer from "./store/product/SimilarProductReducer";
+import ProductsReducerPaginated from "./store/product/ProductsReducerPaginated";
+import PreloaderReducer from "./preloader/PreloaderReducer";
 
 const RootReducer = combineReducers({
     website:WebsiteReducer,
@@ -21,8 +23,10 @@ const RootReducer = combineReducers({
     product: ProductReducer,
     IsLoggedIn: IsLoginReducer,
     products: ProductsReducer,
+    productsPaginated: ProductsReducerPaginated,
     similarProducts: SimilarProductReducer,
     cartList: CartListReducer,
+    preloader: PreloaderReducer,
 })
 
 export default RootReducer;

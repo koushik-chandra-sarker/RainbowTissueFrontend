@@ -5,12 +5,18 @@ import Banner from "./components/banner";
 import CategoryFilter from "./components/categoryFilter";
 import {isLoggedIn} from "../../services/login/Action";
 import {useDispatch} from "react-redux";
+import {isPreloaderActive} from "../../services/preloader/PreloaderAction";
 
 const Index = () => {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(isLoggedIn())
+        dispatch(isPreloaderActive(true))
+        setTimeout(()=>{
+            dispatch(isPreloaderActive(false))
+        },1000)
     },[dispatch])
+
     return (
         <div>
             <Header/>
