@@ -86,7 +86,7 @@ const Register = () => {
             Swal.fire({
                 title: 'Error!',
                 text: "Please Give your valid Information",
-                icon: 'error',
+                icon: 'error',phone,
                 confirmButtonText: 'Okay'
             })
         }

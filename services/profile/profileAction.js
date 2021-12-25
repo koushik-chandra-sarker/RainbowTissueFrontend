@@ -16,6 +16,20 @@ export const createProfile = (profile) => {
         return reason
     })
 }
+export const updateProfile = (profile, id) => {
+    const token = localStorage.getItem("accessToken")
+    return axios.put(`${base_static_url}/account/api/profile/${id}/`, profile,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(value => {
+        return value
+    }).catch(reason => {
+        return reason
+    })
+}
 
 /*
 {

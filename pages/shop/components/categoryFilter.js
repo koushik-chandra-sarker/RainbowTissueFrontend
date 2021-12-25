@@ -5,7 +5,7 @@ import {ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon} from
 import ProductGrid from "./productGrid";
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash'
-import {getProductList} from "../../../services/store/product/ProductAction";
+import {getProductList, getProductListPaginated} from "../../../services/store/product/ProductAction";
 import {Pagination, Skeleton} from "@mui/material";
 import {store_base_url} from "../../../constants";
 
@@ -29,17 +29,18 @@ const limit = 16
 const CategoryFilter = () => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const productCat = useSelector(state => state.category);
-    const products = useSelector(state => state.products);
+    const products = useSelector(state => state.productsPaginated);
     const [offset, setOffset] = React.useState(1);
     const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(getProductList(`${store_base_url}/product/?&active=${status}&limit=${limit}&offset=${(offset - 1) * limit}`));
+        dispatch(getProductListPaginated(`${store_base_url}/product/?&active=${status}&limit=${limit}&offset=${(offset - 1) * limit}`));
     }, [dispatch])
 
 
     const handlePaginating = (event, value) => {
         setOffset(value)
-        // getProducts(id, type, status, area, value);
+        getProducts(catParams, true, value)
+        window.scrollTo(0, 900);
     };
     // const [categoryIds, setCategoryIds] = useState([]);
     const [catParams, setCatParams] = useState([]);
@@ -70,12 +71,12 @@ const CategoryFilter = () => {
     },[catParams])
 
     const getProducts = (categoryParam, status = true, offset = 1) => {
-        dispatch(getProductList(`${store_base_url}/product/?active=${status}&limit=${limit}&offset=${(offset - 1) * limit}${categoryParam}`))
+        dispatch(getProductListPaginated(`${store_base_url}/product/?active=${status}&limit=${limit}&offset=${(offset - 1) * limit}${categoryParam}`))
     }
 
 
     function handleSort(orderKey, order) {
-        dispatch(getProductList(`${store_base_url}/product/?active=${status}&limit=${limit}&offset=${(offset - 1) * limit}${catParamsStr}&orderKey=${orderKey}&order=${order}`))
+        dispatch(getProductListPaginated(`${store_base_url}/product/?active=${status}&limit=${limit}&offset=${(offset - 1) * limit}${catParamsStr}&orderKey=${orderKey}&order=${order}`))
     }
 
     return (

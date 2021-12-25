@@ -1,0 +1,130 @@
+
+$yellow: #feb60a;
+$red: #ff0062;
+$blue: #00dbf9;
+$violet: #da00f7;
+.preloader {
+  //background-color: $bg-white-1;
+  background-color: white;
+  position: fixed;
+  display: block;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100000000;
+  //display: none;
+
+  .content_main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+
+    img {
+      max-width: 18vw;
+      @media (max-width: 600px) {
+        max-width: 60vw;
+      }
+      @media (min-width: 601px) and (max-width: 992px) {
+        max-width: 50vw;
+      }
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      div {
+        width: 2vw;
+        height: 2vw;
+        border-radius: 100%;
+        margin: 1.5vw;
+        background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+        animation: loading_bounce 1.5s 0.5s linear infinite;
+        @media (max-width: 600px) {
+          width: 8vw;
+          height: 8vw;
+          margin: 4vw;
+        }
+        @media (min-width: 601px) and (max-width: 992px) {
+          width: 5vw;
+          height: 5vw;
+          margin: 4vw;
+        }
+      }
+
+      .yellow {
+        background-color: $yellow;
+      }
+
+      .red {
+        background-color: $red;
+        animation-delay: 0.1s;
+      }
+
+      .blue {
+        background-color: $blue;
+        animation-delay: 0.2s;
+      }
+
+      .violet {
+        background-color: $violet;
+        animation-delay: 0.3s;
+      }
+
+      @keyframes loading_bounce {
+        0%, 50%, 100% {
+          transform: scale(1);
+          filter: blur(0px);
+        }
+        25% {
+          transform: scale(0.6);
+          filter: blur(3px);
+        }
+        75% {
+          filter: blur(3px);
+          transform: scale(1.4);
+        }
+      }
+    }
+
+    //@media (max-width: 992px) {
+    //  img{
+    //    max-width: 18vw;
+    //  }
+    //  div {
+    //    width: 2vw;
+    //    height: 2vw;
+    //    border-radius: 100%;
+    //    margin: 1.5vw;
+    //  }
+    //
+    //}
+    //@media (max-width: 600px) {
+    //  img{
+    //    max-width: 60vw;
+    //  }
+    //  .loading{
+    //    div {
+    //      width: 10vw;
+    //      height: 10vw;
+    //      border-radius: 100%;
+    //      margin: 5vw;
+    //    }
+    //  }
+    //
+    //}
+  }
+
+}

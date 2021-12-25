@@ -1,11 +1,17 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from "./Header.module.scss"
 import classnames from 'classnames';
 import Link from "next/link";
 import ActiveLink from "../../ActiveLink";
+import Preloader from "../../Preloader";
+import {useDispatch, useSelector} from "react-redux";
+import {isPreloaderActive} from "../../../services/preloader/PreloaderAction";
 
 const Header = () => {
     const [openMenu, setOpenMenu] = useState(false)
+    const dispatch  = useDispatch()
+
+    const preloader = useSelector(store => store.preloader)
     function handleMenu(checked) {
         setOpenMenu(checked)
         if (openMenu) {
@@ -13,12 +19,15 @@ const Header = () => {
         } else {
             document.body.style.overflow = 'hidden'
         }
-        console.log("sdfsf")
+    }
+    function handlePreloader(action){
+        // dispatch(isPreloaderActive(action))
     }
 
     return (
 
         <>
+            { preloader.active ? <Preloader/> : <></> }
             <section className={classnames(styles.navbar, "display-flex justify-content-center align-items-center z-50")}>
                 <input onChange={event => handleMenu(event.target.checked)} className={classnames(styles.menu_icon, )}
                        type="checkbox" id="menu-icon" name="menu-icon"/>
@@ -49,7 +58,7 @@ const Header = () => {
                             <li ><ActiveLink activeClassName={styles.active} href="/about"><a>How we are</a></ActiveLink></li>
                             <li><ActiveLink activeClassName={styles.active} href="/missionVision"><a>Mission&Vision</a></ActiveLink></li>
                             <li><ActiveLink activeClassName={styles.active} href="/contact"><a>Contact</a></ActiveLink></li>
-                            <li><ActiveLink activeClassName={styles.active} href="/shop"><a>E-Shop</a></ActiveLink></li>
+                            <li onClick={()=>handlePreloader(true)}><ActiveLink activeClassName={styles.active} href="/shop"><a>E-Shop</a></ActiveLink></li>
                         </ul>
                         {/*<div
                             className={classnames(styles.search_bar, "display-flex justify-content-center align-items-center")}>

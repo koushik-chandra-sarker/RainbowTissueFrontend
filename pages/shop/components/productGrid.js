@@ -52,7 +52,7 @@ const ProductGrid = (props) => {
     }
 
     return (
-        <section className="text-gray-600 body-font">
+        <section className="text-gray-600 body-font animate__animated animate__zoomIn">
             <div className="container mx-auto">
                 <div className="flex flex-wrap -m-4">
                     {

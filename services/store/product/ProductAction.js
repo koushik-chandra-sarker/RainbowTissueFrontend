@@ -4,7 +4,11 @@ import {
     PRODUCT_SUCCESS,
     PRODUCTS_ERROR,
     PRODUCTS_LOADING,
-    PRODUCTS_SUCCESS, SIMILAR_PRODUCTS_LOADING, SIMILAR_PRODUCTS_SUCCESS, SIMILAR_PRODUCTS_ERROR
+    PRODUCTS_SUCCESS,
+    SIMILAR_PRODUCTS_LOADING,
+    SIMILAR_PRODUCTS_SUCCESS,
+    SIMILAR_PRODUCTS_ERROR,
+    PAGINATED_PRODUCTS_LOADING, PAGINATED_PRODUCTS_SUCCESS, PAGINATED_PRODUCTS_ERROR
 } from "./ProductType";
 import axios from "axios";
 import {store_base_url} from "../../../constants";
@@ -22,6 +26,22 @@ export const getProductList = (url) => async dispatch => {
     } catch (e) {
         dispatch({
             type: PRODUCTS_ERROR
+        })
+    }
+}
+export const getProductListPaginated = (url) => async dispatch => {
+    try {
+        dispatch({
+            type: PAGINATED_PRODUCTS_LOADING
+        })
+        const response = await axios.get(url)
+        dispatch({
+            type: PAGINATED_PRODUCTS_SUCCESS,
+            payload: response.data
+        })
+    } catch (e) {
+        dispatch({
+            type: PAGINATED_PRODUCTS_ERROR
         })
     }
 }
