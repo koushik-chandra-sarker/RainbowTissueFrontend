@@ -24,12 +24,9 @@ const ContentSlider = () => {
         }
         dispatch(getProductList(`${store_base_url}/product/?&active=true&category=${initialCatId}`));
         dispatch(getSimilarProductList())
-        console.log("call")
     }, [])
     const products = useSelector(state => state.products);
     const similarProducts = useSelector(state => state.similarProducts);
-    console.log(products)
-
     function handleTab(catId, i) {
         setActivePanel(i)
         getProducts(catId)

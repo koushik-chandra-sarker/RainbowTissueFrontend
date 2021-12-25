@@ -3,37 +3,42 @@ import {Splide, SplideSlide} from "splide-nextjs/react-splide/dist/js";
 import InnerImageZoom from "react-inner-image-zoom";
 import classnames from 'classnames'
 import Header from "../components/header";
-import {useRouter} from "next/router";
+import Router, {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import {getProduct} from "../../../services/store/product/ProductAction";
+import {getProduct, getSimilarProductList} from "../../../services/store/product/ProductAction";
 import _ from "lodash";
 import {toast} from "react-toastify";
 import {addCart, updateCart} from "../../../services/store/cart/Action";
 import {getUserFromLocalStorage} from "../../../services/common/Action";
+import Swal from 'sweetalert2'
+import Link from "next/link";
+import styles from "../Index.module.scss";
+import {store_base_url} from "../../../constants";
 
 const Product = () => {
     const router = useRouter();
     let id = router.query.id
     const dispatch = useDispatch()
     const product = useSelector(store => store.product)
+    const similarProducts = useSelector(state => state.similarProducts);
     const [cartItem, setCartItem] = useState({
         quantity: 1,
-
     })
     useEffect(() => {
         dispatch(getProduct(id))
+        dispatch(getSimilarProductList(`${store_base_url}/product/?active=true&limit=4&random=true`))
     }, [id])
-
+    console.log(similarProducts)
     useEffect(() => {
         if (!_.isEmpty(product.data.images)) {
             setProductBigImage(product.data.images[0].image)
         }
         if (!_.isEmpty(product.data)) {
-            setCartItem({
-                ...cartItem, product: product.data.id,
-                total: product.data.discount_price !== 0 ? product.data.discount_price : product.data.price
-            })
         }
+        setCartItem({
+            ...cartItem,
+            total: product.data.discount_price !== 0 ? product.data.discount_price : product.data.price
+        })
 
     }, [product])
     const [productBigImage, setProductBigImage] = useState('')
@@ -45,16 +50,16 @@ const Product = () => {
     }
 
 
-    function handleQuantity(value){
+    function handleQuantity(value) {
 
-        let q = Number(cartItem.quantity)+(value)
-        if (q>product.data.stock){
-            toast.error(`Product Available ${cartItem.product.stock}`, {autoClose: 10000, theme:"colored"});
+        let q = Number(cartItem.quantity) + (value)
+        if (q > product.data.stock) {
+            toast.error(`Product Available ${cartItem.product.stock}`, {autoClose: 10000, theme: "colored"});
             return
         }
-        let total = product.data.discount_price !==0 ? product.data.discount_price*q: product.data.price*q
-        if (q>0){
-            setCartItem({...cartItem, quantity:q, total:total})
+        let total = product.data.discount_price !== 0 ? product.data.discount_price * q : product.data.price * q
+        if (q > 0) {
+            setCartItem({...cartItem, quantity: q, total: total})
         }
     }
 
@@ -76,9 +81,23 @@ const Product = () => {
         let cart = cartItem;
         if (user !== null) {
             cart.user = user.pk
-            console.log(cart)
+            cart.product = product.data.id
             addCart(cart).then(response => {
                 console.log(response)
+                if (response.data.message === 'success') {
+                    Swal.fire({
+                        title: "Product Added To Cart",
+                        text: 'Are you checkout this product now.',
+                        icon: 'success',
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: "Latter",
+                        showCancelButton: true
+                    }).then(value => {
+                        if (value.isConfirmed) {
+                            Router.push('/shop/cart')
+                        }
+                    })
+                }
             })
         }
     }
@@ -380,71 +399,154 @@ const Product = () => {
                                         <h2 className="text-2xl md:text-3xl font-medium text-gray-800 uppercase mb-6">related
                                             products</h2>
                                         {/* product wrapper */}
-                                        <div className="grid lg:grid-cols-4 sm:grid-cols-2 gap-6">
+                                        {/*<div className="grid lg:grid-cols-4 sm:grid-cols-2 gap-6">*/}
+                                            <div className="flex flex-wrap -m-4">
                                             {
-                                                [1, 2, 3, 4].map((v, key) => (
-                                                    <div key={key}
-                                                         className="group rounded bg-white shadow overflow-hidden">
-                                                        {/* product image */}
-                                                        <div className="relative">
-                                                            {/* product image */}
-                                                            <a className="block relative h-48 rounded overflow-hidden transition hover:scale-105">
-                                                                <img alt="ecommerce"
-                                                                     className={classnames("object-cover object-center w-full h-full block ")}
-                                                                     src='/static/image/product/2-2-2.jpg'/>
-                                                            </a>
-                                                            {/* product image: end */}
-                                                            <div
-                                                                className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
-                                                                <a href="view.html"
-                                                                   className="text-white text-lg w-9 h-9 rounded-full bg-primary hover:bg-gray-800 transition flex items-center justify-center">
-                                                                    <i className="fas fa-search"/>
-                                                                </a>
-                                                                <a href="#"
-                                                                   className="text-white text-lg w-9 h-9 rounded-full bg-primary hover:bg-gray-800 transition flex items-center justify-center">
-                                                                    <i className="far fa-heart"/>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        {/* product image end */}
-                                                        {/* product content */}
-                                                        <div className="mt-4 px-4">
-                                                            {/* product category */}
-                                                            <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">Facial
-                                                                Tissue</h3>
-                                                            {/* product title */}
-                                                            <h2 className="text-gray-900 title-font text-lg font-medium">Rainbow
-                                                                200 Sheet
-                                                                Facial Tissue Box</h2>
-                                                            {/* product price */}
-                                                            <div className="flex items-baseline my-1 space-x-2">
-                                                                <p className="text-xl text-primary font-roboto font-semibold">$45.00</p>
-                                                                <p className="text-sm text-gray-400 font-roboto line-through">$55.00</p>
-                                                            </div>
-                                                            {/* product price:end */}
-                                                            {/* product star */}
-                                                            <div className="flex items-center">
-                                                                <div className="flex gap-1 text-sm text-yellow-400">
-                                                                    <span><i className="fas fa-star"/></span>
-                                                                    <span><i className="fas fa-star"/></span>
-                                                                    <span><i className="fas fa-star"/></span>
-                                                                    <span><i className="fas fa-star"/></span>
-                                                                    <span><i className="fas fa-star"/></span>
-                                                                </div>
-                                                                <div className="text-xs text-gray-500 ml-3">(150)</div>
-                                                            </div>
-                                                            {/* product star: end */}
-                                                        </div>
-                                                        {/* product button */}
-                                                        <a href="#"
-                                                           className="block w-full py-1 mt-2 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">
-                                                            Add to Cart
-                                                        </a> {/* product button end */}
-                                                    </div>
-                                                ))
-                                            }
+                                                !_.isEmpty(similarProducts.data.results) ?
+                                                    similarProducts.data.results.map((product, key) => (
+                                                        <div key={key}
+                                                             className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1 cursor-pointer animate__animated animate__fadeIn">
+                                                            <div className={'border border-primary p-3'}>
+                                                                {/* product image */}
+                                                                <Link href={`/shop/product/${product.id}`}>
+                                                                    <a>
+                                                                        <div
+                                                                            className="block relative h-48 rounded overflow-hidden transition hover:scale-105">
+                                                                            <img alt="ecommerce"
+                                                                                 className={classnames(styles.product_img, "object-cover object-center w-full h-full block ")}
+                                                                                 src={product.thumbnail}/>
+                                                                        </div>
+                                                                        {/* product image: end */}
 
-                                        </div>
+                                                                        <div className="mt-4">
+                                                                            {/* product category */}
+                                                                            <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{
+                                                                                !_.isEmpty(product.category) ?
+                                                                                    product.category.map((cat, i) => (
+                                                                                        <>
+                                                                                            {
+                                                                                                i > 0 ? <>, {cat.name}</> : cat.name
+                                                                                            }
+                                                                                        </>
+
+                                                                                    )) : "Undefine"}</h3>
+                                                                            {/* product title */}
+                                                                            <h2 className="text-gray-900 title-font text-lg font-medium">{product.name}</h2>
+                                                                            {/* product price */}
+                                                                            <div className="flex items-baseline my-1 space-x-2">
+
+                                                                                {
+                                                                                    !(product.discount_price === 0) ?
+                                                                                        <>
+                                                                                            <p className="text-xl text-primary font-roboto font-semibold">{product.currency} {product.discount_price}</p>
+                                                                                            <p className="text-sm text-gray-400 font-roboto line-through">{product.currency} {product.price}</p>
+                                                                                        </>
+                                                                                        :
+                                                                                        <p className="text-xl text-primary font-roboto font-semibold">{product.currency} {product.price}</p>
+                                                                                }
+
+                                                                            </div>
+                                                                            {/* product price:end */}
+                                                                            {/* product star */}
+                                                                            <div className="flex items-center">
+                                                                                <div className="flex gap-1 text-sm text-yellow-400">
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                </div>
+                                                                                <div className="text-xs text-gray-500 ml-3">(150)</div>
+                                                                            </div>
+                                                                            {/* product star: end */}
+
+                                                                        </div>
+                                                                        {/* product button */}
+                                                                    </a>
+                                                                </Link>
+                                                                {/*<div onClick={() => handleAddCart(product)}*/}
+                                                                {/*     className="block w-full py-1 mt-2 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">*/}
+                                                                {/*    Add to Cart*/}
+                                                                {/*</div>*/}
+                                                                {/* product button end */}
+
+                                                            </div>
+                                                        </div>
+                                                      /*  <div key={`single-product-similar-${key}`}
+                                                             className="group rounded bg-white shadow overflow-hidden">
+                                                            {/!* product image *!/}
+                                                            <div className="relative">
+                                                                {/!* product image *!/}
+                                                                <a className="block relative h-48 rounded overflow-hidden transition hover:scale-105">
+                                                                    <img alt="ecommerce"
+                                                                         className={classnames("object-cover object-center w-full h-full block ")}
+                                                                         src={product.thumbnail}/>
+                                                                </a>
+                                                                {/!* product image: end *!/}
+                                                                <div
+                                                                    className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
+                                                                    <a href="view.html"
+                                                                       className="text-white text-lg w-9 h-9 rounded-full bg-primary hover:bg-gray-800 transition flex items-center justify-center">
+                                                                        <i className="fas fa-search"/>
+                                                                    </a>
+                                                                    <a href="#"
+                                                                       className="text-white text-lg w-9 h-9 rounded-full bg-primary hover:bg-gray-800 transition flex items-center justify-center">
+                                                                        <i className="far fa-heart"/>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            {/!* product image end *!/}
+                                                            {/!* product content *!/}
+                                                            <div className="mt-4 px-4">
+                                                                {/!* product category *!/}
+                                                                <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{
+                                                                    !_.isEmpty(product.category) ?
+                                                                        product.category.map((cat, i) => (
+                                                                            <>
+                                                                                {
+                                                                                    i > 0 ? <>, {cat.name}</> : cat.name
+                                                                                }
+                                                                            </>
+
+                                                                        )) : "Undefine"}</h3>
+                                                                {/!* product title *!/}
+                                                                <h2 className="text-gray-900 title-font text-lg font-medium">Rainbow
+                                                                    200 Sheet
+                                                                    Facial Tissue Box</h2>
+                                                                {/!* product price *!/}
+                                                                <div className="flex items-baseline my-1 space-x-2">
+                                                                    <p className="text-xl text-primary font-roboto font-semibold">$45.00</p>
+                                                                    <p className="text-sm text-gray-400 font-roboto line-through">$55.00</p>
+                                                                </div>
+                                                                {/!* product price:end *!/}
+                                                                {/!* product star *!/}
+                                                                <div className="flex items-center">
+                                                                    <div className="flex gap-1 text-sm text-yellow-400">
+                                                                        <span><i className="fas fa-star"/></span>
+                                                                        <span><i className="fas fa-star"/></span>
+                                                                        <span><i className="fas fa-star"/></span>
+                                                                        <span><i className="fas fa-star"/></span>
+                                                                        <span><i className="fas fa-star"/></span>
+                                                                    </div>
+                                                                    <div className="text-xs text-gray-500 ml-3">(150)
+                                                                    </div>
+                                                                </div>
+                                                                {/!* product star: end *!/}
+                                                            </div>
+                                                            {/!* product button *!/}
+                                                            <a href="#"
+                                                               className="block w-full py-1 mt-2 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">
+                                                                Add to Cart
+                                                            </a> {/!* product button end *!/}
+                                                        </div>*/
+
+                                                    ))
+                                                    :
+                                                    <></>
+                                            }
+                                            </div>
+
+                                        {/*</div>*/}
                                         {/* product wrapper end */}
                                     </div>
                                     {/* related products end */}
@@ -456,8 +558,9 @@ const Product = () => {
 
         </>
 
-    )
-        ;
+    );
+
 };
 
 export default Product;
+
