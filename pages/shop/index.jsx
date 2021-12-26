@@ -6,12 +6,14 @@ import CategoryFilter from "./components/categoryFilter";
 import {isLoggedIn} from "../../services/login/Action";
 import {useDispatch} from "react-redux";
 import {isPreloaderActive} from "../../services/preloader/PreloaderAction";
+import {getCartList} from "../../services/store/cart/Action";
 
 const Index = () => {
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(isLoggedIn())
         dispatch(isPreloaderActive(true))
+        dispatch(getCartList())
         setTimeout(()=>{
             dispatch(isPreloaderActive(false))
         },1000)

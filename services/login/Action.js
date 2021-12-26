@@ -35,6 +35,7 @@ export const logout = () => {
     localStorage.removeItem("user")
     localStorage.removeItem("profile")
     localStorage.removeItem("type")
+    isLoggedIn()
 }
 
 export const isLoggedIn = () => async dispatch => {
@@ -44,6 +45,11 @@ export const isLoggedIn = () => async dispatch => {
         dispatch({
             type: IS_LOGIN,
             payload: true
+        })
+    }else {
+        dispatch({
+            type: IS_LOGIN,
+            payload: false
         })
     }
     // if (loggedIn!=="true") {

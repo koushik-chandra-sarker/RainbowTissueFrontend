@@ -10,7 +10,7 @@ function classNames(...classes) {
 }
 
 const Header = () => {
-    const loggedIn = useSelector(store => store.IsLoggedIn)
+
     const dispatch = useDispatch()
     const router = useRouter()
     useEffect(() => {
@@ -19,10 +19,11 @@ const Header = () => {
 
     function logoutHandle() {
         logout();
-        router.push('/shop')
         dispatch(isLoggedIn())
+        router.push('/shop')
     }
-
+    const loggedIn = useSelector(store => store.IsLoggedIn)
+    const cartList = useSelector(store => store.cartList)
     return (
         <>
             {/* header */}
@@ -54,7 +55,7 @@ const Header = () => {
                     {/* searchbar end */}
                     {/* navicons */}
                     <div className="space-x-4 flex items-center">
-                        <a href="wishlist.html"
+                       {/* <a href="wishlist.html"
                            className="block text-center text-gray-700 hover:text-primary transition relative">
                             <span
                                 className="absolute -right-0 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">5</span>
@@ -62,12 +63,14 @@ const Header = () => {
                                 <i className="far fa-heart"/>
                             </div>
                             <div className="text-xs leading-3">Wish List</div>
-                        </a>
+                        </a>*/}
                         <Link href="/shop/cart">
                             <a
                                 className="lg:block text-center text-gray-700 hover:text-primary transition hidden relative">
                             <span
-                                className="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">3</span>
+                                className="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
+                                {cartList.data.length}
+                            </span>
                                 <div className="text-2xl">
                                     <i className="fas fa-shopping-bag"/>
                                 </div>
