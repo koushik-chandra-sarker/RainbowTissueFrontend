@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
+    "@mui/icons-material": "^5.2.5",
     "@mui/material": "^5.2.0",
     "@svgr/webpack": "^5.5.0",
     "animate.css": "^4.1.1",
