@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "react-scripts start",
     "export": "next build && next export"
   },
   "dependencies": {

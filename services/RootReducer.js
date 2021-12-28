@@ -12,6 +12,8 @@ import CartListReducer from "./store/cart/CartListReducer";
 import SimilarProductReducer from "./store/product/SimilarProductReducer";
 import ProductsReducerPaginated from "./store/product/ProductsReducerPaginated";
 import PreloaderReducer from "./preloader/PreloaderReducer";
+import profileReducer from "./profile/profileReducer";
+
 
 const RootReducer = combineReducers({
     website:WebsiteReducer,
@@ -27,6 +29,7 @@ const RootReducer = combineReducers({
     similarProducts: SimilarProductReducer,
     cartList: CartListReducer,
     preloader: PreloaderReducer,
+    profile:profileReducer,
 })
 
 export default RootReducer;
