@@ -91,15 +91,23 @@
 .splide_hide_arrow .splide__arrows {
   display: none !important; }
 
-.margin-right-85 {
-  margin-right: 85px; }
-
-.single-product .iiz {
-  height: 28rem !important; }
-.single-product .iiz__img {
-  object-fit: contain !important;
-  height: 28rem !important; }
-.single-product .iiz__zoom-img {
-  object-fit: contain !important; }
+.profile div {
+  position: relative; }
+  .profile div:hover:after {
+    content: "";
+    width: 100%;
+    height: 3px;
+    background: #00bfff;
+    position: absolute;
+    bottom: 0;
+    left: 0; }
+.profile .active:after {
+  content: "";
+  width: 100%;
+  height: 3px;
+  background: #00bfff;
+  position: absolute;
+  bottom: 0;
+  left: 0; }
 
 /*# sourceMappingURL=globals.css.map */

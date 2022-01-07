@@ -45,7 +45,6 @@ const Register = () => {
         setError(error)
         if (error.valid) {
             createProfile(formData).then(r => {
-                console.log(r)
                 if (r.status === 201) {
                     if (r.data.message === 'success') {
                         e.target.phone.value = ''
@@ -85,7 +84,7 @@ const Register = () => {
             Swal.fire({
                 title: 'Error!',
                 text: "Please Give your valid Information",
-                icon: 'error',
+                icon: 'error',phone,
                 confirmButtonText: 'Okay'
             })
         }
@@ -133,7 +132,7 @@ const Register = () => {
                                             First Name <span className="text-primary">*</span><span
                                             className={"text-xs text-red-500"}>{error.name}</span>
                                         </label>
-                                        <input type="text" id="firstName" placeholder={'First Name'} required
+                                        <input type="text" id="firstName" placeholder={'Enter Your First Name'} required
                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                     px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -143,7 +142,7 @@ const Register = () => {
                                                htmlFor="lastName">
                                             Last Name <span className="text-gray-400">(optional)</span>
                                         </label>
-                                        <input type="text" id="lastName" placeholder={'First Name'}
+                                        <input type="text" id="lastName" placeholder={'Enter Your Last Name'}
                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                     px-3 leading-8 transition-colors duration-200 ease-in-out"/>

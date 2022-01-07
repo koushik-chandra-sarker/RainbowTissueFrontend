@@ -12,6 +12,7 @@ const Index = () => {
         dispatch(isLoggedIn())
     },[dispatch])
     const loggedIn = useSelector(store => store.IsLoggedIn)
+
     useEffect(()=>{
         if (loggedIn){
             router.push("/shop/cart")

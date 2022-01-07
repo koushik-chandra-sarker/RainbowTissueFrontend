@@ -1,4 +1,8 @@
 import axios from "axios";
+import {
+    PROFILES_ERROR, PROFILES_LOADING,
+    PROFILES_SUCCESS
+} from "../profile/profileType";
 
 export async function clientInfo() {
     return await axios.get('https://geolocation-db.com/json/').then(res=>{
