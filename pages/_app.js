@@ -8,7 +8,7 @@ import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css';
 import store from "../services/Store";
 import {getWebsiteDetails} from "../services/website/WebsiteAction";
 import {useDispatch} from 'react-redux'
-import {useEffect, useState} from 'react'
+import {useEffect} from 'react'
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {getCategoryList} from "../services/store/category/CategoryAction";

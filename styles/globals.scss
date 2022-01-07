@@ -134,6 +134,22 @@
     display: none !important;
   }
 }
+.margin-right-85{
+  margin-right: 85px;
+}
+.single-product{
+  .iiz{
+    //width: 28rem !important;
+    height: 28rem !important;
+  }
+  .iiz__img{
+    object-fit: contain !important;
+    height: 28rem !important;
+  }
+  .iiz__zoom-img{
+    object-fit: contain !important;
+  }
+}
 .profile{
   div{
     position: relative;

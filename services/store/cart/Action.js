@@ -52,3 +52,18 @@ export const updateCart = (id,cart) => {
             return reason.message
         })
 }
+
+export const deleteCart = (cartId) => {
+    const token = localStorage.getItem("accessToken")
+    return axios.delete(`${store_base_url}/cart/${cartId}/`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(value => {
+            return value
+        }).catch(reason => {
+            return reason.message
+        })
+}

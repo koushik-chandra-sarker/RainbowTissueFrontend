@@ -2,9 +2,11 @@ import React, {useEffect, useState} from 'react';
 import Header from "../components/header";
 import {useDispatch, useSelector} from "react-redux";
 import {getCartList} from "../../../services/store/cart/Action";
-import Card from "./components/Card";
+import Card from "./components/Card.js";
 import _ from "lodash";
 import {getDeliveryFee} from "../../../services/store/deliveryFee/Action";
+import DataNotFound from "../../../components/DataNotFound";
+import Link from "next/link";
 
 const Index = () => {
     const dispatch = useDispatch()
@@ -33,29 +35,32 @@ const Index = () => {
                 return a + b.quantity;
             }, 0)
         }
-        getDeliveryFee(totalQuantity).then(res => {
-            let deliveryFee = 0
-            if (!_.isEmpty(res.data)){
-                deliveryFee = res.data[0].fees
-            }
-            setSummary({
-                ...summary,
-                subTotal: total,
-                deliveryFee: deliveryFee,
-                total: total + deliveryFee,
-                totalQuantity: totalQuantity
-            })
-            console.log(res )
-        }).catch(reason => {
-            console.log(reason)
+        if (!_.isEmpty(cartList.data)) {
+            getDeliveryFee(totalQuantity).then(res => {
+                let deliveryFee = 0
+                if (!_.isEmpty(res.data)) {
+                    deliveryFee = res.data[0].fees
+                }
+                setSummary({
+                    ...summary,
+                    subTotal: total,
+                    deliveryFee: deliveryFee,
+                    total: total + deliveryFee,
+                    totalQuantity: totalQuantity
+                })
+                // console.log(res )
+            }).catch(reason => {
+                console.log(reason)
 
-        })
+            })
+        }
+
     }
 
     function summaryCalculateFromChild(amount, quantity) {
-        getDeliveryFee(summary.totalQuantity+quantity).then(res => {
+        getDeliveryFee(summary.totalQuantity + quantity).then(res => {
             let deliveryFee = 0
-            if (!_.isEmpty(res.data)){
+            if (!_.isEmpty(res.data)) {
                 deliveryFee = res.data[0].fees
             }
             setSummary({
@@ -63,9 +68,12 @@ const Index = () => {
                 subTotal: summary.subTotal + amount,
                 deliveryFee: deliveryFee,
                 total: summary.subTotal + amount + deliveryFee,
-                totalQuantity: summary.totalQuantity+quantity
+                totalQuantity: summary.totalQuantity + quantity
             })
         })
+    }
+    function updateCartList(){
+        dispatch(getCartList())
     }
 
     return (
@@ -91,9 +99,22 @@ const Index = () => {
                                 :
                                 !_.isEmpty(cartList.data) ?
                                     cartList.data.map((cart, i) => (
-                                        <Card key={i} cart={cart} summaryCalc={summaryCalculateFromChild}/>
+                                        <Card key={i} cart={cart} summaryCalc={summaryCalculateFromChild} updateCartList={updateCartList}/>
                                     )) :
-                                    <></>
+                                    <>
+                                        <DataNotFound
+                                            element={<p className={'text-sm'}>Item Not found in your cart. Please add
+                                                any product to your Cart</p>}/>
+                                        <Link href={'/shop'}>
+                                            <a className={'flex justify-center items-center w-full h-full'}>
+                                                <button
+                                                    className="bg-primary border border-primary text-white px-4 py-1 font-medium rounded-md uppercase hover:bg-transparent
+                                                        hover:text-primary transition text-sm  block text-center"
+                                                > Continue Shopping
+                                                </button>
+                                            </a>
+                                        </Link>
+                                    </>
                         }
                         {/* single cart end */}
                     </div>
@@ -136,7 +157,7 @@ const Index = () => {
                         </button>
                     </div>
                     {/* searchbar end */} {/* checkout */}
-                    <a href="checkout.html" className="bg-primary border border-primary text-white px-4 py-3 font-medium rounded-md uppercase hover:bg-transparent
+                    <a href="" className="bg-primary border border-primary text-white px-4 py-3 font-medium rounded-md uppercase hover:bg-transparent
                         hover:text-primary transition text-sm w-full block text-center"
                     >
                         Process to checkout

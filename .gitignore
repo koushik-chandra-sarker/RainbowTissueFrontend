@@ -18,6 +18,8 @@ node_modules
 # misc
 .DS_Store
 *.pem
+*.zip
+**.zip
 
 # debug
 npm-debug.log*

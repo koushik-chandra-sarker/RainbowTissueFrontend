@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {Splide, SplideSlide} from "splide-nextjs/react-splide/dist/js";
 import InnerImageZoom from "react-inner-image-zoom";
 import classnames from 'classnames'
@@ -28,7 +28,6 @@ const Product = () => {
         dispatch(getProduct(id))
         dispatch(getSimilarProductList(`${store_base_url}/product/?active=true&limit=4&random=true`))
     }, [id])
-    console.log(similarProducts)
     useEffect(() => {
         if (!_.isEmpty(product.data.images)) {
             setProductBigImage(product.data.images[0].image)
@@ -115,12 +114,12 @@ const Product = () => {
                             !_.isEmpty(product.data) ?
                                 <>
                                     {/* product view */}
-                                    <div className="container pt-6 mt-4 md:pb-6 lg:grid lg:grid-cols-2 md:gap-10">
+                                    <div className="container pt-6 mt-4 md:pb-6 lg:grid lg:grid-cols-2 md:gap-10 single-product">
                                         {/* product image */}
                                         <div>
                                             <div
                                                 className={'w-full max-h-100  border border-primary flex  items-center justify-center overflow-hidden'}>
-                                                <InnerImageZoom src={productBigImage} zoomSrc={productBigImage}
+                                                <InnerImageZoom  src={productBigImage} zoomSrc={productBigImage}
                                                                 zoomPreload={true}/>
 
                                             </div>
@@ -153,11 +152,11 @@ const Product = () => {
                                                     {
                                                         !_.isEmpty(product.data.images) ?
                                                             product.data.images.map((slide, key) => (
-                                                                <SplideSlide key={slide.id}
+                                                                <SplideSlide key={`product-slider-${slide.id}`}
                                                                              className={activeThumbnail === key ? "active" : ''}>
                                                                     <div
                                                                         onClick={(e) => handleSliderClick(key, slide.image)}>
-                                                                        <img src={slide.small_image} alt={slide.image}/>
+                                                                        <img className={'object-contain'} src={slide.small_image} alt={slide.image}/>
                                                                     </div>
                                                                 </SplideSlide>
                                                             )) :
@@ -201,11 +200,11 @@ const Product = () => {
                                                         {
                                                             !_.isEmpty(product.data.category) ?
                                                                 product.data.category.map((cat, i) => (
-                                                                    <>
+                                                                    <Fragment key={`product-view-cat-${i}`}>
                                                                         {
                                                                             i > 0 ? <>, {cat.name}</> : cat.name
                                                                         }
-                                                                    </>
+                                                                    </Fragment>
 
                                                                 )) : "Undefine"
                                                         }
@@ -404,7 +403,7 @@ const Product = () => {
                                             {
                                                 !_.isEmpty(similarProducts.data.results) ?
                                                     similarProducts.data.results.map((product, key) => (
-                                                        <div key={key}
+                                                        <div key={`product-view-similar-product-${key}`}
                                                              className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1 cursor-pointer animate__animated animate__fadeIn">
                                                             <div className={'border border-primary p-3'}>
                                                                 {/* product image */}
@@ -413,7 +412,7 @@ const Product = () => {
                                                                         <div
                                                                             className="block relative h-48 rounded overflow-hidden transition hover:scale-105">
                                                                             <img alt="ecommerce"
-                                                                                 className={classnames(styles.product_img, "object-cover object-center w-full h-full block ")}
+                                                                                 className={classnames(styles.product_img, "object-contain object-center w-full h-full block ")}
                                                                                  src={product.thumbnail}/>
                                                                         </div>
                                                                         {/* product image: end */}
@@ -423,11 +422,11 @@ const Product = () => {
                                                                             <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{
                                                                                 !_.isEmpty(product.category) ?
                                                                                     product.category.map((cat, i) => (
-                                                                                        <>
+                                                                                        <Fragment key={`product-view-similar-product-cat-${key}`}>
                                                                                             {
                                                                                                 i > 0 ? <>, {cat.name}</> : cat.name
                                                                                             }
-                                                                                        </>
+                                                                                        </Fragment>
 
                                                                                     )) : "Undefine"}</h3>
                                                                             {/* product title */}
@@ -472,73 +471,6 @@ const Product = () => {
 
                                                             </div>
                                                         </div>
-                                                      /*  <div key={`single-product-similar-${key}`}
-                                                             className="group rounded bg-white shadow overflow-hidden">
-                                                            {/!* product image *!/}
-                                                            <div className="relative">
-                                                                {/!* product image *!/}
-                                                                <a className="block relative h-48 rounded overflow-hidden transition hover:scale-105">
-                                                                    <img alt="ecommerce"
-                                                                         className={classnames("object-cover object-center w-full h-full block ")}
-                                                                         src={product.thumbnail}/>
-                                                                </a>
-                                                                {/!* product image: end *!/}
-                                                                <div
-                                                                    className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition">
-                                                                    <a href="view.html"
-                                                                       className="text-white text-lg w-9 h-9 rounded-full bg-primary hover:bg-gray-800 transition flex items-center justify-center">
-                                                                        <i className="fas fa-search"/>
-                                                                    </a>
-                                                                    <a href="#"
-                                                                       className="text-white text-lg w-9 h-9 rounded-full bg-primary hover:bg-gray-800 transition flex items-center justify-center">
-                                                                        <i className="far fa-heart"/>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                            {/!* product image end *!/}
-                                                            {/!* product content *!/}
-                                                            <div className="mt-4 px-4">
-                                                                {/!* product category *!/}
-                                                                <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{
-                                                                    !_.isEmpty(product.category) ?
-                                                                        product.category.map((cat, i) => (
-                                                                            <>
-                                                                                {
-                                                                                    i > 0 ? <>, {cat.name}</> : cat.name
-                                                                                }
-                                                                            </>
-
-                                                                        )) : "Undefine"}</h3>
-                                                                {/!* product title *!/}
-                                                                <h2 className="text-gray-900 title-font text-lg font-medium">Rainbow
-                                                                    200 Sheet
-                                                                    Facial Tissue Box</h2>
-                                                                {/!* product price *!/}
-                                                                <div className="flex items-baseline my-1 space-x-2">
-                                                                    <p className="text-xl text-primary font-roboto font-semibold">$45.00</p>
-                                                                    <p className="text-sm text-gray-400 font-roboto line-through">$55.00</p>
-                                                                </div>
-                                                                {/!* product price:end *!/}
-                                                                {/!* product star *!/}
-                                                                <div className="flex items-center">
-                                                                    <div className="flex gap-1 text-sm text-yellow-400">
-                                                                        <span><i className="fas fa-star"/></span>
-                                                                        <span><i className="fas fa-star"/></span>
-                                                                        <span><i className="fas fa-star"/></span>
-                                                                        <span><i className="fas fa-star"/></span>
-                                                                        <span><i className="fas fa-star"/></span>
-                                                                    </div>
-                                                                    <div className="text-xs text-gray-500 ml-3">(150)
-                                                                    </div>
-                                                                </div>
-                                                                {/!* product star: end *!/}
-                                                            </div>
-                                                            {/!* product button *!/}
-                                                            <a href="#"
-                                                               className="block w-full py-1 mt-2 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">
-                                                                Add to Cart
-                                                            </a> {/!* product button end *!/}
-                                                        </div>*/
 
                                                     ))
                                                     :

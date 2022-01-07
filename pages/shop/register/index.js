@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import Link from 'next/link'
 import classnames from 'classnames'
-import _ from "lodash";
-import {toast} from "react-toastify";
 import {createProfile} from "../../../services/profile/profileAction";
 import Swal from 'sweetalert2'
 import Router from 'next/router'

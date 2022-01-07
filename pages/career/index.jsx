@@ -37,7 +37,6 @@ const Career = () => {
         dispatch(getJobList());
 
     },[dispatch])
-    console.log(job)
     return (
         <>
             {
