@@ -78,4 +78,14 @@ const Card = ({cart, summaryCalc}) => {
     );
 };
 
+Card.getInitialProps = async ({query}) =>{
+    const {cart, summaryCalc} = query
+    return {
+        props: {
+            cart: cart,
+            summaryCalc: summaryCalc
+        },
+    }
+}
+
 export default Card;

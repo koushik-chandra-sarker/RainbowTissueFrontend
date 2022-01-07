@@ -2,12 +2,12 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {Dialog, Disclosure, Menu, Transition} from '@headlessui/react'
 import {XIcon} from '@heroicons/react/outline'
 import {ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon} from '@heroicons/react/solid'
-import ProductGrid from "./productGrid";
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash'
 import {getProductList, getProductListPaginated} from "../../../services/store/product/ProductAction";
 import {Pagination, Skeleton} from "@mui/material";
 import {store_base_url} from "../../../constants";
+import ProductGrid from "./productGrid";
 
 const sortOptions = [
     {name: 'Price: Low to High',orderKey:'price', order:'asc'},
@@ -126,7 +126,7 @@ const CategoryFilter = () => {
                                         <h3 className="sr-only">Categories</h3>
                                         <ul role="list" className="font-medium text-gray-900 px-2 py-3">
                                             {subCategories.map((category) => (
-                                                <li key={category.name}>
+                                                <li key={`product-category-${category.name}`}>
                                                     <a href={category.href} className="block px-2 py-3">
                                                         {category.name}
                                                     </a>
@@ -159,7 +159,7 @@ const CategoryFilter = () => {
                                                             <Disclosure.Panel className="pt-6">
                                                                 <div className="space-y-6">
                                                                     {productCat.data.map((option, optionIdx) => (
-                                                                        <div key={option.name}
+                                                                        <div key={`pro-op=${option.name}`}
                                                                              className="flex items-center">
                                                                             <input
                                                                                 id={`filter-mobile-${option.name}-${optionIdx}`}
@@ -223,7 +223,7 @@ const CategoryFilter = () => {
                                             className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                             <div className="py-1">
                                                 {sortOptions.map((option) => (
-                                                    <Menu.Item key={option.id}>
+                                                    <Menu.Item key={`pro-op-1-${option.id}`}>
                                                         {({active}) => (
                                                             <div
                                                                 className={classNames(
@@ -267,7 +267,7 @@ const CategoryFilter = () => {
                                     <ul role="list"
                                         className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
                                         {subCategories.map((category) => (
-                                            <li key={category.name}>
+                                            <li key={`pro-cat-${category.name}`}>
                                                 <a href={category.href}>{category.name}</a>
                                             </li>
                                         ))}
@@ -298,7 +298,7 @@ const CategoryFilter = () => {
                                                         <Disclosure.Panel className="pt-6">
                                                             <div className="space-y-6">
                                                                 {productCat.data.map((option, optionIdx) => (
-                                                                    <div key={option.name}
+                                                                    <div key={`pro-op-2-${option.name}`}
                                                                          className="flex items-center">
                                                                         <input
                                                                             id={`filter-mobile-${option.name}-${optionIdx}`}
@@ -336,7 +336,7 @@ const CategoryFilter = () => {
                                                     <div className="flex flex-wrap -m-4">
                                                         {
                                                             [1, 2, 3, 4, 1, 1, 1, 1, 1, 1, 1, 1].map((item, index) => (
-                                                                <div key={index}
+                                                                <div key={`pro-skel-${index}`}
                                                                      className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1 cursor-pointer">
                                                                     <Skeleton variant="rect" height={400}/>
                                                                 </div>

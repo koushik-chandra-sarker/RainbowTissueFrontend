@@ -111,7 +111,7 @@ const Index = () => {
                         </div>
                     </form>
                     <p className="mt-4 text-gray-600 text-center">
-                        Don't have an account? <Link href={'/shop/register'}><a className="text-primary">Register Now
+                        Don&#39;t have an account? <Link href={'/shop/register'}><a className="text-primary">Register Now
                     </a></Link>
                 </p>
                 </div>

@@ -1,5 +1,6 @@
 module.exports = {
   reactStrictMode: true,
+  useFileSystemPublicRoutes: false,
 }
 module.exports = {
   distDir: 'bbb',
@@ -15,15 +16,3 @@ module.exports = {
     return config;
   }
 };
-// next.config.js
-/*
-module.exports = {
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: 'http://127.0.0.1:8000/rainbow-site/api:path*',
-      },
-    ]
-  },
-};*/

@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {getCartList, updateCart} from "../../../../services/store/cart/Action";
-import {getDeliveryFee} from "../../../../services/store/deliveryFee/Action";
-import {useDispatch} from "react-redux";
+import {deleteCart, updateCart} from "../../../../services/store/cart/Action";
 import {toast} from "react-toastify";
+import _ from "lodash";
 
-const Card = ({cart, summaryCalc}) => {
+
+
+
+const Card = ({cart, summaryCalc, updateCartList}) => {
     const [cartItem, setCartItem] = useState(cart)
-    const dispatch = useDispatch()
     function handleQuantity(value){
 
         let q = Number(cartItem.quantity)+(value)
@@ -49,7 +50,18 @@ const Card = ({cart, summaryCalc}) => {
     },[cartItem])
 
 
+    function handleDelete(id) {
+        deleteCart(id).then(function (response){
+           if (response.status === 204){
+               updateCartList()
+               toast.success("Delete Successful", {theme:'colored'})
+           }
+           else {
+               toast.error("Something went wrong! Try Again.", {theme:'colored'})
 
+           }
+        })
+    }
 
     return (
         <div
@@ -98,10 +110,20 @@ const Card = ({cart, summaryCalc}) => {
                 <p className="text-primary text-lg font-semibold">{cartItem.total}</p>
             </div>
             <div className="text-gray-600 hover:text-primary cursor-pointer">
-                <i className="fas fa-trash"/>
+                <i onClick={()=>handleDelete(cartItem.id)} className="fas fa-trash"/>
             </div>
         </div>
     );
 };
 
+Card.getInitialProps = async ({query}) =>{
+    const {cart, summaryCalc, updateCartList} = query
+    return {
+        props: {
+            cart: cart,
+            summaryCalc: summaryCalc,
+            updateCartList: updateCartList
+        },
+    }
+}
 export default Card;

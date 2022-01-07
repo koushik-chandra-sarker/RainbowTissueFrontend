@@ -44,7 +44,7 @@ const steps = [
     },
 ];
 
-const Index = () => {
+const CheckOut = () => {
     const [summary, setSummary] = useState({
         subTotal: 0,
         deliveryFee: 0,
@@ -59,7 +59,6 @@ const Index = () => {
 
     const dispatch = useDispatch()
     const loggedIn = useSelector(store => store.IsLoggedIn)
-    // const loggedIn = false
     const cartList = useSelector(store => store.cartList)
     const user = getUserFromLocalStorage();
     const profile = getUserProfileFromLocalStorage();
@@ -104,7 +103,7 @@ const Index = () => {
                     setError({...error, status: true, message: r.message})
                 }
             }
-        )*/
+        ) */
     }
 
     function handleCODChange(event) {
@@ -188,8 +187,8 @@ const Index = () => {
                                         </div>
                                     </form>
                                     <p className="mt-4 text-gray-600 text-center">
-                                        {/* eslint-disable-next-line react/no-unescaped-entities */}
-                                        Don't have an account? <Link href={'/shop/register'}><a
+
+                                        Don&apos;t have an account? <Link href={'/shop/register'}><a
                                         className="text-primary">Register Now
                                     </a></Link>
                                     </p>
@@ -276,7 +275,8 @@ const Index = () => {
                                                     value={deliveryOption}
                                                     onChange={handleCODChange}
                                                 >
-                                                    <FormControlLabel  value="1" control={<Radio />} label="Cash on Delivery (COD)" />
+                                                    <FormControlLabel value="1" control={<Radio/>}
+                                                                      label="Cash on Delivery (COD)"/>
                                                 </RadioGroup>
                                             </div>
                                             <div className={classnames(selectedPaymentIndex === 1 ? "" : "hidden")}>
@@ -286,7 +286,7 @@ const Index = () => {
                                                     value={deliveryOption}
                                                     onChange={handleCODChange}
                                                 >
-                                                    <FormControlLabel value="2" control={<Radio />} label="Bkash" />
+                                                    <FormControlLabel value="2" control={<Radio/>} label="Bkash"/>
                                                 </RadioGroup>
                                             </div>
                                         </div>
@@ -340,5 +340,4 @@ const Index = () => {
 
     );
 };
-
-export default Index;
+export default CheckOut;

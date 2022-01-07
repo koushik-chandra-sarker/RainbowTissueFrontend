@@ -94,4 +94,12 @@
 .margin-right-85 {
   margin-right: 85px; }
 
+.single-product .iiz {
+  height: 28rem !important; }
+.single-product .iiz__img {
+  object-fit: contain !important;
+  height: 28rem !important; }
+.single-product .iiz__zoom-img {
+  object-fit: contain !important; }
+
 /*# sourceMappingURL=globals.css.map */

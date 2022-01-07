@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import styles from '../Index.module.scss'
 import classnames from 'classnames'
 import _ from "lodash"
 import Link from 'next/link'
 import {useSelector} from "react-redux";
 import {addCart} from "../../../services/store/cart/Action";
+import {toast} from "react-toastify";
 
 
-const ProductGrid = (props) => {
+const ProductGrid = ({products}) => {
     const loggedIn = useSelector(store => store.IsLoggedIn)
     const user = JSON.parse(localStorage.getItem('user'))
 
@@ -19,10 +20,16 @@ const ProductGrid = (props) => {
                 product: product.id,
                 user: user.pk,
                 quantity: 1,
-                total: product.discount_price !==0 ? product.discount_price: product.price
+                total: product.discount_price !== 0 ? product.discount_price : product.price
             }
             addCart(cart).then(response => {
-                console.log(response)
+                if (response.status === 200) {
+                    toast.success("Product added to Cart", {theme:"colored"});
+                }else {
+                    toast.error(response, {theme:"colored"});
+                }
+            }).catch(function (error){
+                toast.error(error, {theme:"colored"});
             })
         }
         // if user is not Logged In save cart in localstorage
@@ -56,10 +63,11 @@ const ProductGrid = (props) => {
             <div className="container mx-auto">
                 <div className="flex flex-wrap -m-4">
                     {
-                        !_.isEmpty(props.products) ?
-                            props.products.map((product, i) => (
 
-                                <div key={i}
+                        !_.isEmpty(products) ?
+                            products.map((product, i) => (
+
+                                <div key={`product-single-${i}`}
                                      className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1 cursor-pointer animate__animated animate__fadeIn">
                                     <div className={'border border-primary p-3'}>
                                         {/* product image */}
@@ -68,7 +76,7 @@ const ProductGrid = (props) => {
                                                 <div
                                                     className="block relative h-48 rounded overflow-hidden transition hover:scale-105">
                                                     <img alt="ecommerce"
-                                                         className={classnames(styles.product_img, "object-cover object-center w-full h-full block ")}
+                                                         className={classnames(styles.product_img, "object-contain object-center w-full h-full block ")}
                                                          src={product.thumbnail}/>
                                                 </div>
                                                 {/* product image: end */}
@@ -78,11 +86,11 @@ const ProductGrid = (props) => {
                                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{
                                                         !_.isEmpty(product.category) ?
                                                             product.category.map((cat, i) => (
-                                                                <>
+                                                                <Fragment key={`singe-pro-${i}`}>
                                                                     {
                                                                         i > 0 ? <>, {cat.name}</> : cat.name
                                                                     }
-                                                                </>
+                                                                </Fragment>
 
                                                             )) : "Undefine"}</h3>
                                                     {/* product title */}
@@ -136,4 +144,12 @@ const ProductGrid = (props) => {
     );
 };
 
+ProductGrid.getInitialProps = async ({query}) =>{
+    const {products} = query
+    return {
+        props: {
+            products: products
+        }
+    }
+}
 export default ProductGrid;
