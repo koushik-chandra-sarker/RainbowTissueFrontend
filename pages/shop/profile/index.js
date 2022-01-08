@@ -49,15 +49,12 @@ const Index = () => {
     const profile = useSelector(store => store.profile);
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const [user, setUser] = useState({})
-    const [profileInfo, setProfileInfo] = useState({})
     const [profileId, setProfileId] = useState(-1)
-    const [error, setError] = useState({})
     useEffect(() => {
         if (profileId !== -1) {
             dispatch(getProfile(profileId))
         }
     }, [profileId])
-    console.log(profile)
     useEffect(() => {
         dispatch(isLoggedIn())
     }, [])
@@ -69,9 +66,6 @@ const Index = () => {
         } else {
             const user = getUserFromLocalStorage()
             const profile = getUserProfileFromLocalStorage()
-            // console.log(profile.pk)
-            // console.log(profileId)
-            // console.log(user)
             if (user !== null) {
                 setUser(user)
             }

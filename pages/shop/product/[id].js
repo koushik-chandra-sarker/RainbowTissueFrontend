@@ -14,6 +14,10 @@ import Swal from 'sweetalert2'
 import Link from "next/link";
 import styles from "../Index.module.scss";
 import {store_base_url} from "../../../constants";
+import {Rating} from "@mui/material";
+import ReviewCard from "./reviewCard";
+import {getRatingsObject, getReview} from "../../../services/store/ratings/RatingsAction";
+
 
 const Product = () => {
     const router = useRouter();
@@ -21,12 +25,23 @@ const Product = () => {
     const dispatch = useDispatch()
     const product = useSelector(store => store.product)
     const similarProducts = useSelector(state => state.similarProducts);
+    const reviews = useSelector(store => store.ratings);
+    const [rating, setRating] = useState(0)
+    useEffect(() => {
+        if (!_.isEmpty(reviews.data)) {
+            getRatingsObject(reviews.data)
+        }
+    }, [reviews])
+    console.log(reviews.data)
     const [cartItem, setCartItem] = useState({
         quantity: 1,
     })
     useEffect(() => {
-        dispatch(getProduct(id))
-        dispatch(getSimilarProductList(`${store_base_url}/product/?active=true&limit=4&random=true`))
+        if (id !== undefined) {
+            dispatch(getProduct(id))
+            dispatch(getSimilarProductList(`${store_base_url}/product/?active=true&limit=4&random=true`))
+            dispatch(getReview(id))
+        }
     }, [id])
     useEffect(() => {
         if (!_.isEmpty(product.data.images)) {
@@ -114,12 +129,13 @@ const Product = () => {
                             !_.isEmpty(product.data) ?
                                 <>
                                     {/* product view */}
-                                    <div className="container pt-6 mt-4 md:pb-6 lg:grid lg:grid-cols-2 md:gap-10 single-product">
+                                    <div
+                                        className="container pt-6 mt-4 md:pb-6 lg:grid lg:grid-cols-2 md:gap-10 single-product">
                                         {/* product image */}
                                         <div>
                                             <div
                                                 className={'w-full max-h-100  border border-primary flex  items-center justify-center overflow-hidden'}>
-                                                <InnerImageZoom  src={productBigImage} zoomSrc={productBigImage}
+                                                <InnerImageZoom src={productBigImage} zoomSrc={productBigImage}
                                                                 zoomPreload={true}/>
 
                                             </div>
@@ -156,7 +172,8 @@ const Product = () => {
                                                                              className={activeThumbnail === key ? "active" : ''}>
                                                                     <div
                                                                         onClick={(e) => handleSliderClick(key, slide.image)}>
-                                                                        <img className={'object-contain'} src={slide.small_image} alt={slide.image}/>
+                                                                        <img className={'object-contain'}
+                                                                             src={slide.small_image} alt={slide.image}/>
                                                                     </div>
                                                                 </SplideSlide>
                                                             )) :
@@ -357,6 +374,7 @@ const Product = () => {
                                         {/* product content end */}
                                     </div>
                                     {/* product view end */}
+
                                     {/* product details and review */}
                                     <div className="container pb-16">
                                         {/* detail buttons */}
@@ -393,13 +411,78 @@ const Product = () => {
                                         {/* details content end */}
                                     </div>
                                     {/* product details and review end */}
+                                    <div className="container pb-16">
+                                        {/* detail buttons */}
+                                        <h3 className="text-xl border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium">
+                                            Ratings & Reviews
+                                        </h3>
+                                        <div className={'flex pt-10 pb-4 border-b'}>
+                                            <div className={'sm:w-1/6 pt-4'}>
+                                                <h1 className={'text-4xl'}>4.6<span
+                                                    className={'text-2xl text-gray-400'}>/5</span></h1>
+                                                <Rating
+                                                    name="simple-controlled"
+                                                    size="large"
+                                                    value={4.6}
+                                                    precision={0.5}
+                                                    // onChange={(event, newValue) => {
+                                                    //     setValue(newValue);
+                                                    // }}
+                                                />
+
+                                                <p className={'text-xs text-gray-400'}>27 Ratings</p>
+                                            </div>
+                                            <div className={'sm:w-3/6 pl-12'}>
+                                                {[1, 1, 1, 1, 1].map((v, i) => (
+                                                    <div key={`ratting-${i}`} className={'flex'}>
+                                                        <Rating
+                                                            name="simple-controlled"
+                                                            value={3.4}
+                                                            precision={0.5}
+                                                            // onChange={(event, newValue) => {
+                                                            //     setValue(newValue);
+                                                            // }}
+                                                        />
+                                                        <div className={'sm:w-3/4 flex pl-0  ml-1 align-items-center'}>
+                                                            <input type="range" value="0"/><h4
+                                                            className={'text-xs ml-2'}>2</h4>
+                                                            <div id="h4-container flex">
+                                                                <div id="h4-subcontainer"></div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                ))
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <div className={'border-gray-400 py-4'}>
+                                            <h2 className={'text-sm border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium'}>Product
+                                                Reviews</h2>
+                                        </div>
+                                        {
+                                            !_.isEmpty(reviews.data) ?
+                                                reviews.data.map((v,key)=>(
+                                                    <ReviewCard
+                                                        key={`rating-${key}`}
+                                                        review={v.comment}
+                                                        username={v.user.username}
+                                                        rate={v.rating}/>
+                                                ))
+                                                :
+                                                <></>
+                                        }
+                                    </div>
+
                                     {/* related products */}
                                     <div className="container pb-16">
                                         <h2 className="text-2xl md:text-3xl font-medium text-gray-800 uppercase mb-6">related
                                             products</h2>
                                         {/* product wrapper */}
                                         {/*<div className="grid lg:grid-cols-4 sm:grid-cols-2 gap-6">*/}
-                                            <div className="flex flex-wrap -m-4">
+                                        <div className="flex flex-wrap -m-4">
                                             {
                                                 !_.isEmpty(similarProducts.data.results) ?
                                                     similarProducts.data.results.map((product, key) => (
@@ -422,7 +505,8 @@ const Product = () => {
                                                                             <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{
                                                                                 !_.isEmpty(product.category) ?
                                                                                     product.category.map((cat, i) => (
-                                                                                        <Fragment key={`product-view-similar-product-cat-${key}`}>
+                                                                                        <Fragment
+                                                                                            key={`product-view-similar-product-cat-${key}`}>
                                                                                             {
                                                                                                 i > 0 ? <>, {cat.name}</> : cat.name
                                                                                             }
@@ -432,7 +516,8 @@ const Product = () => {
                                                                             {/* product title */}
                                                                             <h2 className="text-gray-900 title-font text-lg font-medium">{product.name}</h2>
                                                                             {/* product price */}
-                                                                            <div className="flex items-baseline my-1 space-x-2">
+                                                                            <div
+                                                                                className="flex items-baseline my-1 space-x-2">
 
                                                                                 {
                                                                                     !(product.discount_price === 0) ?
@@ -448,14 +533,22 @@ const Product = () => {
                                                                             {/* product price:end */}
                                                                             {/* product star */}
                                                                             <div className="flex items-center">
-                                                                                <div className="flex gap-1 text-sm text-yellow-400">
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                <div
+                                                                                    className="flex gap-1 text-sm text-yellow-400">
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
                                                                                 </div>
-                                                                                <div className="text-xs text-gray-500 ml-3">(150)</div>
+                                                                                <div
+                                                                                    className="text-xs text-gray-500 ml-3">(150)
+                                                                                </div>
                                                                             </div>
                                                                             {/* product star: end */}
 
@@ -476,7 +569,7 @@ const Product = () => {
                                                     :
                                                     <></>
                                             }
-                                            </div>
+                                        </div>
 
                                         {/*</div>*/}
                                         {/* product wrapper end */}

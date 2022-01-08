@@ -32,7 +32,6 @@ const Card = ({cart, summaryCalc}) => {
 
 
 
-
     return (
         <div
             className="flex items-center md:justify-between gap-4 md:gap-6 p-4 border border-gray-200 rounded flex-wrap md:flex-nowrap">
