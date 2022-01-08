@@ -393,6 +393,7 @@ const Product = () => {
                                         {/* details content end */}
                                     </div>
                                     {/* product details and review end */}
+
                                     {/* related products */}
                                     <div className="container pb-16">
                                         <h2 className="text-2xl md:text-3xl font-medium text-gray-800 uppercase mb-6">related

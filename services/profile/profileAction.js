@@ -5,10 +5,12 @@ import {
     PROFILE_LOADING,
     PROFILE_SUCCESS,
 } from "./profileType";
+import _ from "lodash";
+import {toast} from "react-toastify";
 
 
 export const createProfile = (profile) => {
-    return axios.post(`${base_static_url}/account/api/profile/`, profile,
+    return axios.post(`${base_static_url}/account/api/create-profile/`, profile,
         {
             headers: {
                 "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
@@ -21,7 +23,7 @@ export const createProfile = (profile) => {
 }
 export const updateProfile = (profile, id) => {
     const token = localStorage.getItem("accessToken")
-    return axios.put(`${base_static_url}/account/api/profile/${id}/`, profile,
+    return axios.put(`${base_static_url}/account/api/update-profile-by-own/${id}/`, profile,
         {
             headers: {
                 "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
@@ -34,25 +36,96 @@ export const updateProfile = (profile, id) => {
     })
 }
 
+export const updateProfilePicture = (data, profileId) => {
+    const token = localStorage.getItem("accessToken")
+    console.log(data)
+    return axios.put(`${base_static_url}/account/api/update-profile-pic-by-own/${profileId}/`, data,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(value => {
+        return value
+    }).catch(reason => {
+        return reason
+    })
+}
 
-export const getProfile = (id)=> async dispatch =>{
+export const getProfile = (id) => async dispatch => {
     const token = localStorage.getItem("accessToken")
     try {
         dispatch({
-            type:PROFILE_LOADING
+            type: PROFILE_LOADING
         })
-        const response =  await axios.get(`${base_static_url}/account/api/profile/${id}/`,{
+        const response = await axios.get(`${base_static_url}/account/api/profile/${id}/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
         dispatch({
-            type:PROFILE_SUCCESS,
-            payload:response.data
+            type: PROFILE_SUCCESS,
+            payload: response.data
         })
-    }catch (e) {
+    } catch (e) {
         dispatch({
-            type:PROFILE_ERROR
+            type: PROFILE_ERROR
         })
     }
+}
+
+export const extractDefaultAddress = (addressList) => {
+    if (!_.isEmpty(addressList)) {
+        const defaultAddress = addressList.find((address) => address.default)
+        const otherAddressList = addressList.filter((address) => !address.default)
+        return [defaultAddress !== undefined ? defaultAddress: {}, otherAddressList !== undefined?otherAddressList:[]]
+    }
+    return [{},[]]
+}
+
+export const getDefaultAddressId = (addressList) => {
+    if (!_.isEmpty(addressList)) {
+        const address = addressList.find((address) => address.default)
+        return address !== undefined ? address.id : ""
+    }
+    return ''
+
+}
+export const getDefaultAddressCity = (addressList) => {
+    if (!_.isEmpty(addressList)) {
+        const address = addressList.find((address) => address.default)
+        return address !== undefined ? address.city : ""
+    }
+    return ''
+
+}
+export const getDefaultAddressCountry = (addressList) => {
+    if (!_.isEmpty(addressList)) {
+        const address = addressList.find((address) => address.default)
+        return address !== undefined ? address.country : ""
+    }
+    return ''
+
+}
+export const getDefaultAddressZipCode = (addressList) => {
+    if (!_.isEmpty(addressList)) {
+        const address = addressList.find((address) => address.default)
+        return address !== undefined ? address.zipCode : ""
+    }
+    return ''
+}
+export const getDefaultAddressAddress = (addressList) => {
+    if (!_.isEmpty(addressList)) {
+        const address = addressList.find((address) => address.default)
+        return address !== undefined ? address.address : ""
+    }
+    return ''
+
+}
+export const getDefaultAddressPhone = (addressList) => {
+    if (!_.isEmpty(addressList)) {
+        const address = addressList.find((address) => address.default)
+        return address !== undefined ? address.address : ""
+    }
+
 }
