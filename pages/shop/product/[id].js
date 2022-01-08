@@ -129,13 +129,12 @@ const Product = () => {
                             !_.isEmpty(product.data) ?
                                 <>
                                     {/* product view */}
-                                    <div
-                                        className="container pt-6 mt-4 md:pb-6 lg:grid lg:grid-cols-2 md:gap-10 single-product">
+                                    <div className="container pt-6 mt-4 md:pb-6 lg:grid lg:grid-cols-2 md:gap-10 single-product">
                                         {/* product image */}
                                         <div>
                                             <div
                                                 className={'w-full max-h-100  border border-primary flex  items-center justify-center overflow-hidden'}>
-                                                <InnerImageZoom src={productBigImage} zoomSrc={productBigImage}
+                                                <InnerImageZoom  src={productBigImage} zoomSrc={productBigImage}
                                                                 zoomPreload={true}/>
 
                                             </div>
@@ -374,7 +373,6 @@ const Product = () => {
                                         {/* product content end */}
                                     </div>
                                     {/* product view end */}
-
                                     {/* product details and review */}
                                     <div className="container pb-16">
                                         {/* detail buttons */}
@@ -476,6 +474,7 @@ const Product = () => {
                                         }
                                     </div>
 
+
                                     {/* related products */}
                                     <div className="container pb-16">
                                         <h2 className="text-2xl md:text-3xl font-medium text-gray-800 uppercase mb-6">related
@@ -516,8 +515,7 @@ const Product = () => {
                                                                             {/* product title */}
                                                                             <h2 className="text-gray-900 title-font text-lg font-medium">{product.name}</h2>
                                                                             {/* product price */}
-                                                                            <div
-                                                                                className="flex items-baseline my-1 space-x-2">
+                                                                            <div className="flex items-baseline my-1 space-x-2">
 
                                                                                 {
                                                                                     !(product.discount_price === 0) ?
@@ -533,22 +531,14 @@ const Product = () => {
                                                                             {/* product price:end */}
                                                                             {/* product star */}
                                                                             <div className="flex items-center">
-                                                                                <div
-                                                                                    className="flex gap-1 text-sm text-yellow-400">
-                                                                                    <span><i
-                                                                                        className="fas fa-star"/></span>
-                                                                                    <span><i
-                                                                                        className="fas fa-star"/></span>
-                                                                                    <span><i
-                                                                                        className="fas fa-star"/></span>
-                                                                                    <span><i
-                                                                                        className="fas fa-star"/></span>
-                                                                                    <span><i
-                                                                                        className="fas fa-star"/></span>
+                                                                                <div className="flex gap-1 text-sm text-yellow-400">
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                    <span><i className="fas fa-star"/></span>
                                                                                 </div>
-                                                                                <div
-                                                                                    className="text-xs text-gray-500 ml-3">(150)
-                                                                                </div>
+                                                                                <div className="text-xs text-gray-500 ml-3">(150)</div>
                                                                             </div>
                                                                             {/* product star: end */}
 

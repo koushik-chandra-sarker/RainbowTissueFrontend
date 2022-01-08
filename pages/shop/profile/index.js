@@ -1,31 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import Link from "next/link";
 import classnames from 'classnames'
-import Router, {useRouter} from "next/router";
-import {isLoggedIn} from "../../../services/login/Action";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {CircularProgress} from "@mui/material";
 import ProfileInfoCart from "./components/profileInfoCart";
-import {getUserFromLocalStorage, getUserProfileFromLocalStorage} from "../../../services/common/Action";
 import _ from 'lodash'
 import Header from "../components/header";
-import {createProfile, getProfile, updateProfile} from "../../../services/profile/profileAction";
+import {
+     getDefaultAddressAddress,
+    getDefaultAddressCity,
+    getDefaultAddressCountry, getDefaultAddressId, getDefaultAddressZipCode,
+    getProfile,
+    updateProfile
+} from "../../../services/profile/profileAction";
 import Swal from "sweetalert2";
-
-const validatePassword = (p1, p2) => {
-    const errors = {};
-    errors.valid = true
-    if (p1.length < 8) {
-        errors.password = 'Password must be 8 character.';
-        errors.valid = false
-    }
-    if (p1 !== p2) {
-        errors.password2 = "Confirm Password Doesn't Match";
-        errors.valid = false
-    }
-
-    return errors;
-};
+import useProfile from "../../../hooks/useProfile";
 const tab = [
     {
         name: "Profile"
@@ -44,38 +32,8 @@ const tab = [
 
 const Index = () => {
     const dispatch = useDispatch()
-    const router = useRouter()
-    const loggedIn = useSelector(store => store.IsLoggedIn)
-    const profile = useSelector(store => store.profile);
     const [activeTabIndex, setActiveTabIndex] = useState(0)
-    const [user, setUser] = useState({})
-    const [profileId, setProfileId] = useState(-1)
-    useEffect(() => {
-        if (profileId !== -1) {
-            dispatch(getProfile(profileId))
-        }
-    }, [profileId])
-    useEffect(() => {
-        dispatch(isLoggedIn())
-    }, [])
-
-    useEffect(() => {
-        if (!loggedIn) {
-            router.push("/shop/login")
-            return
-        } else {
-            const user = getUserFromLocalStorage()
-            const profile = getUserProfileFromLocalStorage()
-            if (user !== null) {
-                setUser(user)
-            }
-            if (profile !== null) {
-                setProfileId(profile.pk)
-
-            }
-        }
-    }, [loggedIn])
-
+    const [profile, profileId, loggedIn] = useProfile()
     function handleEdit(e) {
         e.preventDefault()
         const formData = new FormData();
@@ -84,26 +42,25 @@ const Index = () => {
             first_name: e.target.firstName.value,
             last_name: e.target.lastName.value,
             email: e.target.email.value
-
         }
-        formData.append("phone", e.target.phone.value)
-        formData.append("address", e.target.address.value)
-        formData.append("city", e.target.city.value)
-        formData.append("country", e.target.country.value)
+        const address = {
+            id: e.target.addressId.value,
+            phone: e.target.phone.value,
+            email: e.target.email.value,
+            address: e.target.address.value,
+            city: e.target.city.value,
+            country: e.target.country.value,
+            zipCode: e.target.zipCode.value
+        }
+        formData.append("address", JSON.stringify(address))
         formData.append("user", JSON.stringify(user))
         updateProfile(formData, e.target.id.value).then(r => {
             if (r.status === 200) {
                 if (r.data.message === 'success') {
-                    // e.target.phone.value = ''
-                    // e.target.city.value = ''
-                    // e.target.address.value = ''
-                    // e.target.country.value = ''
-                    // e.target.password.value = ''
-                    // e.target.password2.value = ''
-                    // e.target.firstName.value = ''
-                    // e.target.lastName.value = ''
-                    // e.target.email.value = ''
-                    // e.target.profile_pic.value = null
+                    if (profileId !== -1) {
+                        dispatch(getProfile(profileId))
+                        window.scrollTo(0, 900);
+                    }
                     Swal.fire({
                         text: 'Update Successful',
                         icon: 'success',
@@ -119,6 +76,7 @@ const Index = () => {
                 }
             }
         }).catch(error => {
+            console.log(error)
         })
     }
 
@@ -156,6 +114,7 @@ const Index = () => {
                                         <div
                                             className={classnames(activeTabIndex === 0 ? "" : "hidden", ' flex flex-wrap')}>
                                             <ProfileInfoCart
+                                                profileId={profileId}
                                                 pictureUrl={profile.data.profilePicture}
                                                 fName={profile.data.first_name}
                                                 lName={profile.data.last_name}
@@ -227,8 +186,8 @@ const Index = () => {
                                                                            placeholder={'example@gmail.com'}
                                                                            defaultValue={profile.data.user.email}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
-                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
-                                                    px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+                                                                            focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
+                                                                            px-3 leading-8 transition-colors duration-200 ease-in-out"/>
                                                                 </div>
                                                             </div>
 
@@ -240,12 +199,13 @@ const Index = () => {
                                                                         htmlFor="city">
                                                                         City
                                                                     </label>
+                                                                    <input type="text" id={'addressId'} hidden value={getDefaultAddressId(profile.data.user.address)}/>
                                                                     <input type="text" id="city"
                                                                            placeholder={'Ex: Dhaka'}
-                                                                           defaultValue={profile.data.city}
+                                                                           defaultValue={getDefaultAddressCity(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
-                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
-                                                    px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+                                                                            focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
+                                                                            px-3 leading-8 transition-colors duration-200 ease-in-out"/>
                                                                 </div>
                                                                 <div className="md:ml-2 md:w-1/2 w-full">
                                                                     <label
@@ -255,28 +215,40 @@ const Index = () => {
                                                                     </label>
                                                                     <input type="text" id="country"
                                                                            placeholder={"Ex: Bangladesh"} required
-                                                                           defaultValue={profile.data.country}
+                                                                           defaultValue={getDefaultAddressCountry(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
-                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
-                                                    px-3
-                                                    leading-8 transition-colors duration-200 ease-in-out"/>
+                                                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
+                                                                                    px-3
+                                                                                    leading-8 transition-colors duration-200 ease-in-out"/>
                                                                 </div>
                                                             </div>
                                                             <div className="mb-4 md:flex">
+                                                                <div className="md:ml-2 md:w-1/2 w-full">
+                                                                    <label
+                                                                        className="block mb-2 text-sm font-bold text-gray-700"
+                                                                        htmlFor="zipCode">
+                                                                        Zip Code
+                                                                    </label>
+                                                                    <input type="text" id="zipCode" required placeholder={"Enter Your Zip Code"}
+                                                                           defaultValue={getDefaultAddressZipCode(profile.data.user.address)}
+                                                                           className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
+                                                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
+                                                                                    px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+                                                                </div>
 
-
-                                                                <div className="md:ml-2 w-full">
+                                                                <div className="md:ml-2 md:w-1/2 w-full">
                                                                     <label
                                                                         className="block mb-2 text-sm font-bold text-gray-700"
                                                                         htmlFor="address">
                                                                         Address
                                                                     </label>
-                                                                    <input type="text" id="address" required
-                                                                           defaultValue={profile.data.address}
+                                                                    <input type="text" id="address" required placeholder={"Enter Your Address"}
+                                                                           defaultValue={getDefaultAddressAddress(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
-                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
-                                                    px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+                                                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
+                                                                                    px-3 leading-8 transition-colors duration-200 ease-in-out"/>
                                                                 </div>
+
                                                             </div>
 
 
