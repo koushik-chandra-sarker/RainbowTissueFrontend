@@ -38,6 +38,7 @@ const Register = () => {
         formData.append("address", e.target.address.value)
         formData.append("city", e.target.city.value)
         formData.append("country", e.target.country.value)
+        formData.append("zipCode", e.target.zipCode.value)
         formData.append("profilePic", e.target.profile_pic.files[0])
         formData.append("user", JSON.stringify(user))
 
@@ -51,6 +52,7 @@ const Register = () => {
                         e.target.city.value = ''
                         e.target.address.value = ''
                         e.target.country.value = ''
+                        e.target.zipCode.value = ''
                         e.target.password.value = ''
                         e.target.password2.value = ''
                         e.target.firstName.value = ''
@@ -105,8 +107,7 @@ const Register = () => {
                                     <div className="mb-1 md:mr-2 md:mb-0 md:w-1/2 w-full">
                                         <label className="block mb-2 text-sm font-bold text-gray-700"
                                                htmlFor="phone">
-                                            Phone <span className="text-primary">*</span><span
-                                            className={"text-xs text-red-500"}>{error.phone}</span>
+                                            Phone <span className="text-primary">*</span>
                                         </label>
                                         <input type="number" id="phone" placeholder={'Ex: 01700000000'} required
                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
@@ -115,8 +116,7 @@ const Register = () => {
                                     </div>
                                     <div className="md:ml-2 md:w-1/2 w-full">
                                         <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="email">
-                                            Email <span className="text-gray-400">(optional)</span><span
-                                            className={"text-xs text-red-500"}>{error.email}</span>
+                                            Email <span className="text-gray-400">(optional)</span>
                                         </label>
                                         <input type="email" id="email" placeholder={'example@gmail.com'}
                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
@@ -129,8 +129,7 @@ const Register = () => {
                                     <div className="mb-4 md:mr-2 md:mb-0 md:w-1/2 w-full">
                                         <label className="block mb-2 text-sm font-bold text-gray-700"
                                                htmlFor="firstName">
-                                            First Name <span className="text-primary">*</span><span
-                                            className={"text-xs text-red-500"}>{error.name}</span>
+                                            First Name <span className="text-primary">*</span>
                                         </label>
                                         <input type="text" id="firstName" placeholder={'Enter Your First Name'} required
                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
@@ -152,8 +151,7 @@ const Register = () => {
                                     <div className="mb-1 md:mr-2 md:mb-0 md:w-1/2 w-full">
                                         <label className="block mb-2 text-sm font-bold text-gray-700"
                                                htmlFor="city">
-                                            City <span className="text-primary">*</span><span
-                                            className={"text-xs text-red-500"}>{error.city}</span>
+                                            City <span className="text-primary">*</span>
                                         </label>
                                         <input type="text" id="city" placeholder={'Ex: Dhaka'}
                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
@@ -162,8 +160,7 @@ const Register = () => {
                                     </div>
                                     <div className="md:ml-2 md:w-1/2 w-full">
                                         <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="country">
-                                            Country <span className="text-primary">*</span><span
-                                            className={"text-xs text-red-500"}>{error.country}</span>
+                                            Country <span className="text-primary">*</span>
                                         </label>
                                         <input type="text" id="country" placeholder={"Ex: Bangladesh"} required
                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
@@ -185,9 +182,19 @@ const Register = () => {
                                                    leading-8 transition-colors duration-200 ease-in-out"/>
                                     </div>
                                     <div className="md:ml-2 md:w-1/2 w-full">
+                                        <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="zipCode">
+                                            Zip Code <span className="text-primary">*</span>
+                                        </label>
+                                        <input type="text" id="zipCode" required
+                                               className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
+                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
+                                                    px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+                                    </div>
+                                </div>
+                                <div className="mb-4 md:flex">
+                                    <div className="md:ml-2 w-full">
                                         <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="address">
-                                            Address <span className="text-primary">*</span><span
-                                            className={"text-xs text-red-500"}>{error.address}</span>
+                                            Address <span className="text-primary">*</span>
                                         </label>
                                         <input type="text" id="address" required
                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
