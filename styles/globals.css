@@ -196,4 +196,7 @@ input:not(:active) + #h4-container h4 {
   margin-top: -50px;
   pointer-events: none; }
 
+.max-height-600 {
+  height: 600px; }
+
 /*# sourceMappingURL=globals.css.map */
