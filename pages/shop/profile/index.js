@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import classnames from 'classnames'
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {CircularProgress} from "@mui/material";
 import ProfileInfoCart from "./components/profileInfoCart";
 import _ from 'lodash'
@@ -14,6 +14,14 @@ import {
 } from "../../../services/profile/profileAction";
 import Swal from "sweetalert2";
 import useProfile from "../../../hooks/useProfile";
+import {getRatingsObject, getReview} from "../../../services/store/ratings/RatingsAction";
+import Router, {useRouter} from "next/router";
+
+import {store_base_url} from "../../../constants";
+import ReviewCard from "../product/reviewCard";
+
+
+
 const tab = [
     {
         name: "Profile"
@@ -32,8 +40,25 @@ const tab = [
 
 const Index = () => {
     const dispatch = useDispatch()
+    const router = useRouter();
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const [profile, profileId, loggedIn] = useProfile()
+
+    let id = router.query.id
+    const reviews = useSelector(store => store.ratings);
+    useEffect(() => {
+        if (!_.isEmpty(reviews.data)) {
+            getRatingsObject(reviews.data)
+        }
+    }, [reviews])
+
+    useEffect(() => {
+        if (id !== undefined) {
+            dispatch(getReview(id))
+        }
+    }, [id])
+
+
     function handleEdit(e) {
         e.preventDefault()
         const formData = new FormData();
@@ -331,7 +356,20 @@ const Index = () => {
                                         </div>
                                         <div className={classnames(activeTabIndex === 2 ? "" : "hidden", '')}>order
                                         </div>
-                                        <div className={classnames(activeTabIndex === 3 ? "" : "hidden", '')}>review
+                                        <div className={classnames(activeTabIndex === 3 ? "" : "hidden", 'pl-4')}>
+                                            {
+                                                !_.isEmpty(reviews.data) ?
+                                                    reviews.data.map((v,key)=>(
+                                                        <ReviewCard
+                                                            key={`rating-${key}`}
+                                                            review={v.comment}
+                                                            username={v.user.username}
+                                                            rate={v.rating}/>
+                                                    ))
+                                                    :
+                                                    <></>
+                                            }
+
                                         </div>
                                     </> :
                                     <></>

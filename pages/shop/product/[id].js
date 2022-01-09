@@ -32,7 +32,6 @@ const Product = () => {
             getRatingsObject(reviews.data)
         }
     }, [reviews])
-    console.log(reviews.data)
     const [cartItem, setCartItem] = useState({
         quantity: 1,
     })
