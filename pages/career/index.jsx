@@ -5,11 +5,7 @@ import Skeleton from "@mui/material/Skeleton";
 import {useDispatch, useSelector} from "react-redux";
 import _ from "lodash";
 import {base_static_url} from "../../constants";
-import store from "../../services/Store";
-import {getWebsiteDetails} from "../../services/website/WebsiteAction";
 import {getJobList} from "../../services/job/JobAction";
-import ActiveLink from "../../components/ActiveLink";
-
 import Link from "next/link";
 import CareerCard from "./components/careerCard";
 

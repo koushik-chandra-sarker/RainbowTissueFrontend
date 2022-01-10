@@ -23,7 +23,6 @@ const ProfileInfoCart = ({profileId, pictureUrl, fName, lName, title, subtitle})
                 }
             }
         },error=>{
-            console.log(error)
             toast.error(error, {theme:"colored"})
         }).catch(error => {
             toast.error(error, {theme:"colored"})

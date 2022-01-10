@@ -17,8 +17,11 @@ import useProfile from "../../../hooks/useProfile";
 import {getRatingsObject, getReview} from "../../../services/store/ratings/RatingsAction";
 import Router, {useRouter} from "next/router";
 
-import {store_base_url} from "../../../constants";
 import ReviewCard from "../product/reviewCard";
+import {getCartList} from "../../../services/store/cart/Action";
+import Card from "../cart/components/Card";
+import {getDeliveryFee} from "../../../services/store/deliveryFee/Action";
+
 
 
 
@@ -141,8 +144,8 @@ const Index = () => {
                                             <ProfileInfoCart
                                                 profileId={profileId}
                                                 pictureUrl={profile.data.profilePicture}
-                                                fName={profile.data.first_name}
-                                                lName={profile.data.last_name}
+                                                fName={profile.data.user.first_name}
+                                                lName={profile.data.user.last_name}
                                                 // lName={user.fields.last_name}
                                                 title={'Edit Profile info'}
                                                 subtitle={'Set up your Information if you needs'}
@@ -354,7 +357,10 @@ const Index = () => {
                                             </div>
 
                                         </div>
-                                        <div className={classnames(activeTabIndex === 2 ? "" : "hidden", '')}>order
+                                        <div readOnly className={classnames(activeTabIndex === 2 ? "" : "hidden", 'p-2 my-2 ')}>
+                                           Order
+
+
                                         </div>
                                         <div className={classnames(activeTabIndex === 3 ? "" : "hidden", 'pl-4')}>
                                             {

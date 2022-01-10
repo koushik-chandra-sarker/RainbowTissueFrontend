@@ -96,7 +96,6 @@ const Product = () => {
             cart.user = user.pk
             cart.product = product.data.id
             addCart(cart).then(response => {
-                console.log(response)
                 if (response.data.message === 'success') {
                     Swal.fire({
                         title: "Product Added To Cart",
@@ -459,18 +458,18 @@ const Product = () => {
                                             <h2 className={'text-sm border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium'}>Product
                                                 Reviews</h2>
                                         </div>
-                                        {
-                                            !_.isEmpty(reviews.data) ?
-                                                reviews.data.map((v,key)=>(
-                                                    <ReviewCard
-                                                        key={`rating-${key}`}
-                                                        review={v.comment}
-                                                        username={v.user.username}
-                                                        rate={v.rating}/>
-                                                ))
-                                                :
-                                                <></>
-                                        }
+                                                    {
+                                                        !_.isEmpty(reviews.data) ?
+                                                            reviews.data.map((v,key)=>(
+                                                                <ReviewCard
+                                                                    key={`rating-${key}`}
+                                                                    review={v.comment}
+                                                                    username={v.user.username}
+                                                                    rate={v.rating}/>
+                                                            ))
+                                                            :
+                                                            <></>
+                                                    }
                                     </div>
 
 

@@ -274,3 +274,17 @@ input:not(:active) + #h4-container h4 {
 .max-height-600{
   height: 600px;
 }
+.why-choose-inner{
+  z-index: 1;
+}
+.why-choose-inner:before{
+  content: "";
+  position: absolute;
+  height: 200px;
+  width: 200px;
+  top: -25px;
+  left: -25px;
+  border-top-left-radius: 5%;
+  z-index: -1;
+  background: #1597ff;
+}
