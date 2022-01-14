@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import classnames from 'classnames'
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Card from "../cart/components/Card";
 
 const Address = ({title, first_name, last_name, phone, email, city, country, zipCode, address, disableDeleteButton}) => {
     const [open, setOpen] = useState(false);
@@ -164,4 +165,22 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
     );
 };
 
+
+Address.getInitialProps = async ({query}) =>{
+    const {title, first_name, last_name, phone, email, city, country, zipCode, address, disableDeleteButton} = query
+    return {
+        props: {
+            title: title,
+            first_name: first_name,
+            last_name: last_name,
+            phone: phone,
+            email: email,
+            city: city,
+            country: country,
+            zipCode: zipCode,
+            address: address,
+            disableDeleteButton: disableDeleteButton
+        },
+    }
+}
 export default Address;
