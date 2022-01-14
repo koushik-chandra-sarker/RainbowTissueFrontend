@@ -18,12 +18,6 @@ import {getRatingsObject, getReview} from "../../../services/store/ratings/Ratin
 import Router, {useRouter} from "next/router";
 
 import ReviewCard from "../product/reviewCard";
-import {getCartList} from "../../../services/store/cart/Action";
-import Card from "../cart/components/Card";
-import {getDeliveryFee} from "../../../services/store/deliveryFee/Action";
-
-
-
 
 const tab = [
     {

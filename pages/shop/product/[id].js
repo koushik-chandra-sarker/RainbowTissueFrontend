@@ -14,9 +14,10 @@ import Swal from 'sweetalert2'
 import Link from "next/link";
 import styles from "../Index.module.scss";
 import {store_base_url} from "../../../constants";
-import {Rating} from "@mui/material";
+import {colors, Rating} from "@mui/material";
 import ReviewCard from "./reviewCard";
-import {getRatingsObject, getReview} from "../../../services/store/ratings/RatingsAction";
+import {getRatingsObject, getReview, saveReview} from "../../../services/store/ratings/RatingsAction";
+import {isLoggedIn, login} from "../../../services/login/Action";
 
 
 const Product = () => {
@@ -27,6 +28,9 @@ const Product = () => {
     const similarProducts = useSelector(state => state.similarProducts);
     const reviews = useSelector(store => store.ratings);
     const [rating, setRating] = useState(0)
+    const user = getUserFromLocalStorage()
+    const [review, setReview] = useState({user: null, product: null, comment: "", rating: null})
+
     useEffect(() => {
         if (!_.isEmpty(reviews.data)) {
             getRatingsObject(reviews.data)
@@ -114,6 +118,27 @@ const Product = () => {
         }
     }
 
+    function handleComment() {
+        setReview({...review, user: user.pk, product: Number(id)})
+
+        if (review.rating === null) {
+            return toast.error("Please Give Product Rating.", {theme: "colored"})
+        }
+        if (review.comment === "") {
+            return toast.error("Please Leave Your Comment.", {theme: "colored"})
+        }
+
+        saveReview(review).then(response=>{
+            if (response.status ===201){
+                toast.success("Review successfully posted",{theme:"colored"})
+            }
+            else toast.error("Something want wrong!",{theme:"colored"})
+        }).catch(reason => {
+            toast.error(reason,{theme:"colored"})
+        })
+
+    }
+
     return (
         <>
             <Header/>
@@ -127,12 +152,13 @@ const Product = () => {
                             !_.isEmpty(product.data) ?
                                 <>
                                     {/* product view */}
-                                    <div className="container pt-6 mt-4 md:pb-6 lg:grid lg:grid-cols-2 md:gap-10 single-product">
+                                    <div
+                                        className="container pt-6 mt-4null md:pb-6 lg:grid lg:grid-cols-2 md:gap-10 single-product">
                                         {/* product image */}
                                         <div>
                                             <div
                                                 className={'w-full max-h-100  border border-primary flex  items-center justify-center overflow-hidden'}>
-                                                <InnerImageZoom  src={productBigImage} zoomSrc={productBigImage}
+                                                <InnerImageZoom src={productBigImage} zoomSrc={productBigImage}
                                                                 zoomPreload={true}/>
 
                                             </div>
@@ -412,6 +438,7 @@ const Product = () => {
                                         <h3 className="text-xl border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium">
                                             Ratings & Reviews
                                         </h3>
+
                                         <div className={'flex pt-10 pb-4 border-b'}>
                                             <div className={'sm:w-1/6 pt-4'}>
                                                 <h1 className={'text-4xl'}>4.6<span
@@ -456,20 +483,42 @@ const Product = () => {
                                         </div>
                                         <div className={'border-gray-400 py-4'}>
                                             <h2 className={'text-sm border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium'}>Product
-                                                Reviews</h2>
+                                                Reviews
+                                            </h2>
+
+                                            <section className={'w-full'}>
+                                                {/*comment*/}
+                                                <div className={'flex flex-col items-end py-5'}>
+                                                    <Rating
+                                                        name="simple-controlled"
+                                                        size="large"
+                                                        precision={1}
+                                                        onChange={(event, newValue) => {
+                                                            setReview({...review, rating: newValue})
+                                                        }}
+                                                    />
+                                                    <p>Rate This Product</p>
+                                                </div>
+                                                <input onChange={e => setReview({...review, comment: e.target.value})}
+                                                       type="text" className={'w-5/6 pl-2 border border-blue-900 py-4'}
+                                                       placeholder={'Comment '} htmlFor="comment"/>
+                                                <button onClick={handleComment}
+                                                        className={'w-1/6 py-4 bg-red-500 border border-red-500'}>Submit
+                                                </button>
+                                            </section>
                                         </div>
-                                                    {
-                                                        !_.isEmpty(reviews.data) ?
-                                                            reviews.data.map((v,key)=>(
-                                                                <ReviewCard
-                                                                    key={`rating-${key}`}
-                                                                    review={v.comment}
-                                                                    username={v.user.username}
-                                                                    rate={v.rating}/>
-                                                            ))
-                                                            :
-                                                            <></>
-                                                    }
+                                        {
+                                            !_.isEmpty(reviews.data) ?
+                                                reviews.data.map((v, key) => (
+                                                    <ReviewCard
+                                                        key={`rating-${key}`}
+                                                        review={v.comment}
+                                                        username={v.user.username}
+                                                        rate={v.rating}/>
+                                                ))
+                                                :
+                                                <></>
+                                        }
                                     </div>
 
 
@@ -513,7 +562,8 @@ const Product = () => {
                                                                             {/* product title */}
                                                                             <h2 className="text-gray-900 title-font text-lg font-medium">{product.name}</h2>
                                                                             {/* product price */}
-                                                                            <div className="flex items-baseline my-1 space-x-2">
+                                                                            <div
+                                                                                className="flex items-baseline my-1 space-x-2">
 
                                                                                 {
                                                                                     !(product.discount_price === 0) ?
@@ -529,14 +579,22 @@ const Product = () => {
                                                                             {/* product price:end */}
                                                                             {/* product star */}
                                                                             <div className="flex items-center">
-                                                                                <div className="flex gap-1 text-sm text-yellow-400">
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
+                                                                                <div
+                                                                                    className="flex gap-1 text-sm text-yellow-400">
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
+                                                                                    <span><i
+                                                                                        className="fas fa-star"/></span>
                                                                                 </div>
-                                                                                <div className="text-xs text-gray-500 ml-3">(150)</div>
+                                                                                <div
+                                                                                    className="text-xs text-gray-500 ml-3">(150)
+                                                                                </div>
                                                                             </div>
                                                                             {/* product star: end */}
 
