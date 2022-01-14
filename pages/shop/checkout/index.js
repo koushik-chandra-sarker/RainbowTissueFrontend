@@ -65,6 +65,7 @@ const CheckOut = () => {
     const dispatch = useDispatch()
     const [profile, profileId, loggedIn] = useProfile()
     const cartList = useSelector(store => store.cartList)
+    const [newAddress, setNewAddress] = useState({user:null,phone:null, email:"", city:"", country:"", zipCode:"", address:"", default:false})
     const user = getUserFromLocalStorage();
     useEffect(() => {
         dispatch(getCartList())
@@ -78,11 +79,11 @@ const CheckOut = () => {
     useEffect(() => {
         if (!_.isEmpty(profile.data)) {
             setUserInfo(profile.data.user)
+            setNewAddress({...newAddress, user:profile.data.user.id})
             const [defaultAddress, otherAddressList] = extractDefaultAddress(profile.data.user.address)
             setDefaultAddress(defaultAddress)
             setOtherAddressList(otherAddressList)
         }
-        console.log(otherAddressList)
     }, [profile])
 
     const handleNext = () => {
@@ -121,6 +122,11 @@ const CheckOut = () => {
 
     function handleCODChange(event) {
         setDeliveryOption(event.target.value);
+    }
+
+    function handleSaveAddress(e) {
+        e.preventDefault()
+        console.log(newAddress)
     }
 
     return (
@@ -290,9 +296,8 @@ const CheckOut = () => {
                                                                                 Phone
                                                                             </label>
                                                                             <input type="number" id="phone"
-                                                                                   readOnly
                                                                                    placeholder={'Enter Your Phone'}
-                                                                                // value={profile.data.phone}
+                                                                                   onChange={(e)=> setNewAddress({...newAddress, phone: e.target.value})}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -306,7 +311,7 @@ const CheckOut = () => {
                                                                             </label>
                                                                             <input type="email" id="email"
                                                                                    placeholder={'example@gmail.com'}
-                                                                                // defaultValue={profile.data.user.email}
+                                                                                   onChange={(e)=> setNewAddress({...newAddress, email: e.target.value})}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                             focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                             px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -325,7 +330,7 @@ const CheckOut = () => {
                                                                             {/*<input type="text" id={'addressId'} hidden value={getDefaultAddressId(profile.data.user.address)}/>*/}
                                                                             <input type="text" id="city"
                                                                                    placeholder={'Ex: Dhaka'}
-                                                                                // defaultValue={getDefaultAddressCity(profile.data.user.address)}
+                                                                                   onChange={(e)=> setNewAddress({...newAddress, city: e.target.value})}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                             focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                             px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -339,7 +344,7 @@ const CheckOut = () => {
                                                                             <input type="text" id="country"
                                                                                    placeholder={"Ex: Bangladesh"}
                                                                                    required
-                                                                                // defaultValue={getDefaultAddressCountry(profile.data.user.address)}
+                                                                                   onChange={(e)=> setNewAddress({...newAddress, country: e.target.value})}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                     px-3
@@ -355,7 +360,7 @@ const CheckOut = () => {
                                                                             </label>
                                                                             <input type="text" id="zipCode" required
                                                                                    placeholder={"Enter Your Zip Code"}
-                                                                                // defaultValue={getDefaultAddressZipCode(profile.data.user.address)}
+                                                                                   onChange={(e)=> setNewAddress({...newAddress, zipCode: e.target.value})}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                     px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -369,7 +374,7 @@ const CheckOut = () => {
                                                                             </label>
                                                                             <input type="text" id="address" required
                                                                                    placeholder={"Enter Your Address"}
-                                                                                // defaultValue={getDefaultAddressAddress(profile.data.user.address)}
+                                                                                   onChange={(e)=> setNewAddress({...newAddress, address: e.target.value})}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                     px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -381,8 +386,10 @@ const CheckOut = () => {
                                                                     <div className="mb-6 text-center">
                                                                         <button
                                                                             className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                                                                            type="submit">
-                                                                            Save Profile
+                                                                            type="submit"
+                                                                            onClick={handleSaveAddress}
+                                                                        >
+                                                                            Save
                                                                         </button>
                                                                     </div>
 
