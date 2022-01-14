@@ -38,7 +38,6 @@ export const updateProfile = (profile, id) => {
 
 export const updateProfilePicture = (data, profileId) => {
     const token = localStorage.getItem("accessToken")
-    console.log(data)
     return axios.put(`${base_static_url}/account/api/update-profile-pic-by-own/${profileId}/`, data,
         {
             headers: {
@@ -128,4 +127,59 @@ export const getDefaultAddressPhone = (addressList) => {
         return address !== undefined ? address.address : ""
     }
 
+}
+
+
+export const saveAddress = (data) => {
+    const token = localStorage.getItem("accessToken")
+    return axios.post(`${base_static_url}/account/api/address/`, data,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(value => {
+        return value
+    }).catch(reason => {
+        return reason
+    })
+}
+export const updateAddress = (data) => {
+    const token = localStorage.getItem("accessToken")
+    return axios.put(`${base_static_url}/account/api/address/${data.id}/`, data,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(value => {
+        return value
+    }).catch(reason => {
+        return reason
+    })
+}
+
+
+export const validateNewAddress = (data)=>{
+    const errors = {};
+    errors.valid = true
+    if (_.isEmpty(data.phone)) {
+        errors.phone = 'Please Enter A Phone Number';
+        errors.valid = false
+    }
+    if (_.isEmpty(data.city)) {
+        errors.city = 'Please Enter Your City';
+        errors.valid = false
+    }
+    if (_.isEmpty(data.country)) {
+        errors.country = 'Please Enter Your Country';
+        errors.valid = false
+    }
+    if (_.isEmpty(data.zipCode)) {
+        errors.zipCode = 'Please Enter Zip Code';
+        errors.valid = false
+    }
+    if (_.isEmpty(data.address)) {
+        errors.address = 'Please Enter Your Address';
+        errors.valid = false
+    }
+    return errors;
 }

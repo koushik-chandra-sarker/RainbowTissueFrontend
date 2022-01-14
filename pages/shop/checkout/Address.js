@@ -5,9 +5,54 @@ import classnames from 'classnames'
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Card from "../cart/components/Card";
+import {getProfile, saveAddress, updateAddress, validateNewAddress} from "../../../services/profile/profileAction";
+import {toast} from "react-toastify";
+import {useDispatch} from "react-redux";
 
-const Address = ({title, first_name, last_name, phone, email, city, country, zipCode, address, disableDeleteButton}) => {
+const Address = ({
+                     title,
+                     first_name,
+                     last_name,
+                     id,
+                     userId,
+                     phone,
+                     email,
+                     city,
+                     country,
+                     zipCode,
+                     address,
+                     disableDeleteButton,
+                     profileId
+                 }) => {
     const [open, setOpen] = useState(false);
+    const [editedAddress, setEditedAddress] = useState({
+        id: id,
+        user: userId,
+        phone: phone,
+        email: email,
+        city: city,
+        country: country,
+        zipCode: zipCode,
+        address: address,
+        default: false
+    })
+    const [error, setError] = useState({valid: true})
+    const dispatch = useDispatch()
+
+    function handleUpdateAddress() {
+        const error = validateNewAddress(editedAddress)
+        setError(error)
+        if (!error.valid) return
+        updateAddress(editedAddress).then(response => {
+            if (response.status === 200) {
+                toast.success("Address Save Successful.")
+                setOpen(false)
+                dispatch(getProfile(profileId))
+            } else toast.error("Something went wrong!")
+        })
+
+    }
+
     return (
         <div
             className={'text-xs leading-6 font-light border border-gray-200 p-4'}>
@@ -19,11 +64,11 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
             <div className={"mt-2 flex gap-4"}>
                 <Button variant={"contained"} size={'small'}> Use This
                     Address</Button>
-                <Button  onClick={() => setOpen(true)}
-                         className={classnames(open?"hidden":"")}
+                <Button onClick={() => setOpen(true)}
+                        className={classnames(open ? "hidden" : "")}
                         variant={"outlined"} size={'small'}
                         startIcon={<EditIcon/>}> Edit </Button>
-                <Button variant={"outlined"} size={'small'} className={classnames(disableDeleteButton ?"hidden":"")}
+                <Button variant={"outlined"} size={'small'} className={classnames(disableDeleteButton ? "hidden" : "")}
                         startIcon={<DeleteIcon/>}> Delete</Button>
             </div>
             <div className={'overflow-hidden'}>
@@ -32,7 +77,7 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
                     {/* Col */}
                     <div
                         className="w-full h-full bg-white rounded-lg lg:rounded-l-none p-8 pt-0">
-                        <form className="pt-6 mb-4 bg-white rounded">
+                        <div className="pt-6 mb-4 bg-white rounded">
                             <div className="h-full w-full flex justify-end">
                                 <IconButton
                                     aria-label="close"
@@ -57,6 +102,7 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
                                            defaultValue={phone}
                                            placeholder={'Enter Your Phone'}
                                         // value={profile.data.phone}
+                                           onChange={e => setEditedAddress({...editedAddress, phone: e.target.value})}
                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -72,6 +118,7 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
                                            defaultValue={email}
                                            placeholder={'example@gmail.com'}
                                         // defaultValue={profile.data.user.email}
+                                           onChange={e => setEditedAddress({...editedAddress, email: e.target.value})}
                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                             focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                             px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -91,6 +138,7 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
                                     <input type="text" id="city"
                                            defaultValue={city}
                                            placeholder={'Ex: Dhaka'}
+                                           onChange={e => setEditedAddress({...editedAddress, city: e.target.value})}
                                         // defaultValue={getDefaultAddressCity(profile.data.user.address)}
                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                             focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
@@ -105,6 +153,7 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
                                     <input type="text" id="country"
                                            defaultValue={country}
                                            placeholder={"Ex: Bangladesh"}
+                                           onChange={e => setEditedAddress({...editedAddress, country: e.target.value})}
                                            required
                                         // defaultValue={getDefaultAddressCountry(profile.data.user.address)}
                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
@@ -122,8 +171,8 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
                                     </label>
                                     <input type="text" id="zipCode" required
                                            defaultValue={zipCode}
+                                           onChange={e => setEditedAddress({...editedAddress, zipCode: e.target.value})}
                                            placeholder={"Enter Your Zip Code"}
-                                        // defaultValue={getDefaultAddressZipCode(profile.data.user.address)}
                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                     px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -137,6 +186,7 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
                                     </label>
                                     <input type="text" id="address" required
                                            defaultValue={address}
+                                           onChange={e => setEditedAddress({...editedAddress, address: e.target.value})}
                                            placeholder={"Enter Your Address"}
                                         // defaultValue={getDefaultAddressAddress(profile.data.user.address)}
                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
@@ -150,14 +200,14 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
                             <div className="mb-6 text-center">
                                 <button
                                     className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-                                    type="submit"
+                                    onClick={handleUpdateAddress}
                                 >
                                     Save
                                 </button>
                             </div>
 
 
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -166,20 +216,37 @@ const Address = ({title, first_name, last_name, phone, email, city, country, zip
 };
 
 
-Address.getInitialProps = async ({query}) =>{
-    const {title, first_name, last_name, phone, email, city, country, zipCode, address, disableDeleteButton} = query
+Address.getInitialProps = async ({query}) => {
+    const {
+        title,
+        first_name,
+        last_name,
+        phone,
+        id,
+        userId,
+        email,
+        city,
+        country,
+        zipCode,
+        address,
+        disableDeleteButton,
+        profileId
+    } = query
     return {
         props: {
             title: title,
             first_name: first_name,
             last_name: last_name,
+            id: id,
+            userId: userId,
             phone: phone,
             email: email,
             city: city,
             country: country,
             zipCode: zipCode,
             address: address,
-            disableDeleteButton: disableDeleteButton
+            disableDeleteButton: disableDeleteButton,
+            profileId:profileId
         },
     }
 }
