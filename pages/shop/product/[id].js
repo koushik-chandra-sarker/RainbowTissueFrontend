@@ -500,10 +500,10 @@ const Product = () => {
                                                     <p>Rate This Product</p>
                                                 </div>
                                                 <input onChange={e => setReview({...review, comment: e.target.value})}
-                                                       type="text" className={'w-5/6 pl-2 border border-blue-900 py-4'}
+                                                       type="text" className={'w-5/6 pl-2 border border-r-0 border-primary py-3 px-3 rounded-l-md focus:ring-primary focus:border-primary'}
                                                        placeholder={'Comment '} htmlFor="comment"/>
                                                 <button onClick={handleComment}
-                                                        className={'w-1/6 py-4 bg-red-500 border border-red-500'}>Submit
+                                                        className={'w-1/6 py-3 bg-primary border border-primary text-white px-8 font-medium rounded-r-md hover:bg-transparent hover:text-primary transition'}>Submit
                                                 </button>
                                             </section>
                                         </div>
