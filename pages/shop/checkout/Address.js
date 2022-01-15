@@ -5,7 +5,13 @@ import classnames from 'classnames'
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Card from "../cart/components/Card";
-import {getProfile, saveAddress, updateAddress, validateNewAddress} from "../../../services/profile/profileAction";
+import {
+    deleteAddress,
+    getProfile,
+    saveAddress,
+    updateAddress,
+    validateNewAddress
+} from "../../../services/profile/profileAction";
 import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
 
@@ -22,7 +28,7 @@ const Address = ({
                      zipCode,
                      address,
                      disableDeleteButton,
-                     profileId
+                     profileId, handleShippingAddress
                  }) => {
     const [open, setOpen] = useState(false);
     const [editedAddress, setEditedAddress] = useState({
@@ -53,6 +59,18 @@ const Address = ({
 
     }
 
+    function handleDelete() {
+        deleteAddress(id).then(function(response){
+            if (response.status===204){
+                toast.success("Address Deleted.")
+                dispatch(getProfile(profileId))
+            }
+            else {
+                toast.success("Something went wrong !", {theme:"colored"})
+            }
+        }).catch(reason => toast.error(reason, {theme:"colored"}))
+    }
+
     return (
         <div
             className={'text-xs leading-6 font-light border border-gray-200 p-4'}>
@@ -62,13 +80,15 @@ const Address = ({
             <p>{email}</p>
             <p>{address}, {city}-{zipCode}, {country}</p>
             <div className={"mt-2 flex gap-4"}>
-                <Button variant={"contained"} size={'small'}> Use This
+                <Button onClick={()=>handleShippingAddress(id)} variant={"contained"} size={'small'}> Use This
                     Address</Button>
                 <Button onClick={() => setOpen(true)}
                         className={classnames(open ? "hidden" : "")}
                         variant={"outlined"} size={'small'}
                         startIcon={<EditIcon/>}> Edit </Button>
-                <Button variant={"outlined"} size={'small'} className={classnames(disableDeleteButton ? "hidden" : "")}
+                <Button
+                    onClick={handleDelete}
+                    variant={"outlined"} size={'small'} className={classnames(disableDeleteButton ? "hidden" : "")}
                         startIcon={<DeleteIcon/>}> Delete</Button>
             </div>
             <div className={'overflow-hidden'}>
@@ -230,7 +250,8 @@ Address.getInitialProps = async ({query}) => {
         zipCode,
         address,
         disableDeleteButton,
-        profileId
+        profileId,
+        handleShippingAddress
     } = query
     return {
         props: {
@@ -246,7 +267,8 @@ Address.getInitialProps = async ({query}) => {
             zipCode: zipCode,
             address: address,
             disableDeleteButton: disableDeleteButton,
-            profileId:profileId
+            profileId:profileId,
+            handleShippingAddress: handleShippingAddress
         },
     }
 }

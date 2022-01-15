@@ -156,6 +156,19 @@ export const updateAddress = (data) => {
         return reason
     })
 }
+export const deleteAddress = (id) => {
+    const token = localStorage.getItem("accessToken")
+    return axios.delete(`${base_static_url}/account/api/address/${id}/`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(value => {
+        return value
+    }).catch(reason => {
+        return reason
+    })
+}
 
 
 export const validateNewAddress = (data)=>{

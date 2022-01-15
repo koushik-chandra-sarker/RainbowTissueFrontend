@@ -60,6 +60,7 @@ const CheckOut = () => {
     })
     const [activeStep, setActiveStep] = React.useState(0);
     const [showPass, setShowPass] = useState(false)
+    const [hideAddress, setHideAddress] = useState(false)
     const [userInfo, setUserInfo] = useState({})
     const [defaultAddress, setDefaultAddress] = useState({})
     const [otherAddressList, setOtherAddressList] = useState([])
@@ -69,9 +70,25 @@ const CheckOut = () => {
     const dispatch = useDispatch()
     const [profile, profileId, loggedIn] = useProfile()
     const cartList = useSelector(store => store.cartList)
-    const [newAddress, setNewAddress] = useState({user:null,phone:"", email:"", city:"", country:"", zipCode:"", address:"", default:false})
+    const [newAddress, setNewAddress] = useState({
+        user: null,
+        phone: "",
+        email: "",
+        city: "",
+        country: "",
+        zipCode: "",
+        address: "",
+        default: false
+    })
     const user = getUserFromLocalStorage();
-    const [newAddressError, setNewAddressError] = useState({valid:true})
+    const [newAddressError, setNewAddressError] = useState({valid: true})
+    const [orderDetails, setOrderDetails] = useState({
+        user: null,
+        shippingAddress: null,
+        total: null,
+        subTotal: null,
+        paymentMethod: 1
+    })
     useEffect(() => {
         dispatch(getCartList())
         dispatch(isLoggedIn())
@@ -84,7 +101,7 @@ const CheckOut = () => {
     useEffect(() => {
         if (!_.isEmpty(profile.data)) {
             setUserInfo(profile.data.user)
-            setNewAddress({...newAddress, user:profile.data.user.id})
+            setNewAddress({...newAddress, user: profile.data.user.id})
             const [defaultAddress, otherAddressList] = extractDefaultAddress(profile.data.user.address)
             setDefaultAddress(defaultAddress)
             setOtherAddressList(otherAddressList)
@@ -133,15 +150,28 @@ const CheckOut = () => {
         const error = validateNewAddress(newAddress)
         setNewAddressError(error)
         if (!error.valid) return
-        saveAddress(newAddress).then(response=>{
-            if (response.status === 201){
+        saveAddress(newAddress).then(response => {
+            if (response.status === 201) {
                 toast.success("Address Save Successful.")
                 setAddAnotherAddressOpen(false)
                 dispatch(getProfile(profileId))
-                setNewAddress({user:null,phone:"", email:"", city:"", country:"", zipCode:"", address:"", default:false})
-            }
-            else toast.error("Something went wrong!")
+                setNewAddress({
+                    user: null,
+                    phone: "",
+                    email: "",
+                    city: "",
+                    country: "",
+                    zipCode: "",
+                    address: "",
+                    default: false
+                })
+            } else toast.error("Something went wrong!")
         })
+    }
+
+    function handleShippingAddress(id) {
+        setOrderDetails({...orderDetails, shippingAddress: id})
+        setActiveStep(2)
     }
 
     return (
@@ -244,7 +274,7 @@ const CheckOut = () => {
                                                     <Address
                                                         title={"Default Address"}
                                                         disableDeleteButton={true}
-                                                        open = {true}
+                                                        open={true}
                                                         first_name={userInfo.first_name}
                                                         last_name={userInfo.last_name}
                                                         id={defaultAddress.id}
@@ -256,30 +286,48 @@ const CheckOut = () => {
                                                         country={defaultAddress.country}
                                                         address={defaultAddress.address}
                                                         profileId={profileId}
+                                                        handleShippingAddress={handleShippingAddress}
                                                     />
                                                     {
-                                                        !_.isEmpty(otherAddressList)?
-                                                            otherAddressList.map((item, key)=>(
-                                                                <Address
-                                                                    key={`Address-${key-1}`}
-                                                                    title={`Address-${key+1}`}
-                                                                    disableDeleteButton={false}
-                                                                    open = {true}
-                                                                    first_name={userInfo.first_name}
-                                                                    last_name={userInfo.last_name}
-                                                                    id={item.id}
-                                                                    userId={item.user}
-                                                                    phone={item.phone}
-                                                                    email={item.email}
-                                                                    city={item.city}
-                                                                    zipCode={item.zipCode}
-                                                                    country={item.country}
-                                                                    address={item.address}
-                                                                    profileId={profileId}
-                                                                />
+                                                        !_.isEmpty(otherAddressList) ?
+                                                            otherAddressList.map((item, key) => (
+                                                                <div
+                                                                    className={classnames(key > 0 && hideAddress ? "hidden" : "")}>
+                                                                    <Address
+                                                                        key={`Address-${key - 1}`}
+                                                                        title={`Address-${key + 1}`}
+                                                                        disableDeleteButton={false}
+                                                                        open={true}
+                                                                        first_name={userInfo.first_name}
+                                                                        last_name={userInfo.last_name}
+                                                                        id={item.id}
+                                                                        userId={item.user}
+                                                                        phone={item.phone}
+                                                                        email={item.email}
+                                                                        city={item.city}
+                                                                        zipCode={item.zipCode}
+                                                                        country={item.country}
+                                                                        address={item.address}
+                                                                        profileId={profileId}
+                                                                        action={handleShippingAddress}
+                                                                    />
+                                                                </div>
+
                                                             ))
                                                             :
                                                             <></>
+                                                    }
+                                                    {
+                                                        otherAddressList.length > 1 ?
+                                                            <div className={"flex justify-end mt-2"}
+                                                                 onClick={() => setHideAddress(!hideAddress)}
+                                                            >
+                                                                <a className={"text-blue-800 cursor-pointer"}>
+                                                                    {hideAddress ? <span>Show All Address</span> :
+                                                                        <span>Show Less</span>}
+                                                                </a>
+                                                            </div>
+                                                            : <></>
                                                     }
 
                                                     <div className={"mt-2 flex gap-4"}>
@@ -314,12 +362,16 @@ const CheckOut = () => {
                                                                             <label
                                                                                 className="block mb-2 text-sm font-bold text-gray-700 disable"
                                                                                 htmlFor="phone">
-                                                                                Phone*<span className={"text-xs text-red-500"}>{newAddressError.phone}</span>
+                                                                                Phone*<span
+                                                                                className={"text-xs text-red-500"}>{newAddressError.phone}</span>
                                                                             </label>
                                                                             <input type="number" id="phone"
                                                                                    value={newAddress.phone}
                                                                                    placeholder={'Enter Your Phone'}
-                                                                                   onChange={(e)=> setNewAddress({...newAddress, phone: e.target.value})}
+                                                                                   onChange={(e) => setNewAddress({
+                                                                                       ...newAddress,
+                                                                                       phone: e.target.value
+                                                                                   })}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                 px-3 leading-8 transition-colors duration-200 ease-in-out"
@@ -334,7 +386,10 @@ const CheckOut = () => {
                                                                             <input type="email" id="email"
                                                                                    value={newAddress.email}
                                                                                    placeholder={'example@gmail.com'}
-                                                                                   onChange={(e)=> setNewAddress({...newAddress, email: e.target.value})}
+                                                                                   onChange={(e) => setNewAddress({
+                                                                                       ...newAddress,
+                                                                                       email: e.target.value
+                                                                                   })}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                             focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                             px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -348,13 +403,17 @@ const CheckOut = () => {
                                                                             <label
                                                                                 className="block mb-2 text-sm font-bold text-gray-700"
                                                                                 htmlFor="city">
-                                                                                City*<span className={"text-xs text-red-500"}>{newAddressError.city}</span>
+                                                                                City*<span
+                                                                                className={"text-xs text-red-500"}>{newAddressError.city}</span>
                                                                             </label>
                                                                             {/*<input type="text" id={'addressId'} hidden value={getDefaultAddressId(profile.data.user.address)}/>*/}
                                                                             <input type="text" id="city"
                                                                                    value={newAddress.city}
                                                                                    placeholder={'Ex: Dhaka'}
-                                                                                   onChange={(e)=> setNewAddress({...newAddress, city: e.target.value})}
+                                                                                   onChange={(e) => setNewAddress({
+                                                                                       ...newAddress,
+                                                                                       city: e.target.value
+                                                                                   })}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                             focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                             px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -363,13 +422,17 @@ const CheckOut = () => {
                                                                             <label
                                                                                 className="block mb-2 text-sm font-bold text-gray-700"
                                                                                 htmlFor="country">
-                                                                                Country*<span className={"text-xs text-red-500"}>{newAddressError.country}</span>
+                                                                                Country*<span
+                                                                                className={"text-xs text-red-500"}>{newAddressError.country}</span>
                                                                             </label>
                                                                             <input type="text" id="country"
                                                                                    placeholder={"Ex: Bangladesh"}
                                                                                    value={newAddress.country}
                                                                                    required
-                                                                                   onChange={(e)=> setNewAddress({...newAddress, country: e.target.value})}
+                                                                                   onChange={(e) => setNewAddress({
+                                                                                       ...newAddress,
+                                                                                       country: e.target.value
+                                                                                   })}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                     px-3
@@ -381,12 +444,16 @@ const CheckOut = () => {
                                                                             <label
                                                                                 className="block mb-2 text-sm font-bold text-gray-700"
                                                                                 htmlFor="zipCode">
-                                                                                Zip Code*<span className={"text-xs text-red-500"}>{newAddressError.zipCode}</span>
+                                                                                Zip Code*<span
+                                                                                className={"text-xs text-red-500"}>{newAddressError.zipCode}</span>
                                                                             </label>
                                                                             <input type="text" id="zipCode" required
                                                                                    value={newAddress.zipCode}
                                                                                    placeholder={"Enter Your Zip Code"}
-                                                                                   onChange={(e)=> setNewAddress({...newAddress, zipCode: e.target.value})}
+                                                                                   onChange={(e) => setNewAddress({
+                                                                                       ...newAddress,
+                                                                                       zipCode: e.target.value
+                                                                                   })}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                     px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -396,12 +463,16 @@ const CheckOut = () => {
                                                                             <label
                                                                                 className="block mb-2 text-sm font-bold text-gray-700"
                                                                                 htmlFor="address">
-                                                                                Address*<span className={"text-xs text-red-500"}>{newAddressError.address}</span>
+                                                                                Address*<span
+                                                                                className={"text-xs text-red-500"}>{newAddressError.address}</span>
                                                                             </label>
                                                                             <input type="text" id="address" required
                                                                                    value={newAddress.address}
                                                                                    placeholder={"Enter Your Address"}
-                                                                                   onChange={(e)=> setNewAddress({...newAddress, address: e.target.value})}
+                                                                                   onChange={(e) => setNewAddress({
+                                                                                       ...newAddress,
+                                                                                       address: e.target.value
+                                                                                   })}
                                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                                                     px-3 leading-8 transition-colors duration-200 ease-in-out"/>
@@ -409,8 +480,9 @@ const CheckOut = () => {
 
                                                                     </div>
 
-                                                                    <div className={classnames(newAddressError.valid?"hidden":"","bg-red-400 text-white text p-2 m-2")}>
-                                                                        <p>Please Fill The Above  Fields</p>
+                                                                    <div
+                                                                        className={classnames(newAddressError.valid ? "hidden" : "", "bg-red-400 text-white text p-2 m-2")}>
+                                                                        <p>Please Fill The Above Fields</p>
                                                                     </div>
                                                                     <div className="mb-6 text-center">
                                                                         <button
@@ -452,12 +524,12 @@ const CheckOut = () => {
                                                 >
                                                     <ListItemText primary="Cash on Delivery"/>
                                                 </ListItemButton>
-                                                <ListItemButton
+                                                {/*<ListItemButton
                                                     selected={selectedPaymentIndex === 1}
                                                     onClick={(event) => handlePaymentMethodListClick(event, 1)}
                                                 >
                                                     <ListItemText primary="Mobile Wallet"/>
-                                                </ListItemButton>
+                                                </ListItemButton>*/}
                                             </List>
                                         </div>
                                         <div className={"col-span-4 p-4 text-xs"}>
@@ -472,7 +544,7 @@ const CheckOut = () => {
                                                                       label="Cash on Delivery (COD)"/>
                                                 </RadioGroup>
                                             </div>
-                                            <div className={classnames(selectedPaymentIndex === 1 ? "" : "hidden")}>
+                                            {/*<div className={classnames(selectedPaymentIndex === 1 ? "" : "hidden")}>
                                                 <RadioGroup
                                                     aria-label="deliveryOption"
                                                     name="deliveryOption"
@@ -481,8 +553,12 @@ const CheckOut = () => {
                                                 >
                                                     <FormControlLabel value="2" control={<Radio/>} label="Bkash"/>
                                                 </RadioGroup>
-                                            </div>
+                                            </div>*/}
                                         </div>
+                                    </div>
+                                    <div className={"mt-2 flex gap-4 justify-end"}>
+                                        <Button variant={"contained"} size={'small'}
+                                        >Checkout</Button>
                                     </div>
                                 </StepContent>
                             </Step>
