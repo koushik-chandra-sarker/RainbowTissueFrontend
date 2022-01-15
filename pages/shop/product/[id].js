@@ -8,18 +8,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {getProduct, getSimilarProductList} from "../../../services/store/product/ProductAction";
 import _ from "lodash";
 import {toast} from "react-toastify";
-import {addCart, updateCart} from "../../../services/store/cart/Action";
-import {getUserFromLocalStorage} from "../../../services/common/Action";
+import {addCart} from "../../../services/store/cart/Action";
+import {authenticated, getUserFromLocalStorage} from "../../../services/common/Action";
 import Swal from 'sweetalert2'
 import Link from "next/link";
 import styles from "../Index.module.scss";
 import {store_base_url} from "../../../constants";
-import {colors, Rating} from "@mui/material";
+import {Pagination, Rating} from "@mui/material";
 import ReviewCard from "./reviewCard";
 import {getRatingsObject, getReview, saveReview} from "../../../services/store/ratings/RatingsAction";
-import {isLoggedIn, login} from "../../../services/login/Action";
 
-
+const limit=2
 const Product = () => {
     const router = useRouter();
     let id = router.query.id
@@ -27,13 +26,18 @@ const Product = () => {
     const product = useSelector(store => store.product)
     const similarProducts = useSelector(state => state.similarProducts);
     const reviews = useSelector(store => store.ratings);
-    const [rating, setRating] = useState(0)
+    // const [rating, setRating] = useState(0)
     const user = getUserFromLocalStorage()
+    const auth= authenticated();
     const [review, setReview] = useState({user: null, product: null, comment: "", rating: null})
-
+    const [offset, setOffset] = useState(0)
     useEffect(() => {
         if (!_.isEmpty(reviews.data)) {
-            getRatingsObject(reviews.data)
+            if (!_.isEmpty(reviews.data.results)){
+                getRatingsObject(reviews.data.results)
+            }
+
+
         }
     }, [reviews])
     const [cartItem, setCartItem] = useState({
@@ -43,14 +47,12 @@ const Product = () => {
         if (id !== undefined) {
             dispatch(getProduct(id))
             dispatch(getSimilarProductList(`${store_base_url}/product/?active=true&limit=4&random=true`))
-            dispatch(getReview(id))
+            getReviewPaginated(id)
         }
     }, [id])
     useEffect(() => {
         if (!_.isEmpty(product.data.images)) {
             setProductBigImage(product.data.images[0].image)
-        }
-        if (!_.isEmpty(product.data)) {
         }
         setCartItem({
             ...cartItem,
@@ -68,7 +70,6 @@ const Product = () => {
 
 
     function handleQuantity(value) {
-
         let q = Number(cartItem.quantity) + (value)
         if (q > product.data.stock) {
             toast.error(`Product Available ${cartItem.product.stock}`, {autoClose: 10000, theme: "colored"});
@@ -92,6 +93,7 @@ const Product = () => {
             // summaryCalc(product.data.discount_price !==0 ? product.data.discount_price*(quantity): product.data.price*(quantity),quantity)
         }
     }
+
 
     function handleCart() {
         const user = getUserFromLocalStorage();
@@ -117,27 +119,48 @@ const Product = () => {
             })
         }
     }
+    useEffect(() => {
+        if (user!== null){
+            setReview({...review, user: user.pk, product: Number(id)})
+        }
+
+    }, [])
+
 
     function handleComment() {
-        setReview({...review, user: user.pk, product: Number(id)})
-
-        if (review.rating === null) {
-            return toast.error("Please Give Product Rating.", {theme: "colored"})
-        }
-        if (review.comment === "") {
-            return toast.error("Please Leave Your Comment.", {theme: "colored"})
-        }
-
-        saveReview(review).then(response=>{
-            if (response.status ===201){
-                toast.success("Review successfully posted",{theme:"colored"})
+            if (review.rating === null) {
+                return toast.error("Please Give Product Rating.", {theme: "colored"})
             }
-            else toast.error("Something want wrong!",{theme:"colored"})
-        }).catch(reason => {
-            toast.error(reason,{theme:"colored"})
-        })
+            if (review.comment === "") {
+                return toast.error("Please Leave Your Comment.", {theme: "colored"})
+            }
+            if (review.user === null){
+                return toast.error("Something went wrong! Please try again.", {theme: "colored"})
+            }
+
+            saveReview(review).then(response=>{
+                if (response.status ===201){
+                    getReviewPaginated(id)
+                    setReview({...review, comment: "", rating: null})
+                    toast.success("Review successfully posted",{theme:"colored"})
+                }
+                else toast.error("Something want wrong!",{theme:"colored"})
+            }).catch(reason => {
+                toast.error(reason,{theme:"colored"})
+            })
 
     }
+
+    function getReviewPaginated(id){
+        dispatch(getReview(id, limit, offset))
+    }
+
+    function handleReviewPagination(e, offset) {
+        setOffset(offset-1)
+    }
+    useEffect(()=>{
+        getReviewPaginated(id)
+    },[offset])
 
     return (
         <>
@@ -194,7 +217,7 @@ const Product = () => {
                                                                 <SplideSlide key={`product-slider-${slide.id}`}
                                                                              className={activeThumbnail === key ? "active" : ''}>
                                                                     <div
-                                                                        onClick={(e) => handleSliderClick(key, slide.image)}>
+                                                                        onClick={() => handleSliderClick(key, slide.image)}>
                                                                         <img className={'object-contain'}
                                                                              src={slide.small_image} alt={slide.image}/>
                                                                     </div>
@@ -209,7 +232,7 @@ const Product = () => {
                                         {/* product content */}
                                         <div>
                                             <h2 className="md:text-3xl text-2xl font-medium uppercase mb-2">{product.data.name}</h2>
-                                            <div className="flex items-center mb-4">
+                                            <d2iv className="flex items-center mb-4">
                                                 <div className="flex gap-1 text-sm text-yellow-400">
                                                     <span><i className="fas fa-star"/></span>
                                                     <span><i className="fas fa-star"/></span>
@@ -218,7 +241,7 @@ const Product = () => {
                                                     <span><i className="fas fa-star"/></span>
                                                 </div>
                                                 <div className="text-xs text-gray-500 ml-3">(150 Reviews)</div>
-                                            </div>
+                                            </d2iv>
                                             <div className="space-y-2">
                                                 <p className="text-gray-800 font-semibold space-x-2">
                                                     <span>Availability: </span>
@@ -355,10 +378,10 @@ const Product = () => {
                                                         min="1" max={product.data.stock}
                                                         maxLength={product.data.stock.length}
                                                     />
-                                                    <div
+                                                    <div1
                                                         onClick={() => handleQuantity(1)}
                                                         className="h-8 w-8 text-xl flex items-center justify-center cursor-pointer select-none">+
-                                                    </div>
+                                                    </div1>
                                                 </div>
                                             </div>
                                             {/* quantity end */}
@@ -398,7 +421,7 @@ const Product = () => {
                                     </div>
                                     {/* product view end */}
                                     {/* product details and review */}
-                                    <div className="container pb-16">
+                             <div className="container pb-16">
                                         {/* detail buttons */}
                                         <h3 className=" text-2xl border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium">
                                             Product Details
@@ -485,31 +508,39 @@ const Product = () => {
                                             <h2 className={'text-sm border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium'}>Product
                                                 Reviews
                                             </h2>
-
-                                            <section className={'w-full'}>
+                                            <section classNauthame={'w-full'}>
                                                 {/*comment*/}
-                                                <div className={'flex flex-col items-end py-5'}>
-                                                    <Rating
-                                                        name="simple-controlled"
-                                                        size="large"
-                                                        precision={1}
-                                                        onChange={(event, newValue) => {
-                                                            setReview({...review, rating: newValue})
-                                                        }}
-                                                    />
-                                                    <p>Rate This Product</p>
-                                                </div>
-                                                <input onChange={e => setReview({...review, comment: e.target.value})}
-                                                       type="text" className={'w-5/6 pl-2 border border-r-0 border-primary py-3 px-3 rounded-l-md focus:ring-primary focus:border-primary'}
-                                                       placeholder={'Comment '} htmlFor="comment"/>
-                                                <button onClick={handleComment}
-                                                        className={'w-1/6 py-3 bg-primary border border-primary text-white px-8 font-medium rounded-r-md hover:bg-transparent hover:text-primary transition'}>Submit
-                                                </button>
+                                                {
+                                                    auth?
+                                                        <>
+                                                            <div className={'flex flex-col items-end py-5'}>
+                                                                <Rating
+                                                                    value={review.rating}
+                                                                    name="simple-controlled"
+                                                                    size="large"
+                                                                    precision={1}
+                                                                    onChange={(event, newValue) => {
+                                                                        setReview({...review, rating: newValue})
+                                                                    }}
+                                                                />
+                                                                <p>Rate This Product</p>
+                                                            </div>
+                                                            <input onChange={e => setReview({...review, comment: e.target.value})}
+                                                                   value={review.comment} id={"product-comment"}
+                                                                   type="text" className={'w-5/6 pl-2 border border-r-0 border-primary py-3 px-3 rounded-l-md focus:ring-primary focus:border-primary'}
+                                                                   placeholder={'Comment '} htmlFor="comment"/>
+                                                            <button onClick={handleComment}
+                                                                    className={'w-1/6 py-3 bg-primary border border-primary text-white px-8 font-medium rounded-r-md hover:bg-transparent hover:text-primary transition'}>Submit
+                                                            </button>
+                                                        </>
+                                                        :<></>
+
+                                                }
                                             </section>
                                         </div>
                                         {
                                             !_.isEmpty(reviews.data) ?
-                                                reviews.data.map((v, key) => (
+                                                reviews.data.results.map((v, key) => (
                                                     <ReviewCard
                                                         key={`rating-${key}`}
                                                         review={v.comment}
@@ -519,6 +550,19 @@ const Product = () => {
                                                 :
                                                 <></>
                                         }
+                                        {/*review pagination*/}
+                                        <div className={'flex justify-center mt-4'}>
+                                            {
+                                                !_.isEmpty(reviews.data)?
+                                                    <Pagination count={reviews.data.count/limit} page={offset+1}
+                                                                onChange={function (event, page) {
+                                                                    handleReviewPagination(event, page)
+
+                                                                }}
+                                                                color="primary"/>:<></>
+                                            }
+
+                                        </div>
                                     </div>
 
 
@@ -526,8 +570,6 @@ const Product = () => {
                                     <div className="container pb-16">
                                         <h2 className="text-2xl md:text-3xl font-medium text-gray-800 uppercase mb-6">related
                                             products</h2>
-                                        {/* product wrapper */}
-                                        {/*<div className="grid lg:grid-cols-4 sm:grid-cols-2 gap-6">*/}
                                         <div className="flex flex-wrap -m-4">
                                             {
                                                 !_.isEmpty(similarProducts.data.results) ?

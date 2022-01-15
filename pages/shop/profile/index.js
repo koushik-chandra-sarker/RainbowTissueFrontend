@@ -45,7 +45,9 @@ const Index = () => {
     const reviews = useSelector(store => store.ratings);
     useEffect(() => {
         if (!_.isEmpty(reviews.data)) {
-            getRatingsObject(reviews.data)
+            if (!_.isEmpty(reviews.data.results)){
+                getRatingsObject(reviews.data)
+            }
         }
     }, [reviews])
 
@@ -363,7 +365,7 @@ const Index = () => {
                                                         <ReviewCard
                                                             key={`rating-${key}`}
                                                             review={v.comment}
-                                                            username={v.user.username}
+                                                            username={v.username}
                                                             rate={v.rating}/>
                                                     ))
                                                     :

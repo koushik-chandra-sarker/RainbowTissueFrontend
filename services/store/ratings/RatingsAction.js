@@ -5,13 +5,13 @@ import axios from "axios";
 import {base_static_url, store_base_url} from "../../../constants";
 import _ from "lodash";
 
-export const getReview= (id) => async dispatch => {
+export const getReview= (id, limit, offset) => async dispatch => {
     try {
         await dispatch({
             type: RATING_LOADING,
             payload: []
         })
-        const response = await axios.get(`${store_base_url}/review/?productId=${id}`)
+        const response = await axios.get(`${store_base_url}/review/?productId=${id}&limit=${limit}&offset=${offset}`)
         await dispatch({
             type: RATING_SUCCESS,
             payload: response.data
