@@ -8,7 +8,14 @@ import {
     SIMILAR_PRODUCTS_LOADING,
     SIMILAR_PRODUCTS_SUCCESS,
     SIMILAR_PRODUCTS_ERROR,
-    PAGINATED_PRODUCTS_LOADING, PAGINATED_PRODUCTS_SUCCESS
+    PAGINATED_PRODUCTS_LOADING,
+    PAGINATED_PRODUCTS_SUCCESS,
+    PRODUCTS_TOP_BANNER_LOADING,
+    PRODUCTS_TOP_BANNER_SUCCESS,
+    PRODUCTS_TOP_BANNER_ERROR,
+    PRODUCTS_TOP_BOTTOM_BANNER_LOADING,
+    PRODUCTS_TOP_BOTTOM_BANNER_SUCCESS,
+    PRODUCTS_TOP_BOTTOM_BANNER_ERROR, PAGINATED_PRODUCTS_ERROR
 } from "./ProductType";
 import axios from "axios";
 import {store_base_url} from "../../../constants";
@@ -93,6 +100,40 @@ export const getProductByCategory= (id) => async dispatch => {
         dispatch({
             type: PRODUCT_ERROR,
             payload: []
+        })
+    }
+}
+export const getProductTopBanner= () => async dispatch => {
+    try {
+        await dispatch({
+            type: PRODUCTS_TOP_BANNER_LOADING,
+            payload: []
+        })
+        const response = await axios.get(`${store_base_url}/product-banner/?type=top`)
+        await dispatch({
+            type: PRODUCTS_TOP_BANNER_SUCCESS,
+            payload: response.data
+        })
+    } catch (e) {
+        dispatch({
+            type: PRODUCTS_TOP_BANNER_ERROR
+        })
+    }
+}
+export const getProductTopBottomBanner= () => async dispatch => {
+    try {
+        await dispatch({
+            type: PRODUCTS_TOP_BOTTOM_BANNER_LOADING,
+            payload: []
+        })
+        const response = await axios.get(`${store_base_url}/product-banner/?type=top-bottom`)
+        await dispatch({
+            type: PRODUCTS_TOP_BOTTOM_BANNER_SUCCESS,
+            payload: response.data
+        })
+    } catch (e) {
+        dispatch({
+            type: PRODUCTS_TOP_BOTTOM_BANNER_ERROR
         })
     }
 }

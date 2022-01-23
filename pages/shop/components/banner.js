@@ -1,5 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Splide, SplideSlide} from "splide-nextjs/react-splide/dist/js";
+import {useDispatch, useSelector} from "react-redux";
+import {getProductTopBanner, getProductTopBottomBanner} from "../../../services/store/product/ProductAction";
+import Skeleton from "@mui/material/Skeleton";
+import _ from "lodash";
+import Link from 'next/link'
 const sqBanner = [
     {
         src: "static/image/banner/square/01-02.jpg",
@@ -28,6 +33,13 @@ const sqBanner = [
 
 ]
 const Banner = () => {
+    const dispatch =  useDispatch()
+    const topBanner = useSelector(store=>store.productTopBanner)
+    const topBottomBanner = useSelector(store=>store.productTopBottomBanner)
+    useEffect(()=>{
+        dispatch(getProductTopBanner())
+        dispatch(getProductTopBottomBanner())
+    },[dispatch])
     return (
         <div className="bg-white">
             <div className={'sm:w-4/5 w-full mx-auto'}>
@@ -136,135 +148,76 @@ const Banner = () => {
                     </Transition.Root>*/}
 
                 <main className="max-w-4/5 mx-auto px-4 sm:px-0">
-                    {/* <div className="flex items-center">
-                            <button
-                                type="button"
-                                className="p-2 text-primary border border-primary hover:text-primary-dark lg:hidden"
-                                onClick={() => setMobileFiltersOpen(true)}
-                            >
-                                <span className="sr-only">Filters</span>
-                                <MenuAlt2Icon className="w-5 h-5" aria-hidden="true"/>
-
-
-                            </button>
-                        </div>*/}
-
                     <section aria-labelledby="products-heading" className="pt-6 pb-24">
                         <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-8 gap-y-10">
-                            {/* Filters */}
-                            {/*<form className="hidden lg:block">
-                                    <h3 className="sr-only">Categories</h3>
-                                    <ul role="list"
-                                        className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
-                                        {subCategories.map((category) => (
-                                            <li key={category.name}>
-                                                <a href={category.href}>{category.name}</a>
-                                            </li>
-                                        ))}
-                                    </ul>
-
-                                    {filters.map((section) => (
-                                        <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
-                                            {({open}) => (
-                                                <>
-                                                    <h3 className="-my-3 flow-root">
-                                                        <Disclosure.Button
-                                                            className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                                                            <span
-                                                                className="font-medium text-gray-900">{section.name}</span>
-                                                            <span className="ml-6 flex items-center">
-                                                                  {open ? (
-                                                                      <MinusSmIcon className="h-5 w-5"
-                                                                                   aria-hidden="true"/>
-                                                                  ) : (
-                                                                      <PlusSmIcon className="h-5 w-5"
-                                                                                  aria-hidden="true"/>
-                                                                  )}
-                                                            </span>
-                                                        </Disclosure.Button>
-                                                    </h3>
-                                                    <Disclosure.Panel className="pt-6">
-                                                        <div className="space-y-4">
-                                                            {section.options.map((option, optionIdx) => (
-                                                                <div key={option.value} className="flex items-center">
-                                                                    <input
-                                                                        id={`filter-${section.id}-${optionIdx}`}
-                                                                        name={`${section.id}[]`}
-                                                                        defaultValue={option.value}
-                                                                        type="checkbox"
-                                                                        defaultChecked={option.checked}
-                                                                        className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                                                    />
-                                                                    <label
-                                                                        htmlFor={`filter-${section.id}-${optionIdx}`}
-                                                                        className="ml-3 text-sm text-gray-600"
-                                                                    >
-                                                                        {option.label}
-                                                                    </label>
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                    </Disclosure.Panel>
-                                                </>
-                                            )}
-                                        </Disclosure>
-                                    ))}
-                                </form>*/}
-
                             {/* Product grid */}
                             <div className="lg:col-span-5">
                                 {/* Replace with your content */}
+                                {
+                                    topBanner.loading?
+                                        <Skeleton variant="rectangular" height={200}  animation="wave" />:
+                                        !_.isEmpty(topBanner.data)?
+                                            <Link href={`/shop/product/${topBanner.data.id}`}>
+                                            <picture className={'cursor-pointer'}>
+                                                <source media="(min-width:650px)" srcSet={topBanner.data.banner_1_image}/>
+                                                {/*<source className={'w-full'} media="(min-width:350px)"*/}
+                                                {/*        srcSet={topBanner.data.banner_1_image_mobile}/>*/}
+                                                <img className={'w-full'} src={topBanner.data.banner_1_image_mobile} alt="Flowers"
+                                                     style={{width: "auto"}}/>
+                                            </picture>
+                                            </Link>:
+                                            <></>
+                                }
 
-                                <picture>
-                                    <source className={'w-full'} media="(min-width:650px)"
-                                            srcSet="static/image/banner/rainbow_banner.jpg"/>
-                                    {/*<source media="(min-width:465px)" srcSet="img_white_flower.jpg"/>*/}
-                                    <img className={'w-full'} src="static/image/rainbow_banner.webp" alt="Flowers"
-                                         style={{width: "auto"}}/>
-                                </picture>
                                 <div className={'mt-2'}>
-                                    <Splide
-                                        options={{
-                                            type: 'loop',
-                                            autoplay: true,
-                                            rewind: true,
-                                            // width: 800,
-                                            speed: '300',
-                                            interval: 3000,
-                                            gap: '0.75rem',
-                                            pagination: false,
-                                            pauseOnHover: true,
-                                            // fixedWidth: 200,
-                                            width: "100rem",
-                                            // height: '20rem',
-                                            perPage: 4,
-                                            cover: true,
-                                            focus: 'left',
-                                            isNavigation: true,
-                                            updateOnMove: true,
-                                            breakpoints: {
-                                                767: {
-                                                    perPage: 3,
-                                                    // height: '12rem',
+                                    {
+                                        topBottomBanner.loading?
+                                            <Skeleton variant="rectangular" height={200}  animation="wave" />:
+                                            !_.isEmpty(topBottomBanner.data)?
+                                                <Splide
+                                                    options={{
+                                                        type: 'loop',
+                                                        autoplay: true,
+                                                        rewind: true,
+                                                        // width: 800,
+                                                        speed: '300',
+                                                        interval: 3000,
+                                                        gap: '0.75rem',
+                                                        pagination: false,
+                                                        pauseOnHover: true,
+                                                        // fixedWidth: 200,
+                                                        width: "100rem",
+                                                        // height: '20rem',
+                                                        perPage: 4,
+                                                        cover: true,
+                                                        focus: 'left',
+                                                        isNavigation: true,
+                                                        updateOnMove: true,
+                                                        breakpoints: {
+                                                            767: {
+                                                                perPage: 3,
+                                                                // height: '12rem',
 
-                                                },
-                                                640: {
-                                                    perPage: 2,
-                                                    // height: '12rem',
-                                                },
-                                            },
-                                        }}
+                                                            },
+                                                            640: {
+                                                                perPage: 2,
+                                                                // height: '12rem',
+                                                            },
+                                                        },
+                                                    }}
 
-                                        hasSliderWrapper
-                                        // hasAutoplayControls
-                                        // hasAutoplayProgress
-                                    >
-                                        {sqBanner.map(slide => (
-                                            <SplideSlide key={slide.src}>
-                                                <a href={slide.url}><img src={slide.src} alt={slide.alt}/></a>
-                                            </SplideSlide>
-                                        ))}
-                                    </Splide>
+                                                    hasSliderWrapper
+                                                    // hasAutoplayControls
+                                                    // hasAutoplayProgress
+                                                >
+                                                    {topBottomBanner.data.map(product => (
+                                                        <SplideSlide key={`product-top-bottom-banner-${product.id}`}>
+                                                            <Link href={`/shop/product/${product.id}`}><a><img src={product.banner_2_image}/></a></Link>
+                                                        </SplideSlide>
+                                                    ))}
+                                                </Splide>:<></>
+                                    }
+
                                 </div>
                                 {/* /End replace */}
                             </div>

@@ -3,15 +3,15 @@ import styles from '../Index.module.scss'
 import classnames from 'classnames'
 import _ from "lodash"
 import Link from 'next/link'
-import {useSelector} from "react-redux";
-import {addCart} from "../../../services/store/cart/Action";
+import {useDispatch, useSelector} from "react-redux";
+import {addCart, getTotalCartByRequestedUser} from "../../../services/store/cart/Action";
 import {toast} from "react-toastify";
 
 
 const ProductGrid = ({products}) => {
     const loggedIn = useSelector(store => store.IsLoggedIn)
     const user = JSON.parse(localStorage.getItem('user'))
-
+    const dispatch =  useDispatch()
     function handleAddCart(product) {
 
         // if user Logged In save cart in database
@@ -25,6 +25,7 @@ const ProductGrid = ({products}) => {
             addCart(cart).then(response => {
                 if (response.status === 200) {
                     toast.success("Product added to Cart", {theme:"colored"});
+                    dispatch(getTotalCartByRequestedUser())
                 }else {
                     toast.error(response, {theme:"colored"});
                 }

@@ -4,6 +4,7 @@ import {Disclosure, Menu, Transition} from '@headlessui/react'
 import {useDispatch, useSelector} from "react-redux";
 import {isLoggedIn, logout} from "../../../services/login/Action";
 import {useRouter} from "next/router";
+import {getTotalCartByRequestedUser} from "../../../services/store/cart/Action";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -15,6 +16,7 @@ const Header = () => {
     const router = useRouter()
     useEffect(() => {
         dispatch(isLoggedIn())
+        dispatch(getTotalCartByRequestedUser())
     }, [dispatch])
 
     function logoutHandle() {
@@ -24,6 +26,7 @@ const Header = () => {
     }
     const loggedIn = useSelector(store => store.IsLoggedIn)
     const cartList = useSelector(store => store.cartList)
+    const totalCart = useSelector(store => store.totalCart)
     return (
         <>
             {/* header */}
@@ -69,7 +72,7 @@ const Header = () => {
                                 className="lg:block text-center text-gray-700 hover:text-primary transition hidden relative">
                             <span
                                 className="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
-                                {cartList.data.length}
+                                {totalCart.data}
                             </span>
                                 <div className="text-2xl">
                                     <i className="fas fa-shopping-bag"/>
