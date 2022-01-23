@@ -26,6 +26,7 @@ import OrderTab from "./components/OrderTab";
 
 const tab = [{name: "Profile"}, {name: "Password"}, {name: "Order"}, {name: "Review"}]
 
+
 const Index = () => {
     const dispatch = useDispatch()
     const [activeTabIndex, setActiveTabIndex] = useState(0)
@@ -44,7 +45,9 @@ const Index = () => {
     const reviews = useSelector(store => store.ratings);
     useEffect(() => {
         if (!_.isEmpty(reviews.data)) {
-            getRatingsObject(reviews.data)
+            if (!_.isEmpty(reviews.data.results)){
+                getRatingsObject(reviews.data)
+            }
         }
     }, [reviews])
 
@@ -99,9 +102,7 @@ const Index = () => {
         }).catch(error => {
             console.log(error)
         })
-
     }
-
 
     if (!loggedIn) {
         return (<CircularProgress color={"info"}/>)
@@ -253,8 +254,7 @@ const Index = () => {
                                                                         htmlFor="zipCode">
                                                                         Zip Code
                                                                     </label>
-                                                                    <input type="text" id="zipCode" required
-                                                                           placeholder={"Enter Your Zip Code"}
+                                                                    <input type="text" id="zipCode" required placeholder={"Enter Your Zip Code"}
                                                                            defaultValue={getDefaultAddressZipCode(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
@@ -267,8 +267,7 @@ const Index = () => {
                                                                         htmlFor="address">
                                                                         Address
                                                                     </label>
-                                                                    <input type="text" id="address" required
-                                                                           placeholder={"Enter Your Address"}
+                                                                    <input type="text" id="address" required placeholder={"Enter Your Address"}
                                                                            defaultValue={getDefaultAddressAddress(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
@@ -366,7 +365,7 @@ const Index = () => {
                                                         <ReviewCard
                                                             key={`rating-${key}`}
                                                             review={v.comment}
-                                                            username={v.user.username}
+                                                            username={v.username}
                                                             rate={v.rating}/>
                                                     ))
                                                     :
