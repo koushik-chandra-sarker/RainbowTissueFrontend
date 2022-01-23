@@ -1,24 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch} from "react-redux";
 import {toast} from "react-toastify";
-import {updateCart} from "../../../services/store/cart/Action";
+import {getCartList, updateCart} from "../../../services/store/cart/Action";
 
 const Card = ({cart, summaryCalc}) => {
     const [cartItem, setCartItem] = useState(cart)
     const dispatch = useDispatch()
-    function handleQuantityByInput(value){
-        if (value>cartItem.product.stock){
-            toast.error(`Product Available ${cartItem.product.stock}`, {autoClose: 10000, theme:"colored"});
+
+    function handleQuantityByInput(value) {
+        if (value > cartItem.product.stock) {
+            toast.error(`Product Available ${cartItem.product.stock}`, {autoClose: 10000, theme: "colored"});
             return
         }
-        if (value>0){
-            let total = cart.product.discount_price !==0 ? cart.product.discount_price*value: cart.product.price*value
-            setCartItem({...cartItem, quantity:value, total:total})
-            const quantity = value-cartItem.quantity
-            summaryCalc(cart.product.discount_price !==0 ? cart.product.discount_price*(quantity): cart.product.price*(quantity),quantity)
-        }
+        let total = cart.product.discount_price !== 0 ? cart.product.discount_price * value : cart.product.price * value
+        setCartItem({...cartItem, quantity: value, total: total})
+        const quantity = value - cartItem.quantity
+        summaryCalc(cart.product.discount_price !== 0 ? cart.product.discount_price * (quantity) : cart.product.price * (quantity), quantity)
+
 
     }
+
     useEffect(() => {
         const cart = {
             product: cartItem.product.id,
@@ -26,11 +27,14 @@ const Card = ({cart, summaryCalc}) => {
             quantity: cartItem.quantity,
             total: cartItem.total
         }
-        updateCart(cartItem.id, cart)
+        updateCart(cartItem.id, cart).then(function (response) {
+            if (response.status === 200) {
+                return
+            }
+        })
 
-    },[cartItem])
 
-
+    }, [cartItem])
 
 
     return (
@@ -38,7 +42,7 @@ const Card = ({cart, summaryCalc}) => {
             className="flex items-center md:justify-between gap-4 md:gap-6 p-4 border border-gray-200 rounded flex-wrap md:flex-nowrap">
             {/* cart image */}
             <div className="w-16 h-16 flex-shrink-0">
-                <img src={!_.isEmpty(cartItem.product)? cartItem.product.thumbnail:""} className="w-full h-full"/>
+                <img src={!_.isEmpty(cartItem.product) ? cartItem.product.thumbnail : ""} className="w-full h-full"/>
             </div>
             {/* cart image end */} {/* cart content */}
             <div className="md:w-1/3 w-full">
@@ -60,12 +64,12 @@ const Card = ({cart, summaryCalc}) => {
             {/* cartItem content end */} {/* cartItem quantity */}
             <div className="flex border border-gray-300 text-gray-600 divide-x divide-gray-300">
                 <input
-                    onChange={(e)=>handleQuantityByInput(e.target.value)}
+                    onChange={(e) => handleQuantityByInput(e.target.value)}
                     type={'number'}
                     className="h-8 w-16 focus:outline-none text-center flex items-center justify-center cart_quantity"
                     value={cartItem.quantity}
                     min="1" max={cartItem.product.stock} maxLength={cartItem.product.stock.length}
-                    />
+                />
             </div>
             {/* cart quantity end */}
             <div className="ml-auto md:ml-0">
@@ -78,7 +82,7 @@ const Card = ({cart, summaryCalc}) => {
     );
 };
 
-Card.getInitialProps = async ({query}) =>{
+Card.getInitialProps = async ({query}) => {
     const {cart, summaryCalc} = query
     return {
         props: {

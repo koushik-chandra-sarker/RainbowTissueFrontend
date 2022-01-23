@@ -1,6 +1,14 @@
 import axios from "axios";
-import {site_base_url, store_base_url} from "../../../constants";
-import {CART_LIST_ERROR, CART_LIST_LOADING, CART_LIST_SUCCESS} from "./Type";
+import {store_base_url} from "../../../constants";
+import {
+    CART_LIST_ERROR,
+    CART_LIST_LOADING,
+    CART_LIST_SUCCESS,
+    TOTAL_CART_ERROR,
+    TOTAL_CART_LOADING,
+    TOTAL_CART_SUCCESS
+} from "./Type";
+import {authenticated} from "../../common/Action";
 
 
 export const addCart = (cart) => {
@@ -38,7 +46,7 @@ export const getCartList = () => async dispatch => {
         })
     }
 }
-export const updateCart = (id,cart) => {
+export const updateCart = (id, cart) => {
     const token = localStorage.getItem("accessToken")
     return axios.put(`${store_base_url}/cart/${id}/`, cart,
         {
@@ -66,4 +74,35 @@ export const deleteCart = (cartId) => {
         }).catch(reason => {
             return reason.message
         })
+}
+
+export const getTotalCartByRequestedUser = () => async dispatch => {
+    const token = localStorage.getItem("accessToken")
+    try {
+        dispatch({
+            type: TOTAL_CART_LOADING
+        })
+        const auth = authenticated()
+        if (auth) {
+            const response = await axios.get(`${store_base_url}/totalCart/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            dispatch({
+                type: TOTAL_CART_SUCCESS,
+                payload: response.data
+            })
+        } else {
+            dispatch({
+                type: TOTAL_CART_SUCCESS,
+                payload: 0
+            })
+        }
+
+    } catch (e) {
+        dispatch({
+            type: TOTAL_CART_ERROR
+        })
+    }
 }

@@ -2,3 +2,7 @@ export  const PROFILE_LOADING= 'PROFILE_LOADING';
 export  const PROFILE_SUCCESS= 'PROFILE_SUCCESS';
 export  const PROFILE_ERROR= 'PROFILE_ERROR';
 
+export  const ORDER_LOADING= 'ORDER_LOADING';
+export  const ORDER_SUCCESS= 'ORDER_SUCCESS';
+export  const ORDER_ERROR= 'ORDER_ERROR';
+

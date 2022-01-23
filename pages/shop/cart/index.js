@@ -7,12 +7,10 @@ import _ from "lodash";
 import {getDeliveryFee} from "../../../services/store/deliveryFee/Action";
 import DataNotFound from "../../../components/DataNotFound";
 import Link from "next/link";
-
+import classnames from 'classnames'
 const Index = () => {
     const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(getCartList())
-    }, [dispatch])
+    const [disableCheckoutBtn, setDisableCheckoutBtn] = useState(false)
     const cartList = useSelector(store => store.cartList)
     const [summary, setSummary] = useState({
         subTotal: 0,
@@ -20,6 +18,10 @@ const Index = () => {
         total: 0,
         totalQuantity: 0
     })
+    useEffect(() => {
+        dispatch(getCartList())
+    }, [dispatch])
+
     useEffect(() => {
         summaryCalculate()
     }, [cartList])
@@ -72,8 +74,12 @@ const Index = () => {
             })
         })
     }
-    function updateCartList(){
+
+    function updateCartList() {
         dispatch(getCartList())
+    }
+    function handleCheckoutBtn(value){
+        setDisableCheckoutBtn(value)
     }
 
     return (
@@ -99,7 +105,10 @@ const Index = () => {
                                 :
                                 !_.isEmpty(cartList.data) ?
                                     cartList.data.map((cart, i) => (
-                                        <Card key={i} cart={cart} summaryCalc={summaryCalculateFromChild} updateCartList={updateCartList}/>
+                                        <Card key={i} cart={cart} summaryCalc={summaryCalculateFromChild}
+                                              updateCartList={updateCartList}
+                                              handleCheckoutBtn ={handleCheckoutBtn}
+                                        />
                                     )) :
                                     <>
                                         <DataNotFound
@@ -143,8 +152,8 @@ const Index = () => {
                         <h4>Total</h4>
                         <h4>{summary.total}</h4>
                     </div>
-                    {/* searchbar */}
-                    <div className="flex mb-5">
+                    {/* Coupon */}
+                    {/*<div className="flex mb-5">
                         <input type="text"
                                className="pl-4 w-full border border-r-0 border-primary py-2 px-3 rounded-l-md
                                focus:ring-primary focus:border-primary text-sm"
@@ -155,13 +164,16 @@ const Index = () => {
                         >
                             Apply
                         </button>
-                    </div>
-                    {/* searchbar end */} {/* checkout */}
-                    <a href="" className="bg-primary border border-primary text-white px-4 py-3 font-medium rounded-md uppercase hover:bg-transparent
-                        hover:text-primary transition text-sm w-full block text-center"
-                    >
-                        Process to checkout
-                    </a> {/* checkout end */}
+                    </div>*/}
+                    {/* Coupon end */} {/* checkout */}
+                    <Link href={'/shop/checkout'}>
+                        <a href=""
+                           className={classnames(disableCheckoutBtn?"pointer-events-none bg-gray-400":"bg-primary border border-primary","  text-white px-4 py-3 font-medium rounded-md uppercase hover:bg-transparent hover:text-primary transition text-sm w-full block text-center")}
+                        >
+                            Process to checkout
+                        </a>
+                    </Link>
+                    {/* checkout end */}
                 </div>
                 {/* order summary end */}
             </div>

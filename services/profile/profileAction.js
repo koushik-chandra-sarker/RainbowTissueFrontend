@@ -1,6 +1,8 @@
 import axios from "axios";
-import {base_static_url, site_base_url} from "../../constants";
+import {base_static_url, site_base_url, store_base_url} from "../../constants";
 import {
+    ORDER_ERROR,
+    ORDER_LOADING, ORDER_SUCCESS,
     PROFILE_ERROR,
     PROFILE_LOADING,
     PROFILE_SUCCESS,
@@ -77,9 +79,9 @@ export const extractDefaultAddress = (addressList) => {
     if (!_.isEmpty(addressList)) {
         const defaultAddress = addressList.find((address) => address.default)
         const otherAddressList = addressList.filter((address) => !address.default)
-        return [defaultAddress !== undefined ? defaultAddress: {}, otherAddressList !== undefined?otherAddressList:[]]
+        return [defaultAddress !== undefined ? defaultAddress : {}, otherAddressList !== undefined ? otherAddressList : []]
     }
-    return [{},[]]
+    return [{}, []]
 }
 
 export const getDefaultAddressId = (addressList) => {
@@ -171,7 +173,7 @@ export const deleteAddress = (id) => {
 }
 
 
-export const validateNewAddress = (data)=>{
+export const validateNewAddress = (data) => {
     const errors = {};
     errors.valid = true
     if (_.isEmpty(data.phone)) {
@@ -195,4 +197,27 @@ export const validateNewAddress = (data)=>{
         errors.valid = false
     }
     return errors;
+}
+
+
+export const getOrder = (limit, offset) => async dispatch => {
+    const token = localStorage.getItem("accessToken")
+    try {
+        dispatch({
+            type: ORDER_LOADING
+        })
+        const response = await axios.get(`${store_base_url}/orderByUser/?limit=${limit}&offset=${offset}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        dispatch({
+            type: ORDER_SUCCESS,
+            payload: response.data
+        })
+    } catch (e) {
+        dispatch({
+            type: ORDER_ERROR
+        })
+    }
 }

@@ -29,6 +29,10 @@ import {
 } from "../../../services/profile/profileAction";
 import Address from "./Address";
 import {toast} from "react-toastify";
+import {checkout} from "../../../services/store/checkout/Action";
+import Swal from "sweetalert2";
+import Router from "next/router";
+import {getDeliveryFee} from "../../../services/store/deliveryFee/Action";
 
 const steps = [
     {
@@ -84,11 +88,12 @@ const CheckOut = () => {
     const [newAddressError, setNewAddressError] = useState({valid: true})
     const [orderDetails, setOrderDetails] = useState({
         user: null,
-        shippingAddress: null,
-        total: null,
-        subTotal: null,
-        paymentMethod: 1
+        shippingAddress: null
     })
+    useEffect(()=>{
+        if (_.isEmpty(cartList.data)) Router.push('/shop/cart')
+        else summaryCalculate()
+    },[cartList])
     useEffect(() => {
         dispatch(getCartList())
         dispatch(isLoggedIn())
@@ -105,16 +110,57 @@ const CheckOut = () => {
             const [defaultAddress, otherAddressList] = extractDefaultAddress(profile.data.user.address)
             setDefaultAddress(defaultAddress)
             setOtherAddressList(otherAddressList)
+            setOrderDetails({...orderDetails, user: profile.data.user.id})
         }
     }, [profile])
 
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
+    function summaryCalculateFromChild(amount, quantity) {
+        getDeliveryFee(summary.totalQuantity + quantity).then(res => {
+            let deliveryFee = 0
+            if (!_.isEmpty(res.data)) {
+                deliveryFee = res.data[0].fees
+            }
+            setSummary({
+                ...summary,
+                subTotal: summary.subTotal + amount,
+                deliveryFee: deliveryFee,
+                total: summary.subTotal + amount + deliveryFee,
+                totalQuantity: summary.totalQuantity + quantity
+            })
+        })
+    }
+    function summaryCalculate() {
+        let totalQuantity = 0
+        let total = 0
+        if (!_.isEmpty(cartList.data)) {
+            total = cartList.data.reduce(function (a, b) {
+                return a + b.total;
+            }, 0)
+            totalQuantity = cartList.data.reduce(function (a, b) {
+                return a + b.quantity;
+            }, 0)
+        }
+        if (!_.isEmpty(cartList.data)) {
+            getDeliveryFee(totalQuantity).then(res => {
+                let deliveryFee = 0
+                if (!_.isEmpty(res.data)) {
+                    deliveryFee = res.data[0].fees
+                }
+                setSummary({
+                    ...summary,
+                    subTotal: total,
+                    deliveryFee: deliveryFee,
+                    total: total + deliveryFee,
+                    totalQuantity: totalQuantity
+                })
+                // console.log(res )
+            }).catch(reason => {
+                console.log(reason)
 
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
+            })
+        }
+
+    }
 
     const handleReset = () => {
         setActiveStep(0);
@@ -172,6 +218,35 @@ const CheckOut = () => {
     function handleShippingAddress(id) {
         setOrderDetails({...orderDetails, shippingAddress: id})
         setActiveStep(2)
+    }
+
+    function handleCheckout(){
+        if (!loggedIn) {
+            toast.error("Please Login First", {theme: 'colored'})
+            setActiveStep(0)
+            return
+        }
+        else if (_.isNull(orderDetails.shippingAddress)) {
+            toast.error("Please use an address", {theme: 'colored'})
+            setActiveStep(1)
+            return;
+        }
+        checkout(orderDetails).then(function (response){
+            if (response.status===200){
+                Swal.fire({
+                    title: "Your Order Is successful",
+                    text: 'Are you Want to ses your order status?',
+                    icon: 'success',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: "Latter",
+                    showCancelButton: true
+                }).then(value => {
+                    if (value.isConfirmed) {
+                        Router.push('/shop/profile?tab=order')
+                    }else Router.push('/shop')
+                })
+            }
+        })
     }
 
     return (
@@ -262,6 +337,8 @@ const CheckOut = () => {
                             </Step>
                             <Step key={'checkout-step-2'}>
                                 <StepLabel
+                                    onClick={()=>setActiveStep(1)}
+                                    className={"cursor-pointer"}
                                 >
                                     Shipping address
                                 </StepLabel>
@@ -309,7 +386,7 @@ const CheckOut = () => {
                                                                         country={item.country}
                                                                         address={item.address}
                                                                         profileId={profileId}
-                                                                        action={handleShippingAddress}
+                                                                        handleShippingAddress={handleShippingAddress}
                                                                     />
                                                                 </div>
 
@@ -519,8 +596,8 @@ const CheckOut = () => {
                                             <List component="nav" aria-label="main mailbox folders">
                                                 <ListItemButton
 
-                                                    selected={selectedPaymentIndex === 0}
-                                                    onClick={(event) => handlePaymentMethodListClick(event, 0)}
+                                                    selected={selectedPaymentIndex === 1}
+                                                    onClick={(event) => handlePaymentMethodListClick(event, 1)}
                                                 >
                                                     <ListItemText primary="Cash on Delivery"/>
                                                 </ListItemButton>
@@ -533,14 +610,14 @@ const CheckOut = () => {
                                             </List>
                                         </div>
                                         <div className={"col-span-4 p-4 text-xs"}>
-                                            <div className={classnames(selectedPaymentIndex === 0 ? "" : "hidden")}>
+                                            <div className={classnames(selectedPaymentIndex === 1 ? "" : "hidden")}>
                                                 <RadioGroup
                                                     aria-label="deliveryOption"
                                                     name="deliveryOption"
                                                     value={deliveryOption}
                                                     onChange={handleCODChange}
                                                 >
-                                                    <FormControlLabel value="1" control={<Radio/>}
+                                                    <FormControlLabel checked value="1" control={<Radio/>}
                                                                       label="Cash on Delivery (COD)"/>
                                                 </RadioGroup>
                                             </div>
@@ -557,7 +634,7 @@ const CheckOut = () => {
                                         </div>
                                     </div>
                                     <div className={"mt-2 flex gap-4 justify-end"}>
-                                        <Button variant={"contained"} size={'small'}
+                                        <Button onClick={handleCheckout} variant={"contained"} size={'small'}
                                         >Checkout</Button>
                                     </div>
                                 </StepContent>
@@ -579,7 +656,7 @@ const CheckOut = () => {
                                 :
                                 !_.isEmpty(cartList.data) ?
                                     cartList.data.map((cart, i) => (
-                                        <Card key={i} cart={cart}/>
+                                        <Card key={i} cart={cart} summaryCalc={summaryCalculateFromChild}/>
                                     )) :
                                     <></>
                         }

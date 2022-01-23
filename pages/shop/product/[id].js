@@ -8,12 +8,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {getProduct, getSimilarProductList} from "../../../services/store/product/ProductAction";
 import _ from "lodash";
 import {toast} from "react-toastify";
-import {addCart, updateCart} from "../../../services/store/cart/Action";
+import {addCart, getTotalCartByRequestedUser, updateCart} from "../../../services/store/cart/Action";
 import {getUserFromLocalStorage} from "../../../services/common/Action";
 import Swal from 'sweetalert2'
 import Link from "next/link";
 import styles from "../Index.module.scss";
-import {store_base_url} from "../../../constants";
+import {frontend_static_url, store_base_url} from "../../../constants";
 
 const Product = () => {
     const router = useRouter();
@@ -48,7 +48,6 @@ const Product = () => {
         setProductBigImage(src)
     }
 
-
     function handleQuantity(value) {
 
         let q = Number(cartItem.quantity) + (value)
@@ -82,8 +81,8 @@ const Product = () => {
             cart.user = user.pk
             cart.product = product.data.id
             addCart(cart).then(response => {
-                console.log(response)
                 if (response.data.message === 'success') {
+                    dispatch(getTotalCartByRequestedUser())
                     Swal.fire({
                         title: "Product Added To Cart",
                         text: 'Are you checkout this product now.',
@@ -231,73 +230,6 @@ const Product = () => {
                                             </div>
                                             <div className="mt-4"
                                                  dangerouslySetInnerHTML={{__html: product.data.shortDescription}}/>
-                                            {/* size */}
-                                            {/*<div className="mt-4">
-                                                <h3 className="text-base text-gray-800 mb-1">Size</h3>
-                                                <div className="flex items-center gap-2">
-                                                     single size
-                                                    <div className="size-selector">
-                                                        <input type="radio" name="size" className="hidden"
-                                                               id="size-xs"/>
-                                                        <label htmlFor="size-xs"
-                                                               className="text-xs p-1 border border-gray-200 rounded-sm  flex items-center justify-center cursor-pointer shadow-sm text-gray-600">
-                                                            50 pcs
-                                                        </label>
-                                                    </div>
-                                                     single size end   single size
-                                                    <div className="size-selector">
-                                                        <input type="radio" name="size" className="hidden" id="size-s"/>
-                                                        <label htmlFor="size-s"
-                                                               className="text-xs p-1 border-2 border-primary rounded-sm  flex items-center justify-center cursor-pointer shadow-sm text-gray-600">
-                                                            100 pcs
-                                                        </label>
-                                                    </div>
-                                                     single size end   single size
-                                                    <div className="size-selector">
-                                                        <input type="radio" name="size" className="hidden" id="size-m"
-                                                               defaultChecked/>
-                                                        <label htmlFor="size-m"
-                                                               className="text-xs p-1 border border-gray-200 rounded-sm  flex items-center justify-center cursor-pointer shadow-sm text-gray-600">
-                                                            150 pcs
-                                                        </label>
-                                                    </div>
-                                                     single size end
-                                                </div>
-                                            </div>*/}
-                                            {/* size end */}
-                                            {/* color */}
-                                            {/*<div className="mt-4">
-                                                <h3 className="text-base text-gray-800 mb-1">Color</h3>
-                                                <div className="flex items-center gap-2">
-                                                     single color
-                                                    <div className="color-selector">
-                                                        <input type="radio" name="color" className="hidden"
-                                                               id="color-red" defaultChecked/>
-                                                        <label htmlFor="color-red" style={{backgroundColor: '#a6e3ff'}}
-                                                               className="text-xs border border-gray-200 rounded-sm h-5 w-5 flex items-center justify-center cursor-pointer shadow-sm">
-                                                        </label>
-                                                    </div>
-                                                     single color end   single color
-                                                    <div className="color-selector">
-                                                        <input type="radio" name="color" className="hidden"
-                                                               id="color-white"/>
-                                                        <label htmlFor="color-white" style={{backgroundColor: '#fff'}}
-                                                               className="text-xs border border-gray-200 rounded-sm h-5 w-5 flex items-center justify-center cursor-pointer shadow-sm">
-                                                        </label>
-                                                    </div>
-                                                     single color end   single color
-                                                    <div className="color-selector">
-                                                        <input type="radio" name="color" className="hidden"
-                                                               id="color-black"/>
-                                                        <label htmlFor="color-black"
-                                                               style={{backgroundColor: '#f00d51'}}
-                                                               className="text-xs border border-gray-200 rounded-sm h-5 w-5 flex items-center justify-center cursor-pointer shadow-sm">
-                                                        </label>
-                                                    </div>
-                                                     single color end
-                                                </div>
-                                            </div>*/}
-                                            {/* color end */}
                                             {/* quantity */}
                                             <div className="mt-4">
                                                 <h3 className="text-base text-gray-800 mb-1">Quantity</h3>
@@ -339,18 +271,19 @@ const Product = () => {
                                             {/* add to cart button end */}
                                             {/* product share icons */}
                                             <div className="flex space-x-3 mt-4">
-                                                <a href="#"
-                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">
+                                                <p className={'flex items-center'}>Share: </p>
+                                                <a target={"_blank"} href={`https://www.facebook.com/sharer.php?u=${frontend_static_url}/shop/product/${product.data.id}`}
+                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center" rel="noreferrer">
                                                     <i className="fab fa-facebook-f"/>
                                                 </a>
-                                                <a href="#"
+                                                <a target={"_blank"} href={`https://twitter.com/share?url=${frontend_static_url}/shop/product/${product.data.id}`}
                                                    className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">
                                                     <i className="fab fa-twitter"/>
                                                 </a>
-                                                <a href="#"
-                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">
-                                                    <i className="fab fa-instagram"/>
-                                                </a>
+                                                {/*<a href="#"*/}
+                                                {/*   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">*/}
+                                                {/*    <i className="fab fa-instagram"/>*/}
+                                                {/*</a>*/}
                                             </div>
                                             {/* product share icons end */}
                                         </div>

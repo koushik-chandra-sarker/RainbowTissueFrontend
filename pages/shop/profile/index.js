@@ -6,7 +6,7 @@ import ProfileInfoCart from "./components/profileInfoCart";
 import _ from 'lodash'
 import Header from "../components/header";
 import {
-     getDefaultAddressAddress,
+    getDefaultAddressAddress,
     getDefaultAddressCity,
     getDefaultAddressCountry, getDefaultAddressId, getDefaultAddressZipCode,
     getProfile,
@@ -14,26 +14,25 @@ import {
 } from "../../../services/profile/profileAction";
 import Swal from "sweetalert2";
 import useProfile from "../../../hooks/useProfile";
-const tab = [
-    {
-        name: "Profile"
-    },
-    {
-        name: "Password"
-    },
-    {
-        name: "Order"
-    },
-    {
-        name: "Review"
-    },
+import {useRouter} from "next/router";
+import OrderTab from "./components/OrderTab";
 
-]
+const tab = [{name: "Profile"}, {name: "Password"}, {name: "Order"}, {name: "Review"}]
 
 const Index = () => {
     const dispatch = useDispatch()
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const [profile, profileId, loggedIn] = useProfile()
+    const router = useRouter();
+    const profileTab = router.query.tab
+    useEffect(() => {
+        console.log(profileTab)
+        if (profileTab === "order") {
+            console.log(profileTab)
+            setActiveTabIndex(2)
+        }
+    }, [profileTab])
+
     function handleEdit(e) {
         e.preventDefault()
         const formData = new FormData();
@@ -78,7 +77,9 @@ const Index = () => {
         }).catch(error => {
             console.log(error)
         })
+
     }
+
 
     if (!loggedIn) {
         return (<CircularProgress color={"info"}/>)
@@ -199,7 +200,8 @@ const Index = () => {
                                                                         htmlFor="city">
                                                                         City
                                                                     </label>
-                                                                    <input type="text" id={'addressId'} hidden value={getDefaultAddressId(profile.data.user.address)}/>
+                                                                    <input type="text" id={'addressId'} hidden
+                                                                           value={getDefaultAddressId(profile.data.user.address)}/>
                                                                     <input type="text" id="city"
                                                                            placeholder={'Ex: Dhaka'}
                                                                            defaultValue={getDefaultAddressCity(profile.data.user.address)}
@@ -229,7 +231,8 @@ const Index = () => {
                                                                         htmlFor="zipCode">
                                                                         Zip Code
                                                                     </label>
-                                                                    <input type="text" id="zipCode" required placeholder={"Enter Your Zip Code"}
+                                                                    <input type="text" id="zipCode" required
+                                                                           placeholder={"Enter Your Zip Code"}
                                                                            defaultValue={getDefaultAddressZipCode(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
@@ -242,7 +245,8 @@ const Index = () => {
                                                                         htmlFor="address">
                                                                         Address
                                                                     </label>
-                                                                    <input type="text" id="address" required placeholder={"Enter Your Address"}
+                                                                    <input type="text" id="address" required
+                                                                           placeholder={"Enter Your Address"}
                                                                            defaultValue={getDefaultAddressAddress(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
@@ -329,7 +333,9 @@ const Index = () => {
                                             </div>
 
                                         </div>
-                                        <div className={classnames(activeTabIndex === 2 ? "" : "hidden", '')}>order
+                                        <div
+                                            className={classnames(activeTabIndex === 2 ? "" : "hidden", 'bg-gray-100 p-5')}>
+                                            <OrderTab/>
                                         </div>
                                         <div className={classnames(activeTabIndex === 3 ? "" : "hidden", '')}>review
                                         </div>
