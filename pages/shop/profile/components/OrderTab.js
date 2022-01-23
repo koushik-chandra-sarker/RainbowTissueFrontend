@@ -10,6 +10,7 @@ const limit = 10
 const OrderTab = () => {
     const [expanded, setExpanded] = React.useState('');
     const [offset, setOffset] = React.useState(0);
+    const [page, setPage] = React.useState(1);
     const orders = useSelector(store=>store.orderForProfile)
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -22,6 +23,12 @@ const OrderTab = () => {
     function getOrderPaginated(){
         dispatch(getOrder(limit,offset))
     }
+
+    function handleOrderPaginate(e,page) {
+        setPage(page)
+        setOffset(limit*(page-1))
+    }
+
     return (
         <div>
             {
@@ -84,7 +91,7 @@ const OrderTab = () => {
                             <div className={'flex justify-center items-center mt-2 w-full'}>
                                 {
                                     orders.data.count>limit?
-                                        <Pagination count={orders.data.count/limit} page={offset+1} onChange={(e,offset)=>{setOffset(offset-1)}} color="primary" />
+                                        <Pagination count={Math.ceil(orders.data.count/limit)} page={offset+1} onChange={handleOrderPaginate} color="primary" />
                                     :<></>
                                 }
                             </div>

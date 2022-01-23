@@ -1,8 +1,14 @@
 
-import {RATING_LOADING, RATING_SUCCESS, RATING_ERROR} from "./RatingType";
+import {
+    RATING_LOADING,
+    RATING_SUCCESS,
+    RATING_ERROR,
+    REVIEW_FOR_PROFILE_LOADING,
+    REVIEW_FOR_PROFILE_SUCCESS, REVIEW_FOR_PROFILE_ERROR
+} from "./Type";
 
 import axios from "axios";
-import {base_static_url, store_base_url} from "../../../constants";
+import {store_base_url} from "../../../constants";
 import _ from "lodash";
 
 export const getReview= (id, limit, offset) => async dispatch => {
@@ -41,4 +47,21 @@ export function getRatingsObject(data){
         response.total = data.length
     }
     return response
+}
+export const getReviewByUserId= (id, limit, offset) => async dispatch => {
+    try {
+        await dispatch({
+            type: REVIEW_FOR_PROFILE_LOADING,
+            payload: []
+        })
+        const response = await axios.get(`${store_base_url}/review/?userId=${id}&limit=${limit}&offset=${offset}`)
+        await dispatch({
+            type: REVIEW_FOR_PROFILE_SUCCESS,
+            payload: response.data
+        })
+    } catch (e) {
+        dispatch({
+            type: REVIEW_FOR_PROFILE_ERROR
+        })
+    }
 }

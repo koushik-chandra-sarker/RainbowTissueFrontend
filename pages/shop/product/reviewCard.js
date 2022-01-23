@@ -4,7 +4,6 @@ import _ from "lodash";
 
 const ReviewCard = ({username, review, rate}) => {
     function getProtectedUsername(username) {
-        console.log(username)
         if (!_.isEmpty(username)){
             return username.substring(0, 3) + "******" + username.substring(username.length-2,username.length)
         }

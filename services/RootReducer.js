@@ -14,7 +14,7 @@ import ProductsReducerPaginated from "./store/product/ProductsReducerPaginated";
 import PreloaderReducer from "./preloader/PreloaderReducer";
 import profileReducer, {OrderForProfile} from "./profile/profileReducer";
 import TotalCartReducer from "./store/cart/TotalCartReducer";
-import RatingsReducer from "./store/ratings/RatingsReducer";
+import {ReviewReducer, ReviewReducerForUserId} from "./store/review/Reducer";
 
 
 const RootReducer = combineReducers({
@@ -35,7 +35,8 @@ const RootReducer = combineReducers({
     totalCart: TotalCartReducer,
     preloader: PreloaderReducer,
     profile:profileReducer,
-    ratings:RatingsReducer,
+    reviews:ReviewReducer,
+    reviewByUserId:ReviewReducerForUserId,
     orderForProfile:OrderForProfile,
 })
 

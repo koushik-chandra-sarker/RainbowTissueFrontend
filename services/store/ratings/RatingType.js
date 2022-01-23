@@ -1,3 +1,0 @@
-export  const RATING_LOADING= 'RATING_LOADING';
-export  const RATING_SUCCESS= 'RATING_SUCCESS';
-export  const RATING_ERROR= 'RATING_ERROR';

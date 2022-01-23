@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getProduct, getSimilarProductList} from "../../../services/store/product/ProductAction";
 import _ from "lodash";
 import {toast} from "react-toastify";
-import {addCart, getTotalCartByRequestedUser, updateCart} from "../../../services/store/cart/Action";
+import {addCart, getTotalCartByRequestedUser} from "../../../services/store/cart/Action";
 import {authenticated, getUserFromLocalStorage} from "../../../services/common/Action";
 import Swal from 'sweetalert2'
 import Link from "next/link";
@@ -16,7 +16,7 @@ import styles from "../Index.module.scss";
 import {Pagination, Rating} from "@mui/material";
 import {frontend_static_url, store_base_url} from "../../../constants";
 import ReviewCard from "./reviewCard";
-import {getRatingsObject, getReview, saveReview} from "../../../services/store/ratings/RatingsAction";
+import {getRatingsObject, getReview, saveReview} from "../../../services/store/review/Action";
 
 const limit=2
 const Product = () => {
@@ -25,8 +25,7 @@ const Product = () => {
     const dispatch = useDispatch()
     const product = useSelector(store => store.product)
     const similarProducts = useSelector(state => state.similarProducts);
-    const reviews = useSelector(store => store.ratings);
-    // const [rating, setRating] = useState(0)
+    const reviews = useSelector(store => store.reviews);
     const user = getUserFromLocalStorage()
     const auth= authenticated();
     const [review, setReview] = useState({user: null, product: null, comment: "", rating: null})

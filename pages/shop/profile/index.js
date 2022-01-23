@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import classnames from 'classnames'
 import {useDispatch, useSelector} from "react-redux";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, Pagination} from "@mui/material";
 import ProfileInfoCart from "./components/profileInfoCart";
 import _ from 'lodash'
 import Header from "../components/header";
@@ -14,48 +14,47 @@ import {
 } from "../../../services/profile/profileAction";
 import Swal from "sweetalert2";
 import useProfile from "../../../hooks/useProfile";
-import {getRatingsObject, getReview} from "../../../services/store/ratings/RatingsAction";
+import {getRatingsObject, getReview, getReviewByUserId} from "../../../services/store/review/Action";
 
 import ReviewCard from "../product/reviewCard";
-import {getCartList} from "../../../services/store/cart/Action";
-import Card from "../cart/components/Card";
-import {getDeliveryFee} from "../../../services/store/deliveryFee/Action";
-
 import {useRouter} from "next/router";
 import OrderTab from "./components/OrderTab";
+import ReviewTab from "./components/ReviewTab";
 
 const tab = [{name: "Profile"}, {name: "Password"}, {name: "Order"}, {name: "Review"}]
 
-
+const limit=5
 const Index = () => {
     const dispatch = useDispatch()
     const [activeTabIndex, setActiveTabIndex] = useState(0)
+    const [reviewPage, setReviewPage] = useState(1)
+    const [reviewOffset, setReviewOffset] = useState(0)
+
     const [profile, profileId, loggedIn] = useProfile()
     const router = useRouter();
     const profileTab = router.query.tab
+    const reviews = useSelector(store => store.reviewByUserId);
     useEffect(() => {
-        console.log(profileTab)
         if (profileTab === "order") {
-            console.log(profileTab)
             setActiveTabIndex(2)
         }
     }, [profileTab])
 
-    let id = router.query.id
-    const reviews = useSelector(store => store.ratings);
-    useEffect(() => {
-        if (!_.isEmpty(reviews.data)) {
-            if (!_.isEmpty(reviews.data.results)){
-                getRatingsObject(reviews.data)
-            }
-        }
-    }, [reviews])
+    // useEffect(() => {
+    //     if (!_.isEmpty(reviews.data)) {
+    //         if (!_.isEmpty(reviews.data.results)){
+    //             getRatingsObject(reviews.data)
+    //         }
+    //     }
+    // }, [reviews])
 
     useEffect(() => {
-        if (id !== undefined) {
-            dispatch(getReview(id))
+        if (loggedIn){
+            if (profile.data.user){
+                dispatch(getReviewByUserId(profile.data.user.id, limit, reviewOffset))
+            }
         }
-    }, [id])
+    }, [profile, reviewOffset])
 
 
     function handleEdit(e) {
@@ -102,6 +101,11 @@ const Index = () => {
         }).catch(error => {
             console.log(error)
         })
+    }
+
+    function handleReviewPaginate(e, page) {
+        setReviewPage(page)
+        setReviewOffset(limit*(page-1))
     }
 
     if (!loggedIn) {
@@ -358,18 +362,28 @@ const Index = () => {
                                             className={classnames(activeTabIndex === 2 ? "" : "hidden", 'bg-gray-100 p-5')}>
                                             <OrderTab/>
                                         </div>
-                                        <div className={classnames(activeTabIndex === 3 ? "" : "hidden", 'pl-4')}>
+                                        <div className={classnames(activeTabIndex === 3 ? "" : "hidden", 'p-4')}>
                                             {
-                                                !_.isEmpty(reviews.data) ?
-                                                    reviews.data.map((v,key)=>(
-                                                        <ReviewCard
-                                                            key={`rating-${key}`}
-                                                            review={v.comment}
-                                                            username={v.username}
-                                                            rate={v.rating}/>
-                                                    ))
+                                                reviews.loading?
+                                                    <div className={"flex h-40 justify-center items-center"}>
+                                                        <CircularProgress/>
+                                                    </div>
                                                     :
-                                                    <></>
+                                                    reviews.data.count>0?
+                                                        <>
+                                                            <ReviewTab reviews={reviews.data.results}/>
+                                                            <div className={'flex justify-center items-center mt-2 w-full'}>
+                                                                {
+                                                                    reviews.data.count>limit?
+                                                                        <Pagination count={Math.ceil(reviews.data.count/limit)} page={reviewPage} onChange={handleReviewPaginate} color="primary" />
+                                                                        :<></>
+                                                                }
+                                                            </div>
+                                                        </>
+                                                        :
+                                                        <div className={"flex h-40 justify-center items-center"}>
+                                                            Review not Found
+                                                        </div>
                                             }
 
                                         </div>
