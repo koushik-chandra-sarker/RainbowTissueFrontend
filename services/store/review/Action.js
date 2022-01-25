@@ -30,7 +30,12 @@ export const getReview= (id, limit, offset) => async dispatch => {
 }
 
 export const saveReview = (data) => {
-    return axios.post(`${store_base_url}/review-editable/`, data)
+    const token = localStorage.getItem("accessToken")
+    return axios.post(`${store_base_url}/review-editable/`, data, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
         .then(r =>  r).catch(reason => reason)
 }
 export function getRatingsObject(data){
@@ -64,4 +69,19 @@ export const getReviewByUserId= (id, limit, offset) => async dispatch => {
             type: REVIEW_FOR_PROFILE_ERROR
         })
     }
+}
+
+export const deleteReviewById = (id) => {
+    const token = localStorage.getItem("accessToken")
+    return axios.delete(`${store_base_url}/review-editable/${id}/`,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(value => {
+            return value
+        }).catch(reason => {
+            return reason.message
+        })
 }

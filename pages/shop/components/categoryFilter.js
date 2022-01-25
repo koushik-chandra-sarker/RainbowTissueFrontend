@@ -81,7 +81,7 @@ const CategoryFilter = () => {
 
     return (
         <>
-            <div className="bg-white">
+            <div className="bg-white mt-12">
                 <div className={'w-4/5 mx-auto'}>
                     {/* Mobile filter dialog */}
                     <Transition.Root show={mobileFiltersOpen} as={Fragment}>

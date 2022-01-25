@@ -7,6 +7,7 @@ import {isLoggedIn} from "../../services/login/Action";
 import {useDispatch} from "react-redux";
 import {isPreloaderActive} from "../../services/preloader/PreloaderAction";
 import {getCartList} from "../../services/store/cart/Action";
+import {getProductTopBanner, getProductTopBottomBanner} from "../../services/store/product/ProductAction";
 
 const Index = () => {
     const dispatch = useDispatch()
@@ -14,6 +15,8 @@ const Index = () => {
         dispatch(isLoggedIn())
         dispatch(isPreloaderActive(true))
         dispatch(getCartList())
+        dispatch(getProductTopBanner())
+        dispatch(getProductTopBottomBanner())
         setTimeout(()=>{
             dispatch(isPreloaderActive(false))
         },1000)
