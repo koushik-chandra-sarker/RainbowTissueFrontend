@@ -31,7 +31,7 @@ const ProfileInfoCart = ({profileId, pictureUrl, fName, lName, title, subtitle})
 
     return (
 
-        <div className={'sm:w-1/4 sm:border-r-2 border-stone-700 sm:pl-0 pl-16'}>
+        <div className={'sm:w-1/4 w-full sm:border-r-2 border-stone-700 '}>
             <div className={'flex justify-content-center mt-4 wrapper'}>
                 <img className={'rounded-full object-contain h-36 w-36 align-items-center border-2 border-blue-900'}
                      src={!_.isEmpty(pictureUrl) ? pictureUrl : "/static/image/img_14.png"}/>

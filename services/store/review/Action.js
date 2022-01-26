@@ -38,6 +38,15 @@ export const saveReview = (data) => {
     })
         .then(r =>  r).catch(reason => reason)
 }
+export const updateReview = (data, id) => {
+    const token = localStorage.getItem("accessToken")
+    return axios.put(`${store_base_url}/review-editable/${id}/`, data, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(r =>  r).catch(reason => reason)
+}
 export function getRatingsObject(data){
     let response= {}
     if (!_.isEmpty(data)){

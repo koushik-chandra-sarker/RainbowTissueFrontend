@@ -47,10 +47,11 @@ const OrderTab = () => {
                                             aria-controls="panel1bh-content"
                                             id="panel1bh-header"
                                         >
-                                            <div className={'w-full flex justify-between px-4 py-2'}>
+                                            <div className={'w-full flex flex-wrap justify-between px-4 py-2'}>
                                                 <h2>Order #{order.id}</h2>
                                                 <h3><Chip label={order.status} size="small" variant="outlined" /></h3>
                                                 <h3>Total: {order.total}</h3>
+                                                <h3>Date: {order.date}</h3>
                                             </div>
 
                                         </AccordionSummary>
@@ -59,25 +60,25 @@ const OrderTab = () => {
                                                 !_.isEmpty(order.items)?
                                                     order.items.map((item, key)=>(
                                                         <div key={`order-panel-orderItem-${key}`}
-                                                             className="flex   gap-4 md:gap-6 p-4 border border-gray-200 rounded flex-wrap md:flex-nowrap mb-2">
+                                                             className="flex   gap-1 sm:gap-6 p-4 border border-gray-200 rounded flex-wrap  mb-2">
                                                             {/* cart image */}
-                                                            <div className="w-32 flex-shrink-0">
-                                                                <img src={item.product.thumbnail} className="w-full"/>
+                                                            <div className=" grid grid-cols-10 gap-4">
+                                                                <img src={item.product.thumbnail} className="col-span-2 sm:col-span-1"/>
+                                                                <div className="break-words text-xs sm:text-base sm:col-span-5  col-span-8">
+                                                                    <p>{item.product.name}</p>
+                                                                    <p className={"text-sm text-primary"}>{item.product.currency} {item.product.price}</p>
+                                                                </div>
+                                                                <div className="sm:text-base text-xs sm:col-span-2  col-span-5">
+                                                                    Quantity: {item.quantity}
+                                                                </div>
+                                                                {/* cartItem content end */} {/* cartItem quantity */}
+                                                                {/* cart quantity end */}
+                                                                <div className="ml-auto md:ml-0 sm:col-span-2  col-span-5">
+                                                                    <p className="text-primary sm:text-base text-xs font-semibold">Total: {item.product.currency} {item.quantity*item.product.price}</p>
+                                                                </div>
                                                             </div>
                                                             {/* cart image end */}
                                                             {/* cart content */}
-                                                            <div className="md:w-1/3 w-full">
-                                                                <p>{item.name}</p>
-                                                                <p className={"text-sm text-primary"}>{item.product.currency} {item.product.price}</p>
-                                                            </div>
-                                                            <div className="md:w-1/3 w-full">
-                                                                Quantity: {item.quantity}
-                                                            </div>
-                                                            {/* cartItem content end */} {/* cartItem quantity */}
-                                                            {/* cart quantity end */}
-                                                            <div className="ml-auto md:ml-0">
-                                                                <p className="text-primary text-lg font-semibold">Total: {item.product.currency} {item.quantity*item.product.price}</p>
-                                                            </div>
                                                         </div>
                                                     )):<></>
                                             }

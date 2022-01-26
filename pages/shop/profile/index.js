@@ -14,16 +14,15 @@ import {
 } from "../../../services/profile/profileAction";
 import Swal from "sweetalert2";
 import useProfile from "../../../hooks/useProfile";
-import {getRatingsObject, getReview, getReviewByUserId} from "../../../services/store/review/Action";
+import {getReviewByUserId} from "../../../services/store/review/Action";
 
-import ReviewCard from "../product/reviewCard";
 import {useRouter} from "next/router";
 import OrderTab from "./components/OrderTab";
-import ReviewTab from "./components/ReviewTab";
+import ReviewCard from "./components/ReviewCard";
 
 const tab = [{name: "Profile"}, {name: "Password"}, {name: "Order"}, {name: "Review"}]
 
-const limit=5
+const limit = 5
 const Index = () => {
     const dispatch = useDispatch()
     const [activeTabIndex, setActiveTabIndex] = useState(0)
@@ -49,14 +48,15 @@ const Index = () => {
     // }, [reviews])
 
     useEffect(() => {
-        if (loggedIn){
-            if (profile.data.user){
+        getReviewPaginated()
+    }, [profile, reviewOffset])
+    function getReviewPaginated() {
+        if (loggedIn) {
+            if (profile.data.user) {
                 dispatch(getReviewByUserId(profile.data.user.id, limit, reviewOffset))
             }
         }
-    }, [profile, reviewOffset])
-
-
+    }
     function handleEdit(e) {
         e.preventDefault()
         const formData = new FormData();
@@ -105,7 +105,7 @@ const Index = () => {
 
     function handleReviewPaginate(e, page) {
         setReviewPage(page)
-        setReviewOffset(limit*(page-1))
+        setReviewOffset(limit * (page - 1))
     }
 
     if (!loggedIn) {
@@ -119,17 +119,17 @@ const Index = () => {
                     </> :
                     <>
                         <Header/>
-                        <section className={'sm:w-7/12 mx-auto  border-2 rounded-2xl mt-16'}>
+                        <section className={'xl:w-7/12 lg:w-10/12 w-11/12 mx-auto  border-2 rounded-2xl my-16'}>
 
                             <div
-                                className="flex border-b-2 border-gray-100 rounded-t-2xl justify-content-start px-4 pt-4 text-gray-500 profile bg-gray-50">
+                                className="flex flex-wrap md:text-base text-sm border-b-2 border-gray-100 rounded-t-2xl justify-content-start px-4 pt-4 text-gray-500 profile bg-gray-50">
                                 {
                                     tab.map((v, i) => (
                                         <div
 
                                             onClick={() => setActiveTabIndex(i)}
                                             key={`profile-tab-${i}`}
-                                            className={classnames(activeTabIndex === i ? "active" : "", "mx-8 pb-4")}>{v.name}</div>
+                                            className={classnames(activeTabIndex === i ? "active" : "", "md:mx-8 mx-2 pb-4")}>{v.name}</div>
                                     ))
                                 }
 
@@ -150,11 +150,11 @@ const Index = () => {
                                                 title={'Edit Profile info'}
                                                 subtitle={'Set up your Information if you needs'}
                                             />
-                                            <div className={'sm:w-3/4  px-4'}>
+                                            <div className={'sm:w-3/4 w-full  px-4'}>
 
                                                 <div className="w-full flex">
                                                     {/* Col */}
-                                                    <div className="w-full bg-white rounded-lg lg:rounded-l-none p-8">
+                                                    <div className="w-full bg-white rounded-lg lg:rounded-l-none sm:p-8">
                                                         <form className="pt-6 pb-8 mb-4 bg-white rounded"
                                                               onSubmit={handleEdit}>
                                                             <div className="mb-1 md:flex">
@@ -258,7 +258,8 @@ const Index = () => {
                                                                         htmlFor="zipCode">
                                                                         Zip Code
                                                                     </label>
-                                                                    <input type="text" id="zipCode" required placeholder={"Enter Your Zip Code"}
+                                                                    <input type="text" id="zipCode" required
+                                                                           placeholder={"Enter Your Zip Code"}
                                                                            defaultValue={getDefaultAddressZipCode(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
@@ -271,7 +272,8 @@ const Index = () => {
                                                                         htmlFor="address">
                                                                         Address
                                                                     </label>
-                                                                    <input type="text" id="address" required placeholder={"Enter Your Address"}
+                                                                    <input type="text" id="address" required
+                                                                           placeholder={"Enter Your Address"}
                                                                            defaultValue={getDefaultAddressAddress(profile.data.user.address)}
                                                                            className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
@@ -305,7 +307,7 @@ const Index = () => {
                                                 title={'Change Password'}
                                                 subtitle={'Manage your password'}
                                             />
-                                            <div className={'sm:w-3/4  px-4'}>
+                                            <div className={'sm:w-3/4 w-full  px-4'}>
                                                 <form className="pt-6 pb-8 mb-4 bg-white rounded">
                                                     <div className="mb-1 md:flex">
                                                         <div className="mb-4  w-full">
@@ -364,19 +366,30 @@ const Index = () => {
                                         </div>
                                         <div className={classnames(activeTabIndex === 3 ? "" : "hidden", 'p-4')}>
                                             {
-                                                reviews.loading?
+                                                reviews.loading ?
                                                     <div className={"flex h-40 justify-center items-center"}>
                                                         <CircularProgress/>
                                                     </div>
                                                     :
-                                                    reviews.data.count>0?
+                                                    reviews.data.count > 0 ?
                                                         <>
-                                                            <ReviewTab reviews={reviews.data.results}/>
-                                                            <div className={'flex justify-center items-center mt-2 w-full'}>
+                                                            {
+                                                                reviews.data.results.map((review, keys) => (
+                                                                    <ReviewCard review={review} getReview={getReviewPaginated}
+                                                                                key={`profile-review-card-${keys}`}/>
+
+                                                                ))
+                                                            }
+                                                            <div
+                                                                className={'flex justify-center items-center mt-2 w-full'}>
                                                                 {
-                                                                    reviews.data.count>limit?
-                                                                        <Pagination count={Math.ceil(reviews.data.count/limit)} page={reviewPage} onChange={handleReviewPaginate} color="primary" />
-                                                                        :<></>
+                                                                    reviews.data.count > limit ?
+                                                                        <Pagination
+                                                                            count={Math.ceil(reviews.data.count / limit)}
+                                                                            page={reviewPage}
+                                                                            onChange={handleReviewPaginate}
+                                                                            color="primary"/>
+                                                                        : <></>
                                                                 }
                                                             </div>
                                                         </>

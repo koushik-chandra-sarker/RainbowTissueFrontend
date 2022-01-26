@@ -1,11 +1,27 @@
-import React from 'react';
+import React, {useState} from 'react';
 import classnames from 'classnames'
 import {useSelector} from "react-redux";
 import Skeleton from "@mui/material/Skeleton";
 import _ from "lodash";
+import {toast} from "react-toastify";
+import {sendMail} from "../../services/mail/MailAction";
 
 const Contact = () => {
     const website = useSelector(state => state.website);
+    const [mail, setMail] = useState({
+        name:"", mailFrom:"", message: "",
+    })
+
+    function sendEmail() {
+        sendMail(mail).then(r => {
+            if (r.status===200){
+                toast(r.data.message);
+                setMail({...mail, name:"", mailFrom:"", message: "", })
+            }
+        }).catch(reason =>
+            toast("Something went wrong!"+reason)
+        )
+    }
     return (
         <>
 
