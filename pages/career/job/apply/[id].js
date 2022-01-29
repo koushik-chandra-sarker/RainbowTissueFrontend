@@ -66,7 +66,6 @@ const Application = () => {
             formdata.append("cv", application.cv)
             formdata.append("coverLetter", application.coverLetter)
             formdata.append("job", application.job)
-            console.log(application)
             apply(formdata).then(r => {
                 if (r.status === 201) {
                     toast("Message sent Successful");

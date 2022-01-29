@@ -9,7 +9,7 @@ import {
     getDefaultAddressAddress,
     getDefaultAddressCity,
     getDefaultAddressCountry, getDefaultAddressId, getDefaultAddressZipCode,
-    getProfile,
+    getProfile, updatePassword,
     updateProfile
 } from "../../../services/profile/profileAction";
 import Swal from "sweetalert2";
@@ -21,6 +21,20 @@ import OrderTab from "./components/OrderTab";
 import ReviewCard from "./components/ReviewCard";
 
 const tab = [{name: "Profile"}, {name: "Password"}, {name: "Order"}, {name: "Review"}]
+const validatePassword = (p1, p2) => {
+    const errors = {};
+    errors.valid = true
+    if (p1.length < 8) {
+        errors.password1 = 'Password must be 8 character.';
+        errors.valid = false
+    }
+    if (p1 !== p2) {
+        errors.password2 = "Confirm Password Doesn't Match";
+        errors.valid = false
+    }
+
+    return errors;
+};
 
 const limit = 5
 const Index = () => {
@@ -28,6 +42,7 @@ const Index = () => {
     const [activeTabIndex, setActiveTabIndex] = useState(0)
     const [reviewPage, setReviewPage] = useState(1)
     const [reviewOffset, setReviewOffset] = useState(0)
+    const [error, setError] = useState({})
 
     const [profile, profileId, loggedIn] = useProfile()
     const router = useRouter();
@@ -50,6 +65,7 @@ const Index = () => {
     useEffect(() => {
         getReviewPaginated()
     }, [profile, reviewOffset])
+
     function getReviewPaginated() {
         if (loggedIn) {
             if (profile.data.user) {
@@ -57,6 +73,7 @@ const Index = () => {
             }
         }
     }
+
     function handleEdit(e) {
         e.preventDefault()
         const formData = new FormData();
@@ -108,6 +125,25 @@ const Index = () => {
         setReviewOffset(limit * (page - 1))
     }
 
+    function handleChangePassword(e) {
+        e.preventDefault()
+        const password = {
+            old_password: e.target.old_password.value,
+            new_password1: e.target.password1.value,
+            new_password2: e.target.password2.value
+        }
+        const error = validatePassword(password.new_password1, password.new_password2)
+        setError(error)
+        if (error.valid){
+            updatePassword(password).then(function (response){
+                // console.log(response)
+            }).catch(function (reason){
+                // console.log(reason)
+            })
+        }
+
+    }
+
     if (!loggedIn) {
         return (<CircularProgress color={"info"}/>)
     } else {
@@ -154,7 +190,8 @@ const Index = () => {
 
                                                 <div className="w-full flex">
                                                     {/* Col */}
-                                                    <div className="w-full bg-white rounded-lg lg:rounded-l-none sm:p-8">
+                                                    <div
+                                                        className="w-full bg-white rounded-lg lg:rounded-l-none sm:p-8">
                                                         <form className="pt-6 pb-8 mb-4 bg-white rounded"
                                                               onSubmit={handleEdit}>
                                                             <div className="mb-1 md:flex">
@@ -297,6 +334,7 @@ const Index = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                        {/*Password Change:start*/}
                                         <div
                                             className={classnames(activeTabIndex === 1 ? "" : "hidden", '', 'flex flex-wrap')}>
 
@@ -308,7 +346,8 @@ const Index = () => {
                                                 subtitle={'Manage your password'}
                                             />
                                             <div className={'sm:w-3/4 w-full  px-4'}>
-                                                <form className="pt-6 pb-8 mb-4 bg-white rounded">
+                                                <form onSubmit={handleChangePassword}
+                                                      className="pt-6 pb-8 mb-4 bg-white rounded">
                                                     <div className="mb-1 md:flex">
                                                         <div className="mb-4  w-full">
                                                             <label
@@ -320,8 +359,8 @@ const Index = () => {
                                                                    placeholder={'Enter Your Old Password'}
                                                                    required
                                                                    className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
-                                                    focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
-                                                    px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+                                                                            focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
+                                                                            px-3 leading-8 transition-colors duration-200 ease-in-out"/>
                                                         </div>
 
                                                     </div>
@@ -330,18 +369,23 @@ const Index = () => {
                                                             className="block mb-2 text-sm font-semibold text-gray-700"
                                                             htmlFor="password1">
                                                             New Password
+                                                            <span
+                                                                className={"text-xs text-red-500"}> {error.password1}</span>
                                                         </label>
                                                         <input type="password" id="password1"
                                                                placeholder={'Enter Your New Password'}
                                                                className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500
                                                     focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1
                                                     px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+                                                        <span className={'text-xs text-gray-600'}>Password at least 8 character.</span>
                                                     </div>
                                                     <div className="w-full">
                                                         <label
                                                             className="block mb-2 text-sm font-semibold text-gray-700"
                                                             htmlFor="password2">
-                                                            Confarm Password
+                                                            Confirm Password
+                                                            <span
+                                                                className={"text-xs text-red-500"}> {error.password2}</span>
                                                         </label>
                                                         <input type="password" id="password2"
                                                                placeholder={'Enter Your New Password'}
@@ -360,10 +404,15 @@ const Index = () => {
                                             </div>
 
                                         </div>
+                                        {/*Password Change:end*/}
+                                        {/*OrderTab:start*/}
                                         <div
                                             className={classnames(activeTabIndex === 2 ? "" : "hidden", 'bg-gray-100 p-5')}>
                                             <OrderTab/>
                                         </div>
+                                        {/*OrderTab:end*/}
+                                        {/*Review:start*/}
+
                                         <div className={classnames(activeTabIndex === 3 ? "" : "hidden", 'p-4')}>
                                             {
                                                 reviews.loading ?
@@ -375,7 +424,8 @@ const Index = () => {
                                                         <>
                                                             {
                                                                 reviews.data.results.map((review, keys) => (
-                                                                    <ReviewCard review={review} getReview={getReviewPaginated}
+                                                                    <ReviewCard review={review}
+                                                                                getReview={getReviewPaginated}
                                                                                 key={`profile-review-card-${keys}`}/>
 
                                                                 ))
@@ -400,6 +450,7 @@ const Index = () => {
                                             }
 
                                         </div>
+                                        {/*Review:end*/}
                                     </> :
                                     <></>
                             }

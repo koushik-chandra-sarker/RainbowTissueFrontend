@@ -221,3 +221,17 @@ export const getOrder = (limit, offset) => async dispatch => {
         })
     }
 }
+
+export const updatePassword = (data) => {
+    const token = localStorage.getItem("accessToken")
+    return axios.put(`${base_static_url}/account/api/change-password/`, data,
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(value => {
+        return value
+    }).catch(reason => {
+        return reason
+    })
+}
