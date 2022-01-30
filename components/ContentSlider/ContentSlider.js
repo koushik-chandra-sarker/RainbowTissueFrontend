@@ -12,6 +12,7 @@ import {ChevronDownIcon} from '@heroicons/react/solid'
 import {getProductList, getSimilarProductList} from "../../services/store/product/ProductAction";
 import {store_base_url} from "../../constants";
 import Link from "next/link";
+import {isPreloaderActive} from "../../services/preloader/PreloaderAction";
 
 const ContentSlider = () => {
     const productCat = useSelector(state => state.category);
@@ -34,8 +35,12 @@ const ContentSlider = () => {
 
     const getProducts = (catId) => {
         dispatch(getProductList(`${store_base_url}/product/?active=true&category=${catId}`))
-
     }
+
+    function handlePreloader() {
+        dispatch(isPreloaderActive(true))
+    }
+
     return (
         <div>
             <section className={classnames(styles.tabs, '')}>
@@ -305,7 +310,20 @@ const ContentSlider = () => {
                                                     !_.isEmpty(similarProducts.data.results) ?
                                                         similarProducts.data.results.map((slide, i) => (
                                                             <SplideSlide key={`slide!!-${i}`}>
-                                                                <img src={slide.thumbnail} />
+                                                                <img className={classnames('cursor-pointer')}
+                                                                     src={slide.thumbnail} alt={slide.name}/>
+                                                                <div
+                                                                    className={classnames('w-full h-full flex flex-col items-center slider_content justify-center bg-primary bg-opacity-70')}>
+                                                                    <h5 className={'text-white  text-center mt-2 '}>
+                                                                        {slide.name}
+                                                                    </h5>
+                                                                    <Link href={`/shop/product/${slide.id}`}>
+                                                                        <a className={'text-center py-2 px-3 mt-1 bg-primary transition ease-linear hover:bg-secondary'}
+                                                                           href="#">
+                                                                            <button onClick={handlePreloader}>Details</button>
+                                                                        </a>
+                                                                    </Link>
+                                                                </div>
                                                             </SplideSlide>
                                                         )) :
                                                         <div className={'text-primary h-40 -ml-64 flex justify-center items-center'}> Product Not Available</div>
@@ -371,7 +389,7 @@ const ContentSlider = () => {
                                                                     <Link href={`/shop/product/${product.id}`}>
                                                                         <a className={'text-center py-2 px-3 mt-1 bg-primary transition ease-linear hover:bg-secondary'}
                                                                            href="#">
-                                                                            <button>Details</button>
+                                                                            <button onClick={handlePreloader}>Details</button>
                                                                         </a>
                                                                     </Link>
                                                                 </div>

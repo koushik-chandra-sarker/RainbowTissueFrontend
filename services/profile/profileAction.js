@@ -231,7 +231,7 @@ export const updatePassword = (data) => {
             }
         }).then(value => {
         return value
-    }).catch(reason => {
-        return reason
+    }).catch(error => {
+        return error.response
     })
 }

@@ -16,9 +16,11 @@ import Swal from "sweetalert2";
 import useProfile from "../../../hooks/useProfile";
 import {getReviewByUserId} from "../../../services/store/review/Action";
 
-import {useRouter} from "next/router";
+import {Router, useRouter} from "next/router";
 import OrderTab from "./components/OrderTab";
 import ReviewCard from "./components/ReviewCard";
+import {toast} from "react-toastify";
+import {logout} from "../../../services/login/Action";
 
 const tab = [{name: "Profile"}, {name: "Password"}, {name: "Order"}, {name: "Review"}]
 const validatePassword = (p1, p2) => {
@@ -136,9 +138,13 @@ const Index = () => {
         setError(error)
         if (error.valid){
             updatePassword(password).then(function (response){
-                // console.log(response)
-            }).catch(function (reason){
-                // console.log(reason)
+                if (response.status===200){
+                    logout()
+                    router.push('/shop/login')
+                    toast.success(response.data.message, {theme:"colored"})
+                }else if (response.status===400){
+                    toast.error(response.data.old_password[0], { autoClose: false,theme:"colored"})
+                }
             })
         }
 

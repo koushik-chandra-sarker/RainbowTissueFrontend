@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useRef, useState} from 'react';
 import {Splide, SplideSlide} from "splide-nextjs/react-splide/dist/js";
 import InnerImageZoom from "react-inner-image-zoom";
 import classnames from 'classnames'
@@ -17,6 +17,7 @@ import {Pagination, Rating} from "@mui/material";
 import {frontend_static_url, store_base_url} from "../../../constants";
 import ReviewCard from "./reviewCard";
 import {getRatingsObject, getReview, saveReview} from "../../../services/store/review/Action";
+import {isPreloaderActive} from "../../../services/preloader/PreloaderAction";
 
 const limit=2
 const Product = () => {
@@ -30,6 +31,9 @@ const Product = () => {
     const auth= authenticated();
     const [review, setReview] = useState({user: null, product: null, comment: "", rating: null})
     const [offset, setOffset] = useState(0)
+    const containerRef = useRef();
+    const { current } = containerRef;
+
     useEffect(() => {
         if (!_.isEmpty(reviews.data)) {
             if (!_.isEmpty(reviews.data.results)){
@@ -118,6 +122,7 @@ const Product = () => {
             })
         }
     }
+
     useEffect(() => {
         if (user!== null){
             setReview({...review, user: user.pk, product: Number(id)})
@@ -125,7 +130,9 @@ const Product = () => {
 
     }, [])
 
-
+    useEffect(()=>{
+        dispatch(isPreloaderActive(false))
+    }, [current]);
     function handleComment() {
             if (review.rating === null) {
                 return toast.error("Please Give Product Rating.", {theme: "colored"})

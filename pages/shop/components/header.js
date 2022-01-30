@@ -1,10 +1,16 @@
-import React, {Fragment, useEffect} from 'react';
+import React, {Fragment, useEffect, useRef, useState} from 'react';
 import Link from "next/link";
 import {Disclosure, Menu, Transition} from '@headlessui/react'
 import {useDispatch, useSelector} from "react-redux";
 import {isLoggedIn, logout} from "../../../services/login/Action";
 import {useRouter} from "next/router";
 import {getTotalCartByRequestedUser} from "../../../services/store/cart/Action";
+import SearchedProductCard from "./SearchedProductCard";
+import {Card, CircularProgress} from "@mui/material";
+import {getProductList} from "../../../services/store/product/ProductAction";
+import {store_base_url} from "../../../constants";
+import _ from "lodash";
+import useOutsideClicked from "../../../hooks/useOutsideClicked";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -14,19 +20,42 @@ const Header = () => {
 
     const dispatch = useDispatch()
     const router = useRouter()
+    const loggedIn = useSelector(store => store.IsLoggedIn)
+    const totalCart = useSelector(store => store.totalCart)
+    const [searchKey, setSearchKey] = useState("")
+    const productList = useSelector(state => state.products);
+    const [products, setProducts] = useState("")
+    const { ref, isComponentVisible, setIsComponentVisible } = useOutsideClicked(false);
+
     useEffect(() => {
         dispatch(isLoggedIn())
         dispatch(getTotalCartByRequestedUser())
     }, [dispatch])
-
+    useEffect(() => {
+        setProducts(productList)
+    }, [productList])
     function logoutHandle() {
         logout();
         dispatch(isLoggedIn())
         router.push('/shop')
     }
-    const loggedIn = useSelector(store => store.IsLoggedIn)
-    const cartList = useSelector(store => store.cartList)
-    const totalCart = useSelector(store => store.totalCart)
+
+    const getProducts = () => {
+        dispatch(getProductList(`${store_base_url}/product/?active=true&search=${searchKey}`))
+    }
+
+    function handleSearchProduct() {
+
+        if (!_.isEmpty(searchKey)) {
+            getProducts()
+            setIsComponentVisible(true)
+        } else {
+            setProducts({})
+            setIsComponentVisible(false)
+        }
+
+    }
+
     return (
         <>
             {/* header */}
@@ -47,18 +76,37 @@ const Header = () => {
                         <span className="absolute left-4 top-3 text-lg text-gray-400">
                             <i className="fas fa-search"/>
                         </span>
-                        <input type="text"
+                        <input type="text" onChange={e => setSearchKey(e.target.value)}
                                className="pl-12 w-full border border-r-0 border-primary py-3 px-3 rounded-l-md focus:ring-primary focus:border-primary"
                                placeholder="search"/>
-                        <button type="submit"
+                        <button type="submit" onClick={handleSearchProduct}
                                 className="bg-primary border border-primary text-white px-8 font-medium rounded-r-md hover:bg-transparent hover:text-primary transition">
                             Search
                         </button>
+                        {
+                            isComponentVisible ?
+                                <Card ref={ref}
+                                      className={'absolute bg-white w-full top-16 p-4 gap-4 max-h-96 grid z-10 overflow-auto'}>
+                                    {
+                                        products.loading ?
+                                            <div className={'flex justify-center p-4'}><CircularProgress/></div> :
+                                            !_.isEmpty(products.data) ?
+                                                products.data.map((product, key) => (
+                                                    <SearchedProductCard key={`search-product-${key}`}
+                                                                         product={product}/>
+                                                )) :
+                                                <div className={'flex justify-center p-4'}>Product not match</div>
+                                    }
+
+                                </Card> :
+                                <></>
+                        }
+
                     </div>
                     {/* searchbar end */}
                     {/* navicons */}
                     <div className="space-x-4 flex items-center">
-                       {/* <a href="wishlist.html"
+                        {/* <a href="wishlist.html"
                            className="block text-center text-gray-700 hover:text-primary transition relative">
                             <span
                                 className="absolute -right-0 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">5</span>
