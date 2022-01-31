@@ -4,23 +4,15 @@ import {XIcon} from '@heroicons/react/outline'
 import {ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon} from '@heroicons/react/solid'
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash'
-import {getProductList, getProductListPaginated} from "../../../services/store/product/ProductAction";
+import {getProductList, getProductListPaginated, getProductOffer} from "../../../services/store/product/ProductAction";
 import {Pagination, Skeleton} from "@mui/material";
 import {store_base_url} from "../../../constants";
 import ProductGrid from "./productGrid";
-
+import Link from "next/link";
 const sortOptions = [
-    {name: 'Price: Low to High',orderKey:'price', order:'asc'},
-    {name: 'Price: High to Low',orderKey:'price', order:'desc'},
+    {name: 'Price: Low to High', orderKey: 'price', order: 'asc'},
+    {name: 'Price: High to Low', orderKey: 'price', order: 'desc'},
 ]
-const subCategories = [
-    {name: '3 Pack Combo', href: '#'},
-    {name: '5 Pack Combo', href: '#'},
-    {name: 'Special Offer', href: '#'},
-    {name: 'Boishakhi Offer', href: '#'},
-    {name: 'Mix Combo', href: '#'},
-]
-
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
@@ -30,10 +22,12 @@ const CategoryFilter = () => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const productCat = useSelector(state => state.category);
     const products = useSelector(state => state.productsPaginated);
+    const productOffer = useSelector(state => state.productOffer);
     const [offset, setOffset] = React.useState(1);
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(getProductListPaginated(`${store_base_url}/product/?&active=${status}&limit=${limit}&offset=${(offset - 1) * limit}`));
+        dispatch(getProductOffer())
     }, [dispatch])
 
 
@@ -48,27 +42,26 @@ const CategoryFilter = () => {
 
     function handleCategoryFilter(e) {
 
-        let cats = ''
         if (e.target.checked) {
-            setCatParams(prevState =>[...
+            setCatParams(prevState => [...
                 prevState, `&category=${e.target.name}`
             ])
-        }
-        else{
+        } else {
             const arr = catParams.filter((item) => item !== `&category=${e.target.name}`);
             setCatParams(arr);
         }
 
     }
-    useEffect(()=>{
+
+    useEffect(() => {
         // getProducts(catParams,true, 1)
-        let categoryParams=''
-        catParams.forEach((v)=>{
-            categoryParams+=v
+        let categoryParams = ''
+        catParams.forEach((v) => {
+            categoryParams += v
         })
         setCatParamsStr(categoryParams)
         getProducts(categoryParams, true, 1)
-    },[catParams])
+    }, [catParams])
 
     const getProducts = (categoryParam, status = true, offset = 1) => {
         dispatch(getProductListPaginated(`${store_base_url}/product/?active=${status}&limit=${limit}&offset=${(offset - 1) * limit}${categoryParam}`))
@@ -82,7 +75,7 @@ const CategoryFilter = () => {
     return (
         <>
             <div className="bg-white mt-12">
-                <div className={'w-4/5 mx-auto'}>
+                <div className={'sm:w-4/5 w-full mx-auto'}>
                     {/* Mobile filter dialog */}
                     <Transition.Root show={mobileFiltersOpen} as={Fragment}>
                         <Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
@@ -124,14 +117,19 @@ const CategoryFilter = () => {
                                     {/* Filters mobile start*/}
                                     <form className="mt-4 border-t border-gray-200">
                                         <h3 className="sr-only">Categories</h3>
+                                        {/*product offer list*/}
                                         <ul role="list" className="font-medium text-gray-900 px-2 py-3">
-                                            {subCategories.map((category) => (
-                                                <li key={`product-category-${category.name}`}>
-                                                    <a href={category.href} className="block px-2 py-3">
-                                                        {category.name}
-                                                    </a>
-                                                </li>
-                                            ))}
+                                            {
+                                                !_.isEmpty(productOffer.data) ?
+
+                                                    productOffer.data.map((offer) => (
+                                                        <li key={`product-category-${offer.offerTitle}`}>
+                                                            <Link href={`/shop/product/${offer.id}`} className="block px-2 py-3">
+                                                                {offer.offerTitle}
+                                                            </Link>
+                                                        </li>
+                                                    )) : <></>
+                                            }
                                         </ul>
 
                                         {
@@ -167,7 +165,9 @@ const CategoryFilter = () => {
                                                                                 defaultValue={option.name}
                                                                                 type="checkbox"
                                                                                 defaultChecked={false}
-                                                                                onClick={function (e){handleCategoryFilter(e)}}
+                                                                                onClick={function (e) {
+                                                                                    handleCategoryFilter(e)
+                                                                                }}
                                                                                 className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                                                             />
                                                                             <label
@@ -195,7 +195,7 @@ const CategoryFilter = () => {
                     <main className="max-w-3/4 mx-auto px-4 sm:px-0">
                         <div
                             className="relative z-10 flex items-baseline justify-between  pb-6 border-b border-gray-200">
-                            <h1 className="text-4xl font-extrabold tracking-tight text-primary">Products</h1>
+                            <h1 className="sm:text-4xl text-sm font-extrabold tracking-tight text-primary">Products</h1>
 
                             <div className="flex items-center">
                                 <Menu as="div" className="relative inline-block text-left">
@@ -231,7 +231,9 @@ const CategoryFilter = () => {
                                                                     active ? 'bg-gray-100' : '',
                                                                     'block px-4 py-2 text-sm'
                                                                 )}
-                                                                onClick={()=>{handleSort(option.orderKey, option.order)}}
+                                                                onClick={() => {
+                                                                    handleSort(option.orderKey, option.order)
+                                                                }}
                                                             >
                                                                 {option.name}
                                                             </div>
@@ -264,13 +266,20 @@ const CategoryFilter = () => {
                                 {/* Filters  start*/}
                                 <form className="hidden lg:block">
                                     <h3 className="sr-only">Categories</h3>
+                                    {/*product offer list*/}
                                     <ul role="list"
                                         className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
-                                        {subCategories.map((category) => (
-                                            <li key={`pro-cat-${category.name}`}>
-                                                <a href={category.href}>{category.name}</a>
-                                            </li>
-                                        ))}
+                                        {
+                                            !_.isEmpty(productOffer.data) ?
+
+                                                productOffer.data.map((offer) => (
+                                                    <li key={`product-category-${offer.offerTitle}`}>
+                                                        <Link href={`/shop/product/${offer.id}`} className="block px-2 py-3">
+                                                            {offer.offerTitle}
+                                                        </Link>
+                                                    </li>
+                                                )) : <></>
+                                        }
                                     </ul>
 
                                     {
@@ -306,7 +315,9 @@ const CategoryFilter = () => {
                                                                             defaultValue={option.name}
                                                                             type="checkbox"
                                                                             defaultChecked={false}
-                                                                            onClick={function (e){handleCategoryFilter(e)}}
+                                                                            onClick={function (e) {
+                                                                                handleCategoryFilter(e)
+                                                                            }}
                                                                             className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
                                                                         />
                                                                         <label
@@ -348,23 +359,23 @@ const CategoryFilter = () => {
                                             :
                                             <>
                                                 {
-                                                    !_.isEmpty(products.data.results)?
+                                                    !_.isEmpty(products.data.results) ?
                                                         <>
                                                             <ProductGrid products={products.data.results}/>
                                                             <div className={'flex justify-center mt-16'}>
-                                                                <Pagination count={Math.ceil(products.data.count / limit)}
-                                                                            page={offset}
-                                                                            onChange={function (event, page) {
-                                                                                handlePaginating(event, page)
+                                                                <Pagination
+                                                                    count={Math.ceil(products.data.count / limit)}
+                                                                    page={offset}
+                                                                    onChange={function (event, page) {
+                                                                        handlePaginating(event, page)
 
-                                                                            }}/>
+                                                                    }}/>
                                                             </div>
-                                                        </>:
+                                                        </> :
                                                         <div className={'flex justify-center items-center w-full h-64'}>
                                                             <h2 className={'text-4xl'}>Product not Found </h2>
                                                         </div>
                                                 }
-
 
 
                                             </>

@@ -60,11 +60,11 @@ const Header = () => {
         <>
             {/* header */}
             <header className="py-4 shadow-sm bg-pink-100 lg:bg-white">
-                <div className="sm:w-4/5 w-full mx-auto flex items-center justify-between">
+                <div className="sm:w-4/5 w-11/12 mx-auto flex items-center justify-between">
                     {/* logo */}
                     <div className={'border border-3 border-primary p-2 rounded text-primary'}>
                         <Link href={'/shop'}>
-                            <a className="block text-2xl">
+                            <a className="block sm:text-2xl text-base">
                                 Rainbow E-Shop
                             </a>
                         </Link>

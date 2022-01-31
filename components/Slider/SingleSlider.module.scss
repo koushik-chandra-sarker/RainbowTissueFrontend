@@ -3,6 +3,9 @@
   width: 100%;
   height: 600px;
   overflow: hidden;
+  @media (max-width: 768px) {
+    height: 200px;
+  }
 
   & a {
     &.previousButton, &.nextButton {
@@ -58,6 +61,7 @@
     bottom: 0;
     left: 0;
   }
+  
 
   &.hidden {
     visibility: hidden;
@@ -167,6 +171,9 @@
     transition: all .3s ease;
     transform: translateY(-20px);
     opacity: 0;
+    @media (max-width: 768px) {
+      font-size: 25px;
+    }
   }
 
   & p {
@@ -178,6 +185,10 @@
     transition: all .3s ease;
     transform: translateY(20px);
     opacity: 0;
+    @media (max-width: 768px) {
+      font-size: 12px;
+      margin: 10px auto 15px;
+    }
   }
 
   & button {
@@ -195,6 +206,10 @@
     font-weight: 400;
     font-size: 13px;
     cursor: pointer;
+    @media (max-width: 768px) {
+      font-size: 11px;
+      padding: 10px 20px;
+    }
 
   }
 

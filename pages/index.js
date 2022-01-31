@@ -59,8 +59,8 @@ function Home() {
 
                                 </div>
                                 <div className="container  1/12 sm:w-3/4 mx-auto md:px-0 px-8 my-12 mx-auto text-center">
-                                    <h4 className="uppercase text-4xl text-primary">{website.data[0].homeTitle1}</h4>
-                                    <p className={classnames('mt-7 text-lg text-description')}>
+                                    <h4 className="uppercase text-2xl sm:text-4xl text-primary">{website.data[0].homeTitle1}</h4>
+                                    <p className={classnames('mt-7 text-sm sm:text-lg text-description')}>
                                         {website.data[0].homeSubTitle1}
                                     </p>
                                 </div>

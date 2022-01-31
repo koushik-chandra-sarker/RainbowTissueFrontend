@@ -1,6 +1,6 @@
 import {
     PRODUCTS_ERROR,
-    PRODUCTS_LOADING,
+    PRODUCTS_LOADING, PRODUCTS_OFFER_ERROR, PRODUCTS_OFFER_LOADING, PRODUCTS_OFFER_SUCCESS,
     PRODUCTS_SUCCESS,
     PRODUCTS_TOP_BANNER_ERROR,
     PRODUCTS_TOP_BANNER_LOADING,
@@ -67,6 +67,36 @@ export const ProductTopBottomBannerReducer = (state = topBottomBannerState, acti
                 ...state,
                 loading: false,
                 error: "Unable to get Product top bottom banner"
+            }
+        default:
+            return state;
+    }
+}
+
+const productOfferState = {
+    loading: false,
+    data: [],
+    error: ""
+}
+export const ProductOfferReducer = (state = productOfferState, action)=>{
+    switch (action.type) {
+        case PRODUCTS_OFFER_LOADING:
+            return {
+                ...state,
+                loading: true,
+            }
+        case PRODUCTS_OFFER_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                data: action.payload,
+                error: ""
+            }
+        case PRODUCTS_OFFER_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: "Unable to get Product offer list"
             }
         default:
             return state;

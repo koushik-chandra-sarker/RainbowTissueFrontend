@@ -15,7 +15,11 @@ import {
     PRODUCTS_TOP_BANNER_ERROR,
     PRODUCTS_TOP_BOTTOM_BANNER_LOADING,
     PRODUCTS_TOP_BOTTOM_BANNER_SUCCESS,
-    PRODUCTS_TOP_BOTTOM_BANNER_ERROR, PAGINATED_PRODUCTS_ERROR
+    PRODUCTS_TOP_BOTTOM_BANNER_ERROR,
+    PAGINATED_PRODUCTS_ERROR,
+    PRODUCTS_OFFER_LOADING,
+    PRODUCTS_OFFER_SUCCESS,
+    PRODUCTS_OFFER_ERROR
 } from "./ProductType";
 import axios from "axios";
 import {store_base_url} from "../../../constants";
@@ -134,6 +138,25 @@ export const getProductTopBottomBanner= () => async dispatch => {
     } catch (e) {
         dispatch({
             type: PRODUCTS_TOP_BOTTOM_BANNER_ERROR
+        })
+    }
+}
+
+export const getProductOffer= () => async dispatch => {
+    try {
+        dispatch({
+            type: PRODUCTS_OFFER_LOADING,
+            payload: []
+        })
+        const response = await axios.get(`${store_base_url}/product-offer/`)
+        dispatch({
+            type: PRODUCTS_OFFER_SUCCESS,
+            payload: response.data
+        })
+    } catch (e) {
+        dispatch({
+            type: PRODUCTS_OFFER_ERROR,
+            payload: []
         })
     }
 }

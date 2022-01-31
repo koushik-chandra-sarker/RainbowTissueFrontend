@@ -5,7 +5,10 @@ import WebsiteReducer from "./website/WebsiteReducer";
 import JobReducer from "./job/JobReducer";
 import JobSingleReducer from "./job/JobSingleReducer";
 import CategoryReducer from "./store/category/CategoryReducer";
-import ProductsReducer, {ProductTopBottomBannerReducer} from "./store/product/ProductsReducer";
+import ProductsReducer, {
+    ProductOfferReducer,
+    ProductTopBottomBannerReducer
+} from "./store/product/ProductsReducer";
 import ProductReducer, {ProductTopBannerReducer} from "./store/product/ProductReducer";
 import IsLoginReducer from "./login/IsLoginReducer";
 import CartListReducer from "./store/cart/CartListReducer";
@@ -29,6 +32,7 @@ const RootReducer = combineReducers({
     products: ProductsReducer,
     productsPaginated: ProductsReducerPaginated,
     similarProducts: SimilarProductReducer,
+    productOffer: ProductOfferReducer,
     productTopBanner: ProductTopBannerReducer,
     productTopBottomBanner: ProductTopBottomBannerReducer,
     cartList: CartListReducer,

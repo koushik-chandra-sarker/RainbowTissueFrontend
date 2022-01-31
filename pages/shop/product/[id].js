@@ -402,15 +402,14 @@ const Product = () => {
                                             Ratings & Reviews
                                         </h3>
 
-                                        <div className={'flex pt-10 pb-4 border-b'}>
+                                        <div className={'flex flex-wrap sm:flex-nowrap sm:pt-10 pt-4 pb-4 border-b'}>
                                             <div className={'sm:w-1/6 pt-4'}>
-                                                <h1 className={'text-4xl'}>4.6<span
-                                                    className={'text-2xl text-gray-400'}>/5</span></h1>
+                                                <h1 className={'sm:text-4xl text-2xl'}>4.6<span
+                                                    className={'sm:text-2xl text-xl text-gray-400'}>/5</span></h1>
                                                 <Rating
                                                     name="simple-controlled"
                                                     size="large"
-                                                    value={4.6}
-                                                    precision={0.5}
+                                                    value={4}
                                                     // onChange={(event, newValue) => {
                                                     //     setValue(newValue);
                                                     // }}
@@ -418,23 +417,24 @@ const Product = () => {
 
                                                 <p className={'text-xs text-gray-400'}>27 Ratings</p>
                                             </div>
-                                            <div className={'sm:w-3/6 pl-12'}>
-                                                {[1, 1, 1, 1, 1].map((v, i) => (
-                                                    <div key={`ratting-${i}`} className={'flex'}>
+                                            <div className={'sm:w-3/6 sm:pl-12 sm:mt-0 mt-2 '}>
+                                                {[5, 4, 3, 2, 1].map((v, i) => (
+                                                    <div key={`ratting-${i}`} className={'grid grid-cols-10'}>
                                                         <Rating
+                                                            className={'col-span-3 sm:col-span-4 xl:col-span-2'}
                                                             name="simple-controlled"
-                                                            value={3.4}
-                                                            precision={0.5}
+                                                            value={v}
+                                                            readOnly
+                                                            size={"small"}
                                                             // onChange={(event, newValue) => {
                                                             //     setValue(newValue);
                                                             // }}
                                                         />
-                                                        <div className={'sm:w-3/4 flex pl-0  ml-1 align-items-center'}>
-                                                            <input type="range" value="0"/><h4
-                                                            className={'text-xs ml-2'}>2</h4>
+                                                        <div className={' flex pl-0  ml-1 align-items-center col-span-7 sm:col-span-6 xl:col-span-8'}>
+                                                            <input type="range" value="29"/><h4
+                                                            className={'text-xs ml-2'}>29</h4>
                                                             <div id="h4-container flex">
                                                                 <div id="h4-subcontainer"></div>
-
                                                             </div>
 
                                                         </div>
@@ -445,8 +445,8 @@ const Product = () => {
                                             </div>
                                         </div>
                                         <div className={'border-gray-400 py-4'}>
-                                            <h2 className={'text-sm border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium'}>Product
-                                                Reviews
+                                            <h2 className={'text-sm border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium'}>
+                                                Product Reviews
                                             </h2>
                                             <section classNauthame={'w-full'}>
                                                 {/*comment*/}
@@ -465,13 +465,16 @@ const Product = () => {
                                                                 />
                                                                 <p>Rate This Product</p>
                                                             </div>
-                                                            <input onChange={e => setReview({...review, comment: e.target.value})}
-                                                                   value={review.comment} id={"product-comment"}
-                                                                   type="text" className={'w-5/6 pl-2 border border-r-0 border-primary py-3 px-3 rounded-l-md focus:ring-primary focus:border-primary'}
-                                                                   placeholder={'Comment '} htmlFor="comment"/>
-                                                            <button onClick={handleComment}
-                                                                    className={'w-1/6 py-3 bg-primary border border-primary text-white px-8 font-medium rounded-r-md hover:bg-transparent hover:text-primary transition'}>Submit
-                                                            </button>
+                                                            <div className={'w-full'}>
+                                                                <input onChange={e => setReview({...review, comment: e.target.value})}
+                                                                       value={review.comment} id={"product-comment"}
+                                                                       type="text" className={'md:text-xl text-sm md:w-5/6 w-9/12 pl-2 border border-r-0 border-primary md:py-3 py-1 md:px-3 rounded-l-md focus:ring-primary focus:border-primary'}
+                                                                       placeholder={'Write your review here '} htmlFor="comment"/>
+                                                                <button onClick={handleComment}
+                                                                        className={'md:text-xl text-sm md:w-1/6 w-3/12 md:py-3 py-1 bg-primary border border-primary text-white md:px-8 font-medium rounded-r-md hover:bg-transparent hover:text-primary transition'}>Submit
+                                                                </button>
+                                                            </div>
+
                                                         </>
                                                         :<></>
 
@@ -510,7 +513,7 @@ const Product = () => {
                                     <div className="container pb-16">
                                         <h2 className="text-2xl md:text-3xl font-medium text-gray-800 uppercase mb-6">related
                                             products</h2>
-                                        <div className="flex flex-wrap -m-4">
+                                        <div className=" flex flex-wrap">
                                             {
                                                 !_.isEmpty(similarProducts.data.results) ?
                                                     similarProducts.data.results.map((product, key) => (

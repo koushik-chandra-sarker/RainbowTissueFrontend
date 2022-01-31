@@ -4,7 +4,7 @@ import 'react-animated-slider/build/horizontal.css';
 import customCss from './SingleSlider.module.scss'
 // import 'react-animated-slider/build/horizontal.css';
 // import styles from './SingleSlider.module.scss'
-// import classnames from 'classnames';
+import classnames from 'classnames';
 
 const content = [
     {image: "static/image/slider-1.jpg", title: 'First item', description: 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum', button:"See More"},
