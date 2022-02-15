@@ -1,11 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch} from "react-redux";
 import {toast} from "react-toastify";
-import {getCartList, updateCart} from "../../../services/store/cart/Action";
+import {updateCart} from "../../../services/store/cart/Action";
+import _ from "lodash";
 
 const Card = ({cart, summaryCalc}) => {
     const [cartItem, setCartItem] = useState(cart)
-    const dispatch = useDispatch()
 
     function handleQuantityByInput(value) {
         if (value > cartItem.product.stock) {

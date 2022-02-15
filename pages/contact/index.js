@@ -67,7 +67,7 @@ const Contact = () => {
                 !_.isEmpty(website.data) ?
                     <>
                         <section className="text-gray-600 body-font relative">
-                            <div className={classnames("contact_map absolute inset-0 bg-primary bg-opacity-20")}>
+                            <div className={classnames("contact_map lg:absolute inset-0 bg-primary bg-opacity-20")}>
                                 <iframe width="100%" height="100%" frameBorder="0" marginHeight="0" marginWidth="0"
                                         title="map"
                                         scrolling="no"
@@ -77,7 +77,7 @@ const Contact = () => {
                             </div>
                             <div className="container px-5 py-12 mx-auto flex">
                                 <form onSubmit={handleSendEmail}
-                                      className="lg:w-1/3 md:w-1/2 bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
+                                      className="xl:w-1/3 lg:w-1/2 bg-white rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0 relative z-10 shadow-md">
                                     <h2 className="text-gray-900 text-lg mb-1 font-medium title-font">Leave Your
                                         Query</h2>
                                     <p className="leading-relaxed mb-5 text-gray-600">We will contact with you.</p>

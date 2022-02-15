@@ -16,6 +16,7 @@ const ReviewCard = ({username, review, rate}) => {
                 <Rating
                     name="simple-controlled"
                     value={rate}
+                    readOnly
                 />
                 <div>
                     <h2 className={'text-xs mb-2'}>by {getProtectedUsername(username)}</h2>

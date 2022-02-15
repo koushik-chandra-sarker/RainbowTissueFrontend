@@ -15,8 +15,7 @@ import {
 import Swal from "sweetalert2";
 import useProfile from "../../../hooks/useProfile";
 import {getReviewByUserId} from "../../../services/store/review/Action";
-
-import {Router, useRouter} from "next/router";
+import {useRouter} from "next/router";
 import OrderTab from "./components/OrderTab";
 import ReviewCard from "./components/ReviewCard";
 import {toast} from "react-toastify";

@@ -12,8 +12,8 @@ const CareerCard = (props) => {
                     </span>
                     {
                         !_.isEmpty(props.location) ?
-                            <span
-                                className={"pl-2 text-base"}> {i18n.language === 'en' ? props.location.address : props.location.bn_address}</span> : <></>
+                            <span className={"pl-2 text-base"}>{props.location.address}</span>
+                            : <></>
                     }
                 </div>
             </div>

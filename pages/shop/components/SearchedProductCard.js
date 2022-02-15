@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from "next/link"
+import ReviewCard from "../profile/components/ReviewCard";
 const SearchedProductCard = ({product}) => {
     return (
         <Link href={"#"}>
@@ -13,5 +14,13 @@ const SearchedProductCard = ({product}) => {
         </Link>
     );
 };
+SearchedProductCard.getInitialProps = async ({query}) => {
+    const {product} = query
+    return {
+        props: {
+            product: product
+        },
+    }
+}
 
 export default SearchedProductCard;

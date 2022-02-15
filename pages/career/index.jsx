@@ -4,34 +4,15 @@ import 'splide-nextjs/splide/dist/css/themes/splide-skyblue.min.css';
 import Skeleton from "@mui/material/Skeleton";
 import {useDispatch, useSelector} from "react-redux";
 import _ from "lodash";
-import {base_static_url} from "../../constants";
 import {getJobList} from "../../services/job/JobAction";
 import Link from "next/link";
 import CareerCard from "./components/careerCard";
-
-const sliderImage = [
-    {
-        img: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1598257006626-48b0c252070d?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
-    },
-
-]
-
 const Career = () => {
     const website = useSelector(state => state.website);
     const job = useSelector(s => s.job)
     const dispatch = useDispatch()
     useEffect(()=>{
         dispatch(getJobList());
-
     },[dispatch])
     return (
         <>
@@ -59,7 +40,7 @@ const Career = () => {
                         {
                             !_.isEmpty(website.data) ?
                                 <>
-                                    <section className="w-full bg-center bg-cover relative h-128"
+                                    <section className="w-full bg-center bg-cover relative sm:h-128 h-72"
                                              style={{backgroundImage: "url(static/image/careerBanner.jpeg"}}>
                                         <div className="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
                                             <div className="text-center">
@@ -72,7 +53,7 @@ const Career = () => {
                                                 </button>*/}
                                             </div>
                                         </div>
-                                        <div className={'absolute w-full h-max -bottom-1'}>
+                                        <div className={'absolute w-full h-max sm:-bottom-1 -bottom-0'}>
                                             <img src="static/image/wave.svg" alt=""/>
                                         </div>
 
@@ -129,7 +110,7 @@ const Career = () => {
                                                     {/*))}*/}
                                                     {website.data[0].careerSliders.map(slide => (
                                                         <SplideSlide key={slide.src}>
-                                                            <img src={`${base_static_url}${slide.image}`} alt={"career_slider_image"}/>
+                                                            <img src={slide.image} alt={"career_slider_image"}/>
                                                         </SplideSlide>
                                                     ))}
                                                 </Splide>
@@ -141,7 +122,7 @@ const Career = () => {
                                     <section className="flex flex-col text-center w-full mb-20 mt-20">
 
                                         <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-primary">
-                                            {website.data[0].careerTitle1}
+                                            {website.data[0].careerTitle2}
                                         </h1>
                                         <p className="lg:w-2/3 mx-auto leading-relaxed text-base text-description">
                                             {website.data[0].careerSubTitle2}

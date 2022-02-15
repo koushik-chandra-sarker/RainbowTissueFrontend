@@ -1,18 +1,20 @@
 import React, {Fragment, useEffect, useState} from 'react';
 import {Dialog, Disclosure, Menu, Transition} from '@headlessui/react'
 import {XIcon} from '@heroicons/react/outline'
-import {ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon} from '@heroicons/react/solid'
+import {ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon} from '@heroicons/react/solid'
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash'
-import {getProductList, getProductListPaginated, getProductOffer} from "../../../services/store/product/ProductAction";
+import {getProductListPaginated, getProductOffer} from "../../../services/store/product/ProductAction";
 import {Pagination, Skeleton} from "@mui/material";
 import {store_base_url} from "../../../constants";
 import ProductGrid from "./productGrid";
 import Link from "next/link";
+
 const sortOptions = [
     {name: 'Price: Low to High', orderKey: 'price', order: 'asc'},
     {name: 'Price: High to Low', orderKey: 'price', order: 'desc'},
 ]
+
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
@@ -124,7 +126,8 @@ const CategoryFilter = () => {
 
                                                     productOffer.data.map((offer) => (
                                                         <li key={`product-category-${offer.offerTitle}`}>
-                                                            <Link href={`/shop/product/${offer.id}`} className="block px-2 py-3">
+                                                            <Link href={`/shop/product/${offer.id}`}
+                                                                  className="block px-2 py-3">
                                                                 {offer.offerTitle}
                                                             </Link>
                                                         </li>
@@ -267,21 +270,26 @@ const CategoryFilter = () => {
                                 <form className="hidden lg:block">
                                     <h3 className="sr-only">Categories</h3>
                                     {/*product offer list*/}
-                                    <ul role="list"
-                                        className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
-                                        {
-                                            !_.isEmpty(productOffer.data) ?
-
-                                                productOffer.data.map((offer) => (
-                                                    <li key={`product-category-${offer.offerTitle}`}>
-                                                        <Link href={`/shop/product/${offer.id}`} className="block px-2 py-3">
-                                                            {offer.offerTitle}
-                                                        </Link>
-                                                    </li>
-                                                )) : <></>
-                                        }
-                                    </ul>
-
+                                    {
+                                        !_.isEmpty(productOffer.data) ?
+                                            <>
+                                                <h3 className={"font-bold mb-2 pb-1 border-b border-gray-200"}>Recent Offer</h3>
+                                                <ul role="list"
+                                                    className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
+                                                    {
+                                                        productOffer.data.map((offer) => (
+                                                            <li key={`product-category-${offer.offerTitle}`}>
+                                                                <Link href={`/shop/product/${offer.id}`}
+                                                                      className="block px-2 py-3">
+                                                                    {offer.offerTitle}
+                                                                </Link>
+                                                            </li>
+                                                        ))
+                                                    }
+                                                </ul>
+                                            </>
+                                            : <></>
+                                    }
                                     {
                                         !_.isEmpty(productCat.data) ?
                                             <Disclosure as="div"

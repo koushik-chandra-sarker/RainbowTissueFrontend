@@ -42,7 +42,7 @@ const MissionVision = () => {
 
                                         </div>
                                     </div>
-                                    <div className={'absolute w-full h-max -bottom-0.5 md:-bottom-1'}>
+                                    <div className={'absolute w-full h-max -bottom-0 md:-bottom-1'}>
                                         <img src="static/image/wave.svg" alt=""/>
                                     </div>
                                 </section>

@@ -79,6 +79,7 @@ const Register = () => {
                     }
                 }
             }).catch(error => {
+                console.log(error)
             })
         }
         // else toast.error("Please Give your valid Information", {autoClose: 10000})
@@ -86,7 +87,7 @@ const Register = () => {
             Swal.fire({
                 title: 'Error!',
                 text: "Please Give your valid Information",
-                icon: 'error',phone,
+                icon: 'error',
                 confirmButtonText: 'Okay'
             })
         }

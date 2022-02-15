@@ -16,14 +16,13 @@ import {
 } from "@mui/material";
 import {isLoggedIn} from "../../../services/login/Action";
 import classnames from 'classnames'
-import {getUserFromLocalStorage, getUserProfileFromLocalStorage} from "../../../services/common/Action";
+import {getUserFromLocalStorage} from "../../../services/common/Action";
 import Link from "next/link";
 import Header from "../components/header";
 import CloseIcon from '@mui/icons-material/Close';
 import useProfile from "../../../hooks/useProfile";
 import {
     extractDefaultAddress,
-    getDefaultAddress,
     getProfile,
     saveAddress, validateNewAddress
 } from "../../../services/profile/profileAction";
@@ -369,6 +368,7 @@ const CheckOut = () => {
                                                         !_.isEmpty(otherAddressList) ?
                                                             otherAddressList.map((item, key) => (
                                                                 <div
+                                                                    key={`other-address-${key}`}
                                                                     className={classnames(key > 0 && hideAddress ? "hidden" : "")}>
                                                                     <Address
                                                                         key={`Address-${key - 1}`}

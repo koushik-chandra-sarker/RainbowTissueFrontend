@@ -160,3 +160,14 @@ export const getProductOffer= () => async dispatch => {
         })
     }
 }
+
+export function getAverageRating(reviews) {
+    let sum = 0;
+    if (reviews) {
+        reviews.forEach(review => {
+            sum += review.rating
+        })
+        return sum / reviews.length
+    }
+    return 0;
+}

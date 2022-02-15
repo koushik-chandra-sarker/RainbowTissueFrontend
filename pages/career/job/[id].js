@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {getJob} from "../../../services/job/JobAction";
 import Skeleton from "@mui/material/Skeleton";

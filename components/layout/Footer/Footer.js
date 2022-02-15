@@ -1,8 +1,9 @@
 import React from 'react';
+import Link from 'next/link';
 
 const Footer = () => {
     return (
-        <footer >
+        <footer>
             <svg id="wave" style={{transform: 'rotate(0deg)', transition: '0.3s'}} viewBox="0 0 1440 110"
                  version="1.1"
                  xmlns="http://www.w3.org/2000/svg">
@@ -11,64 +12,72 @@ const Footer = () => {
             </svg>
             <div className={'bg-primary'}>
                 <div className="w-11/12 sm:w-3/4 py-12 mx-auto">
-                <div className={'flex flex-wrap  md:text-left text-center'}>
-                    <div className={'lg:w-1/3 md:w-1/2 w-full md:text-center mb-4'}>
+                    <div className={'flex flex-wrap  md:text-left text-center'}>
+                        <div className={'lg:w-1/3 md:w-1/2 w-full md:text-center mb-4'}>
 
-                        <h3 className={'text-white text-xl text-center md:text-left font-bold uppercase'}>Contact</h3>
-                        <p className={'mt-2 text-white text-center md:text-left leading-10 '}>
-                            House: 6, Road: 3 Baridhara J Block, Dhaka 1212
-                            <br/>
-                            09602666735-8,01987707707, 01987707706
-                            <br/>
-                            info@rainbowtissuepaper.com
-                        </p>
-                    </div>
-                    <div className={'lg:w-1/3  md:w-1/2 mb-4 w-full flex flex-col items-center'}>
-                        <div className={'w-max'}>
-                            <h3 className={'text-white  text-xl font-bold uppercase'}>Quick Link</h3>
-                            <ul className={'mt-2'}>
-                                <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}><a
-                                    href="$">Home</a></li>
-                                <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}><a
-                                    href="$">About</a></li>
-                                <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}><a
-                                    href="$">Career</a></li>
-                                <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}><a
-                                    href="$">Contact</a></li>
-                            </ul>
+                            <h3 className={'text-white text-xl text-center md:text-left font-bold uppercase'}>Contact</h3>
+                            <p className={'mt-2 text-white text-center md:text-left leading-10 '}>
+                                House-06, Road-03, Block-J, Baridhara, Dhaka-1212.
+                                <br/>
+                                09602666736-8, 01987707707, 01987707708, 01987707709, 01987707710, 01987707711.
+                                <br/>
+                                rainbowpaperbd@gmail.com
+                            </p>
+                        </div>
+                        <div className={'lg:w-1/3  md:w-1/2 mb-4 w-full flex flex-col items-center'}>
+                            <div className={'w-max'}>
+                                <h3 className={'text-white  text-xl font-bold uppercase'}>Quick Link</h3>
+                                <ul className={'mt-2'}>
+                                    <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}>
+                                        <Link href={"/"}><a>Home</a></Link>
+                                    </li>
+                                    <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}>
+                                        <Link href={"/about"}><a>About</a></Link>
+                                    </li>
+                                    <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}>
+                                        <Link href={"/career"}><a>Career</a></Link>
+                                        </li>
+                                    <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}>
+                                        <Link href={"/contact"}><a>Contact</a></Link>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                        </div>
+                        <div className={'lg:w-1/3  w-full  '}>
+                            <a className="flex flex-col justify-center lg:flex-row  title-font font-medium items-center md:justify-start justify-center text-gray-900 cursor-pointer">
+                                <img className={'h-16'} src="static/image/rain-logo.png" alt="#"/>
+                                <h3 className={'text-center text-sm lg:text-lg text-white italic'}>Tissue & Paper
+                                    Industries
+                                    Ltd</h3>
+
+                            </a>
+                            <p className={'mt-3 text-center text-white leading-7'}>
+                                Talis nuclear vexatum iacere tandem dignuss amicitia est.
+                                Talis nuclear vexatum iacere tandem dignuss amicitia amicitia est.
+                                Talis nuclear vexatum iacere tandem dignuss amicitia est.
+                            </p>
                         </div>
 
-
                     </div>
-                    <div className={'lg:w-1/3  w-full  '}>
-                        <a className="flex flex-col justify-center lg:flex-row  title-font font-medium items-center md:justify-start justify-center text-gray-900 cursor-pointer">
-                            <img className={'h-16'} src="static/image/rain-logo.png" alt="#"/>
-                            <h3 className={'text-center text-sm lg:text-lg text-white italic'}>Tissue & Paper Industries
-                                Ltd</h3>
-
-                        </a>
-                        <p className={'mt-3 text-center text-white leading-7'}>
-                            Talis nuclear vexatum iacere tandem dignuss amicitia est.
-                            Talis nuclear vexatum iacere tandem dignuss amicitia amicitia est.
-                            Talis nuclear vexatum iacere tandem dignuss amicitia est.
-                        </p>
-                    </div>
-
                 </div>
-            </div>
 
-            <div className={'w-11/12 sm:w-3/4 mx-auto border-t border-black border-opacity-20'}>
-                <div className="py-4 flex flex-wrap items-center sm:flex-row flex-col">
-                    <div className={'md:w-1/2 w-full flex flex-wrap items-center justify-center sm:justify-start mt-4 '}>
-                        <a className="flex title-font font-medium items-center justify-center sm:justify-start text-gray-900 cursor-pointer">
-                            <img className={'h-16'} src="static/image/rain-logo.png" alt="#"/>
-                            <span className="ml-3 text-sm text-white"> <i className="far fa-copyright"/> 2021 </span>
-                        </a>
-                        <a href="#" className={'ml-1 text-gray-200'}> <span className={'sm:hidden'}>|</span> Develop by
-                            Waysis-IT Solution</a>
-                    </div>
+                <div className={'w-11/12 sm:w-3/4 mx-auto border-t border-black border-opacity-20'}>
+                    <div className="py-4 flex flex-wrap items-center sm:flex-row flex-col">
+                        <div
+                            className={'md:w-1/2 w-full flex flex-wrap items-center justify-center sm:justify-start mt-4 '}>
+                            <a className="flex title-font font-medium items-center justify-center sm:justify-start text-gray-900 cursor-pointer">
+                                <img className={'h-16'} src="static/image/rain-logo.png" alt="#"/>
+                                <span className="ml-3 text-sm text-white"> <i
+                                    className="far fa-copyright"/> 2021 </span>
+                            </a>
+                            <a href="#" className={'ml-1 text-gray-200'}> <span className={'sm:hidden'}>|</span> Develop
+                                by
+                                Waysis-IT Solution</a>
+                        </div>
 
-                    <span className="inline-flex  sm:ml-auto   mt-4 items-center justify-center sm:justify-start">
+                        <span className="inline-flex  sm:ml-auto   mt-4 items-center justify-center sm:justify-start">
                         <a className=" h-8 w-8 border rounded-full flex justify-center items-center  cursor-pointer">
                             <i className="fab fa-facebook-f text-white"/>
                         </a>
@@ -82,8 +91,8 @@ const Footer = () => {
                             <i className="fab fa-linkedin-in text-white"/>
                         </a>
                     </span>
+                    </div>
                 </div>
-            </div>
             </div>
 
         </footer>

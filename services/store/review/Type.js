@@ -1,3 +1,7 @@
+export  const REVIEW_LOADING= 'REVIEW_LOADING';
+export  const REVIEW_SUCCESS= 'REVIEW_SUCCESS';
+export  const REVIEW_ERROR= 'REVIEW_ERROR';
+
 export  const RATING_LOADING= 'RATING_LOADING';
 export  const RATING_SUCCESS= 'RATING_SUCCESS';
 export  const RATING_ERROR= 'RATING_ERROR';

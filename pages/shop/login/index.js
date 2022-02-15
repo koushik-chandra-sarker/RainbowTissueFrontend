@@ -8,6 +8,7 @@ import {useRouter} from "next/router";
 const Index = () => {
     const dispatch = useDispatch()
     const router = useRouter()
+    const backPrevious = router.query.backPrevious
     useEffect(() => {
         dispatch(isLoggedIn())
     },[dispatch])
@@ -36,7 +37,11 @@ const Index = () => {
                 if (r.loggedIn === true) {
                     setShowLoading(false)
                     dispatch(isLoggedIn())
-                    router.push('/shop/cart')
+                    if (backPrevious) {
+                        router.back()
+                    } else {
+                        router.push("/shop/cart")
+                    }
                 }else {
                     setShowLoading(false)
                     setError({...error, status: true, message: r.message})

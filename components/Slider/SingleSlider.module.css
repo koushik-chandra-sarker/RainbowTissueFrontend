@@ -23,7 +23,7 @@
       transform: translateY(-50%) scale(1.25);
       cursor: pointer; }
     .slider a.previousButton svg polygon, .slider a.nextButton svg polygon {
-      fill: #F77426; }
+      fill: #1993e7; }
   .slider a.previousButton {
     left: 20px; }
   .slider a.nextButton {

@@ -1,6 +1,6 @@
-import React, {Fragment, useEffect, useRef, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import Link from "next/link";
-import {Disclosure, Menu, Transition} from '@headlessui/react'
+import {Menu, Transition} from '@headlessui/react'
 import {useDispatch, useSelector} from "react-redux";
 import {isLoggedIn, logout} from "../../../services/login/Action";
 import {useRouter} from "next/router";
@@ -11,6 +11,7 @@ import {getProductList} from "../../../services/store/product/ProductAction";
 import {store_base_url} from "../../../constants";
 import _ from "lodash";
 import useOutsideClicked from "../../../hooks/useOutsideClicked";
+import {authenticated} from "../../../services/common/Action";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -26,7 +27,7 @@ const Header = () => {
     const productList = useSelector(state => state.products);
     const [products, setProducts] = useState("")
     const { ref, isComponentVisible, setIsComponentVisible } = useOutsideClicked(false);
-
+    const auth = authenticated();
     useEffect(() => {
         dispatch(isLoggedIn())
         dispatch(getTotalCartByRequestedUser())
@@ -115,19 +116,23 @@ const Header = () => {
                             </div>
                             <div className="text-xs leading-3">Wish List</div>
                         </a>*/}
-                        <Link href="/shop/cart">
-                            <a
-                                className="lg:block text-center text-gray-700 hover:text-primary transition hidden relative">
+                        {
+                            auth &&
+                            <Link href="/shop/cart">
+                                <a
+                                    className="lg:block text-center text-gray-700 hover:text-primary transition hidden relative">
                             <span
                                 className="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
                                 {totalCart.data}
                             </span>
-                                <div className="text-2xl">
-                                    <i className="fas fa-shopping-bag"/>
-                                </div>
-                                <div className="text-xs leading-3">Cart</div>
-                            </a>
-                        </Link>
+                                    <div className="text-2xl">
+                                        <i className="fas fa-shopping-bag"/>
+                                    </div>
+                                    <div className="text-xs leading-3">Cart</div>
+                                </a>
+                            </Link>
+                        }
+
                         <div className="ml-4 flex items-center md:ml-6">
                             {/*<button*/}
                             {/*    type="button"*/}

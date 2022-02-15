@@ -5,15 +5,12 @@ import classnames from "classnames"
 import {Splide, SplideSlide} from 'splide-nextjs/react-splide';
 
 import 'splide-nextjs/splide/dist/css/themes/splide-skyblue.min.css';
-import {createSlides} from "splide-nextjs/react-splide/dist/js/utils/slides";
 import {useDispatch, useSelector} from "react-redux";
-import {Popover, Transition} from '@headlessui/react'
-import {ChevronDownIcon} from '@heroicons/react/solid'
 import {getProductList, getSimilarProductList} from "../../services/store/product/ProductAction";
 import {store_base_url} from "../../constants";
 import Link from "next/link";
 import {isPreloaderActive} from "../../services/preloader/PreloaderAction";
-
+import {Transition, Popover} from '@headlessui/react'
 const ContentSlider = () => {
     const productCat = useSelector(state => state.category);
     const [activePanel, setActivePanel] = useState(0)
@@ -72,7 +69,7 @@ const ContentSlider = () => {
                                 </div>
                                 <div className={'bg-primary p-8'} dangerouslySetInnerHTML={{__html: item.description}}/>
                                 <img className={'-mt-0.5'} src="static/image/wave-small-height.svg" alt=""/>
-                                {/*category description section:start*/}
+                                category description section:start
                                 <section className="text-gray-600 body-font">
                                     <div className="container px-5 py-24 mx-auto">
                                         <div className="flex flex-wrap -m-4 text-center">

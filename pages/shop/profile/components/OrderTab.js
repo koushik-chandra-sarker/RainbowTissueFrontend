@@ -10,7 +10,6 @@ const limit = 10
 const OrderTab = () => {
     const [expanded, setExpanded] = React.useState('');
     const [offset, setOffset] = React.useState(0);
-    const [page, setPage] = React.useState(1);
     const orders = useSelector(store=>store.orderForProfile)
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -25,7 +24,6 @@ const OrderTab = () => {
     }
 
     function handleOrderPaginate(e,page) {
-        setPage(page)
         setOffset(limit*(page-1))
     }
 
@@ -108,12 +106,12 @@ const OrderTab = () => {
         </div>
     );
 };
-OrderTab.getInitialProps = async ({query}) => {
+/*OrderTab.getInitialProps = async ({query}) => {
     const {s} = query
     return {
         props: {
         },
     }
-}
+}*/
 
 export default OrderTab;

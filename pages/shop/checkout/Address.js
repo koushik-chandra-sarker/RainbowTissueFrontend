@@ -4,11 +4,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import classnames from 'classnames'
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Card from "../cart/components/Card";
 import {
     deleteAddress,
     getProfile,
-    saveAddress,
     updateAddress,
     validateNewAddress
 } from "../../../services/profile/profileAction";

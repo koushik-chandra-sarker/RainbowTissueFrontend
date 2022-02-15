@@ -6,7 +6,8 @@ import Link from 'next/link'
 import {useDispatch, useSelector} from "react-redux";
 import {addCart, getTotalCartByRequestedUser} from "../../../services/store/cart/Action";
 import {toast} from "react-toastify";
-
+import {Rating} from "@mui/material";
+import {getAverageRating} from "../../../services/store/product/ProductAction";
 
 const ProductGrid = ({products}) => {
     const loggedIn = useSelector(store => store.IsLoggedIn)
@@ -58,6 +59,8 @@ const ProductGrid = ({products}) => {
         }
 
     }
+
+
 
     return (
         <section className="text-gray-600 body-font animate__animated animate__zoomIn">
@@ -112,15 +115,20 @@ const ProductGrid = ({products}) => {
                                                     </div>
                                                     {/* product price:end */}
                                                     {/* product star */}
-                                                    <div className="flex items-center">
+                                                    <div className="flex items-center mb-2">
                                                         <div className="flex gap-1 text-sm text-yellow-400">
-                                                            <span><i className="fas fa-star"/></span>
-                                                            <span><i className="fas fa-star"/></span>
-                                                            <span><i className="fas fa-star"/></span>
-                                                            <span><i className="fas fa-star"/></span>
-                                                            <span><i className="fas fa-star"/></span>
+                                                            <Rating
+                                                                className={'col-span-3 sm:col-span-4 xl:col-span-2'}
+                                                                name="simple-controlled"
+                                                                value={getAverageRating(product.reviews)}
+                                                                readOnly
+                                                                size={"small"}
+                                                                // onChange={(event, newValue) => {
+                                                                //     setValue(newValue);
+                                                                // }}
+                                                            />
                                                         </div>
-                                                        <div className="text-xs text-gray-500 ml-3">(150)</div>
+                                                        {/*<div className="text-xs text-gray-500 ml-3">(150)</div>*/}
                                                     </div>
                                                     {/* product star: end */}
 
@@ -128,10 +136,10 @@ const ProductGrid = ({products}) => {
                                                 {/* product button */}
                                             </a>
                                         </Link>
-                                        <div onClick={() => handleAddCart(product)}
+                                        {/*<div onClick={() => handleAddCart(product)}
                                              className="block w-full py-1 mt-2 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition">
                                             Add to Cart
-                                        </div>
+                                        </div>*/}
                                         {/* product button end */}
 
                                     </div>

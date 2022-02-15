@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import Header from "../components/header";
 import Router, {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import {getProduct, getSimilarProductList} from "../../../services/store/product/ProductAction";
+import {getAverageRating, getProduct, getSimilarProductList} from "../../../services/store/product/ProductAction";
 import _ from "lodash";
 import {toast} from "react-toastify";
 import {addCart, getTotalCartByRequestedUser} from "../../../services/store/cart/Action";
@@ -16,10 +16,10 @@ import styles from "../Index.module.scss";
 import {Pagination, Rating} from "@mui/material";
 import {frontend_static_url, store_base_url} from "../../../constants";
 import ReviewCard from "./reviewCard";
-import {getRatingsObject, getReview, saveReview} from "../../../services/store/review/Action";
+import {getRatingsByProductId, getRatingsObject, getReview, saveReview} from "../../../services/store/review/Action";
 import {isPreloaderActive} from "../../../services/preloader/PreloaderAction";
 
-const limit=2
+const limit = 2
 const Product = () => {
     const router = useRouter();
     let id = router.query.id
@@ -27,22 +27,20 @@ const Product = () => {
     const product = useSelector(store => store.product)
     const similarProducts = useSelector(state => state.similarProducts);
     const reviews = useSelector(store => store.reviews);
+    const ratings = useSelector(store => store.ratings);
     const user = getUserFromLocalStorage()
-    const auth= authenticated();
+    const auth = authenticated();
     const [review, setReview] = useState({user: null, product: null, comment: "", rating: null})
     const [offset, setOffset] = useState(0)
+    const [ratingsCalculated, setRatingsCalculated] = useState({})
     const containerRef = useRef();
-    const { current } = containerRef;
-
+    const {current} = containerRef;
     useEffect(() => {
-        if (!_.isEmpty(reviews.data)) {
-            if (!_.isEmpty(reviews.data.results)){
-                getRatingsObject(reviews.data.results)
-            }
-
-
+        if (!_.isEmpty(ratings.data)) {
+            setRatingsCalculated(getRatingsObject(ratings.data))
         }
-    }, [reviews])
+
+    }, [ratings])
     const [cartItem, setCartItem] = useState({
         quantity: 1,
     })
@@ -51,6 +49,7 @@ const Product = () => {
             dispatch(getProduct(id))
             dispatch(getSimilarProductList(`${store_base_url}/product/?active=true&limit=4&random=true`))
             getReviewPaginated(id)
+            dispatch(getRatingsByProductId(id))
         }
     }, [id])
     useEffect(() => {
@@ -98,75 +97,93 @@ const Product = () => {
 
 
     function handleCart() {
-        const user = getUserFromLocalStorage();
-        let cart = cartItem;
-        if (user !== null) {
-            cart.user = user.pk
-            cart.product = product.data.id
-            addCart(cart).then(response => {
-                if (response.data.message === 'success') {
-                    dispatch(getTotalCartByRequestedUser())
-                    Swal.fire({
-                        title: "Product Added To Cart",
-                        text: 'Are you checkout this product now.',
-                        icon: 'success',
-                        confirmButtonText: 'Yes',
-                        cancelButtonText: "Latter",
-                        showCancelButton: true
-                    }).then(value => {
-                        if (value.isConfirmed) {
-                            Router.push('/shop/cart')
-                        }
-                    })
+        if(auth){
+            const user = getUserFromLocalStorage();
+            let cart = cartItem;
+
+            if (user !== null) {
+                cart.user = user.pk
+                cart.product = product.data.id
+                addCart(cart).then(response => {
+                    if (response.data.message === 'success') {
+                        dispatch(getTotalCartByRequestedUser())
+                        Swal.fire({
+                            title: "Product Added To Cart",
+                            text: 'Are you checkout this product now.',
+                            icon: 'success',
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: "Latter",
+                            showCancelButton: true
+                        }).then(value => {
+                            if (value.isConfirmed) {
+                                Router.push('/shop/cart')
+                            }
+                        })
+                    }
+                })
+            }
+        }
+        else{
+            Swal.fire({
+                title: "If you want to add product to cart, Please login first",
+                text: 'Are you want to login now.',
+                icon: 'success',
+                confirmButtonText: 'Yes',
+                cancelButtonText: "Latter",
+                showCancelButton: true
+            }).then(value => {
+                if (value.isConfirmed) {
+                    Router.push(`/shop/login/?backPrevious=true`)
                 }
             })
         }
     }
 
     useEffect(() => {
-        if (user!== null){
+        if (user !== null) {
             setReview({...review, user: user.pk, product: Number(id)})
         }
 
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(isPreloaderActive(false))
     }, [current]);
-    function handleComment() {
-            if (review.rating === null) {
-                return toast.error("Please Give Product Rating.", {theme: "colored"})
-            }
-            if (review.comment === "") {
-                return toast.error("Please Leave Your Comment.", {theme: "colored"})
-            }
-            if (review.user === null){
-                return toast.error("Something went wrong! Please try again.", {theme: "colored"})
-            }
 
-            saveReview(review).then(response=>{
-                if (response.status ===201){
-                    getReviewPaginated(id)
-                    setReview({...review, comment: "", rating: null})
-                    toast.success("Review successfully posted",{theme:"colored"})
-                }
-                else toast.error("Something want wrong!",{theme:"colored"})
-            }).catch(reason => {
-                toast.error(reason,{theme:"colored"})
-            })
+    function handleComment() {
+        if (review.rating === null) {
+            return toast.error("Please Give Product Rating.", {theme: "colored"})
+        }
+        if (review.comment === "") {
+            return toast.error("Please Leave Your Comment.", {theme: "colored"})
+        }
+        if (review.user === null) {
+            return toast.error("Something went wrong! Please try again.", {theme: "colored"})
+        }
+
+        saveReview(review).then(response => {
+            if (response.status === 201) {
+                getReviewPaginated(id)
+                setReview({...review, comment: "", rating: null})
+                toast.success("Review successfully posted", {theme: "colored"})
+            } else toast.error("Something want wrong!", {theme: "colored"})
+        }).catch(reason => {
+            toast.error(reason, {theme: "colored"})
+        })
 
     }
 
-    function getReviewPaginated(id){
+    function getReviewPaginated(id) {
         dispatch(getReview(id, limit, offset))
     }
 
     function handleReviewPagination(e, offset) {
-        setOffset(offset-1)
+        setOffset(offset - 1)
     }
-    useEffect(()=>{
+
+    useEffect(() => {
         getReviewPaginated(id)
-    },[offset])
+    }, [offset])
 
     return (
         <>
@@ -225,7 +242,7 @@ const Product = () => {
                                                                     <div
                                                                         onClick={() => handleSliderClick(key, slide.image)}>
                                                                         <img className={'object-contain'}
-                                                                             src={slide.small_image} alt={slide.image}/>
+                                                                             src={slide.small_image} alt={"thumbnail"}/>
                                                                     </div>
                                                                 </SplideSlide>
                                                             )) :
@@ -239,14 +256,17 @@ const Product = () => {
                                         <div>
                                             <h2 className="md:text-3xl text-2xl font-medium uppercase mb-2">{product.data.name}</h2>
                                             <d2iv className="flex items-center mb-4">
-                                                <div className="flex gap-1 text-sm text-yellow-400">
-                                                    <span><i className="fas fa-star"/></span>
-                                                    <span><i className="fas fa-star"/></span>
-                                                    <span><i className="fas fa-star"/></span>
-                                                    <span><i className="fas fa-star"/></span>
-                                                    <span><i className="fas fa-star"/></span>
-                                                </div>
-                                                <div className="text-xs text-gray-500 ml-3">(150 Reviews)</div>
+                                                <Rating
+                                                    className={'col-span-3 sm:col-span-4 xl:col-span-2'}
+                                                    name="simple-controlled"
+                                                    value={getAverageRating(product.data.reviews)}
+                                                    readOnly
+                                                    size={"small"}
+                                                    // onChange={(event, newValue) => {
+                                                    //     setValue(newValue);
+                                                    // }}
+                                                />
+                                                <div className="text-xs text-gray-500 ml-3">({product.data.reviews? product.data.reviews.length:0})</div>
                                             </d2iv>
                                             <div className="space-y-2">
                                                 <p className="text-gray-800 font-semibold space-x-2">
@@ -280,10 +300,15 @@ const Product = () => {
                                                     </span>
 
                                                 </p>
-                                                <p className="space-x-2">
-                                                    <span className="text-gray-800 font-semibold">SKU: </span>
-                                                    <span className="text-gray-600">{product.data.sku}</span>
-                                                </p>
+                                                {
+                                                    product.data.sku &&
+                                                    <p className="space-x-2">
+                                                        <span className="text-gray-800 font-semibold">SKU: </span>
+                                                        <span className="text-gray-600">{product.data.sku}</span>
+                                                    </p>
+                                                }
+
+
                                             </div>
                                             <div className="mt-4 flex items-baseline gap-3">
                                                 {
@@ -342,12 +367,15 @@ const Product = () => {
                                             {/* product share icons */}
                                             <div className="flex space-x-3 mt-4">
                                                 <p className={'flex items-center'}>Share: </p>
-                                                <a target={"_blank"} href={`https://www.facebook.com/sharer.php?u=${frontend_static_url}/shop/product/${product.data.id}`}
-                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center" rel="noreferrer">
+                                                <a target={"_blank"}
+                                                   href={`https://www.facebook.com/sharer.php?u=${frontend_static_url}/shop/product/${product.data.id}`}
+                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
+                                                   rel="noreferrer">
                                                     <i className="fab fa-facebook-f"/>
                                                 </a>
-                                                <a target={"_blank"} href={`https://twitter.com/share?url=${frontend_static_url}/shop/product/${product.data.id}`}
-                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center">
+                                                <a target={"_blank"}
+                                                   href={`https://twitter.com/share?url=${frontend_static_url}/shop/product/${product.data.id}`}
+                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center" rel="noreferrer">
                                                     <i className="fab fa-twitter"/>
                                                 </a>
                                                 {/*<a href="#"*/}
@@ -361,7 +389,7 @@ const Product = () => {
                                     </div>
                                     {/* product view end */}
                                     {/* product details and review */}
-                             <div className="container pb-16">
+                                    <div className="container pb-16">
                                         {/* detail buttons */}
                                         <h3 className=" text-2xl border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium">
                                             Product Details
@@ -402,48 +430,56 @@ const Product = () => {
                                             Ratings & Reviews
                                         </h3>
 
-                                        <div className={'flex flex-wrap sm:flex-nowrap sm:pt-10 pt-4 pb-4 border-b'}>
-                                            <div className={'sm:w-1/6 pt-4'}>
-                                                <h1 className={'sm:text-4xl text-2xl'}>4.6<span
-                                                    className={'sm:text-2xl text-xl text-gray-400'}>/5</span></h1>
-                                                <Rating
-                                                    name="simple-controlled"
-                                                    size="large"
-                                                    value={4}
-                                                    // onChange={(event, newValue) => {
-                                                    //     setValue(newValue);
-                                                    // }}
-                                                />
+                                        {
+                                            !_.isEmpty(ratingsCalculated) &&
+                                            <div className={'flex flex-wrap sm:flex-nowrap sm:pt-10 pt-4 pb-4 border-b'}>
+                                                <div className={'sm:w-1/6 pt-4'}>
+                                                    <h1 className={'sm:text-4xl text-2xl'}>{ratingsCalculated.avegareRatings}<span
+                                                        className={'sm:text-2xl text-xl text-gray-400'}>/5</span></h1>
+                                                    <Rating
+                                                        name="simple-controlled"
+                                                        size="large"
+                                                        value={ratingsCalculated.avegareRatings}
+                                                        readOnly
+                                                        // onChange={(event, newValue) => {
+                                                        //     setValue(newValue);
+                                                        // }}
+                                                    />
 
-                                                <p className={'text-xs text-gray-400'}>27 Ratings</p>
-                                            </div>
-                                            <div className={'sm:w-3/6 sm:pl-12 sm:mt-0 mt-2 '}>
-                                                {[5, 4, 3, 2, 1].map((v, i) => (
-                                                    <div key={`ratting-${i}`} className={'grid grid-cols-10'}>
-                                                        <Rating
-                                                            className={'col-span-3 sm:col-span-4 xl:col-span-2'}
-                                                            name="simple-controlled"
-                                                            value={v}
-                                                            readOnly
-                                                            size={"small"}
-                                                            // onChange={(event, newValue) => {
-                                                            //     setValue(newValue);
-                                                            // }}
-                                                        />
-                                                        <div className={' flex pl-0  ml-1 align-items-center col-span-7 sm:col-span-6 xl:col-span-8'}>
-                                                            <input type="range" value="29"/><h4
-                                                            className={'text-xs ml-2'}>29</h4>
-                                                            <div id="h4-container flex">
-                                                                <div id="h4-subcontainer"></div>
+                                                    <p className={'text-xs text-gray-400'}>27 Ratings</p>
+                                                </div>
+                                                <div className={'sm:w-3/6 sm:pl-12 sm:mt-0 mt-2 '}>
+                                                    {[5, 4, 3, 2, 1].map((v, i) => (
+                                                        <div key={`ratting-${i}`} className={'grid grid-cols-10'}>
+                                                            <Rating
+                                                                className={'col-span-3 sm:col-span-4 xl:col-span-2'}
+                                                                name="simple-controlled"
+                                                                value={v}
+                                                                readOnly
+                                                                size={"small"}
+                                                                // onChange={(event, newValue) => {
+                                                                //     setValue(newValue);
+                                                                // }}
+                                                            />
+                                                            <div
+                                                                className={'product-ratings-range flex pl-0  ml-1 align-items-center col-span-7 sm:col-span-6 xl:col-span-8'}>
+                                                                <div className="middle">
+                                                                    <div className="bar-container">
+                                                                        <div className="bar-5"
+                                                                             style={{width: `${ratingsCalculated.ratingsPercentArray[i]}%`}}/>
+                                                                    </div>
+                                                                </div>
+                                                                <h4 className={'text-xs ml-2 text-right'}>{ratingsCalculated.ratingsArray[i]}</h4>
+
                                                             </div>
-
                                                         </div>
-                                                    </div>
-                                                ))
-                                                }
+                                                    ))
+                                                    }
 
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
+
                                         <div className={'border-gray-400 py-4'}>
                                             <h2 className={'text-sm border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium'}>
                                                 Product Reviews
@@ -451,7 +487,7 @@ const Product = () => {
                                             <section classNauthame={'w-full'}>
                                                 {/*comment*/}
                                                 {
-                                                    auth?
+                                                    auth ?
                                                         <>
                                                             <div className={'flex flex-col items-end py-5'}>
                                                                 <Rating
@@ -466,17 +502,22 @@ const Product = () => {
                                                                 <p>Rate This Product</p>
                                                             </div>
                                                             <div className={'w-full'}>
-                                                                <input onChange={e => setReview({...review, comment: e.target.value})}
+                                                                <input onChange={e => setReview({
+                                                                    ...review,
+                                                                    comment: e.target.value
+                                                                })}
                                                                        value={review.comment} id={"product-comment"}
-                                                                       type="text" className={'md:text-xl text-sm md:w-5/6 w-9/12 pl-2 border border-r-0 border-primary md:py-3 py-1 md:px-3 rounded-l-md focus:ring-primary focus:border-primary'}
-                                                                       placeholder={'Write your review here '} htmlFor="comment"/>
+                                                                       type="text"
+                                                                       className={'md:text-xl text-sm md:w-5/6 w-9/12 pl-2 border border-r-0 border-primary md:py-3 py-1 md:px-3 rounded-l-md focus:ring-primary focus:border-primary'}
+                                                                       placeholder={'Write your review here '}
+                                                                       htmlFor="comment"/>
                                                                 <button onClick={handleComment}
                                                                         className={'md:text-xl text-sm md:w-1/6 w-3/12 md:py-3 py-1 bg-primary border border-primary text-white md:px-8 font-medium rounded-r-md hover:bg-transparent hover:text-primary transition'}>Submit
                                                                 </button>
                                                             </div>
 
                                                         </>
-                                                        :<></>
+                                                        : <></>
 
                                                 }
                                             </section>
@@ -496,13 +537,13 @@ const Product = () => {
                                         {/*review pagination*/}
                                         <div className={'flex justify-center mt-4'}>
                                             {
-                                                !_.isEmpty(reviews.data)?
-                                                    <Pagination count={reviews.data.count/limit} page={offset+1}
+                                                !_.isEmpty(reviews.data) ?
+                                                    <Pagination count={reviews.data.count / limit} page={offset + 1}
                                                                 onChange={function (event, page) {
                                                                     handleReviewPagination(event, page)
 
                                                                 }}
-                                                                color="primary"/>:<></>
+                                                                color="primary"/> : <></>
                                             }
 
                                         </div>
@@ -564,14 +605,16 @@ const Product = () => {
                                                                             {/* product price:end */}
                                                                             {/* product star */}
                                                                             <div className="flex items-center">
-                                                                                <div className="flex gap-1 text-sm text-yellow-400">
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                    <span><i className="fas fa-star"/></span>
-                                                                                </div>
-                                                                                <div className="text-xs text-gray-500 ml-3">(150)</div>
+                                                                                <Rating
+                                                                                    className={'col-span-3 sm:col-span-4 xl:col-span-2'}
+                                                                                    name="simple-controlled"
+                                                                                    value={getAverageRating(product.reviews)}
+                                                                                    readOnly
+                                                                                    size={"small"}
+                                                                                />
+                                                                                {/*<div*/}
+                                                                                {/*    className="text-xs text-gray-500 ml-3">(150)*/}
+                                                                                {/*</div>*/}
                                                                             </div>
                                                                             {/* product star: end */}
 

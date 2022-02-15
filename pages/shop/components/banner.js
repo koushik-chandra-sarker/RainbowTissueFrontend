@@ -1,37 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Splide, SplideSlide} from "splide-nextjs/react-splide/dist/js";
-import {useDispatch, useSelector} from "react-redux";
-import {getProductTopBanner, getProductTopBottomBanner} from "../../../services/store/product/ProductAction";
+import {useSelector} from "react-redux";
 import Skeleton from "@mui/material/Skeleton";
 import _ from "lodash";
 import Link from 'next/link'
-const sqBanner = [
-    {
-        src: "static/image/banner/square/01-02.jpg",
-        url: "#"
-    },
-    {
-        src: "static/image/banner/square/01-03.jpg",
-        url: "#"
-    },
-    {
-        src: "static/image/banner/square/01-04.jpg",
-        url: "#"
-    },
-    {
-        src: "static/image/banner/square/01-05.jpg",
-        url: "#"
-    },
-    {
-        src: "static/image/banner/square/01-06.jpg",
-        url: "#"
-    },
-    {
-        src: "static/image/banner/square/01-07.jpg",
-        url: "#"
-    },
 
-]
 const Banner = () => {
 
     const topBanner = useSelector(store=>store.productTopBanner)
