@@ -2,6 +2,7 @@ import React from 'react';
 import {useSelector} from 'react-redux'
 import Skeleton from '@mui/material/Skeleton';
 import _ from 'lodash';
+
 const About = () => {
     const website = useSelector(state => state.website);
     return (
@@ -30,7 +31,7 @@ const About = () => {
                         !_.isEmpty(website.data) ?
                             <>
                                 <section className="w-full bg-center bg-cover h-64 md:h-128 relative"
-                                         style={{backgroundImage: "url(static/image/about.jpg)"}}>
+                                         style={{backgroundImage: `url(${!_.isEmpty(website.data[0].aboutCoverPhoto)?website.data[0].aboutCoverPhoto:"/static/image/about.jpg"})`}}>
                                     <div
                                         className="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
                                         <div className="text-center">
@@ -43,18 +44,26 @@ const About = () => {
                                         <img src="static/image/wave.svg" alt=""/>
                                     </div>
                                 </section>
+
+
                                 <section className={'w-11/12 sm:w-3/4 mt-20 mx-auto text-justify'}>
-                                    <div className={'text-primary'} dangerouslySetInnerHTML={{ __html: website.data[0].aboutContent }}/>
-                                    <video className={"my-20 w-full"} autoPlay controls muted loop width="800" height="600"
-                                           preload="auto">
-                                        <source src="static/videos/Rainbow Tissue – Renowned Tissue Brand.mp4"
-                                                type="video/mp4"/>
-                                    </video>
+                                    <div className={'text-primary'}
+                                         dangerouslySetInnerHTML={{__html: website.data[0].aboutContent}}/>
+                                    {
+                                        !_.isEmpty(website.data[0].about_video) ?
+                                            <video className={"my-20 w-full"} autoPlay controls muted loop width="800"
+                                                   height="600"
+                                                   preload="auto">
+                                                <source src={website.data[0].about_video}
+                                                        type="video/mp4"/>
+                                            </video> : <></>
+                                    }
                                 </section>
+
                             </>
 
-                        :
-                        <></>
+                            :
+                            <></>
                     }
 
                 </>

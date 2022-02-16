@@ -1,7 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
+import {useSelector} from "react-redux";
+import _ from "lodash";
 
 const Footer = () => {
+    const website = useSelector(state => state.website);
+    console.log(website);
     return (
         <footer>
             <svg id="wave" style={{transform: 'rotate(0deg)', transition: '0.3s'}} viewBox="0 0 1440 110"
@@ -17,11 +21,18 @@ const Footer = () => {
 
                             <h3 className={'text-white text-xl text-center md:text-left font-bold uppercase'}>Contact</h3>
                             <p className={'mt-2 text-white text-center md:text-left leading-10 '}>
-                                House-06, Road-03, Block-J, Baridhara, Dhaka-1212.
+                                {!_.isEmpty(website.data) ? website.data[0].footerAddress : ""}
+
                                 <br/>
-                                09602666736-8, 01987707707, 01987707708, 01987707709, 01987707710, 01987707711.
+                                {!_.isEmpty(website.data) ? website.data[0].footerPhone : ""}
                                 <br/>
-                                rainbowpaperbd@gmail.com
+                                {!_.isEmpty(website.data) ? website.data[0].footerEmail : ""}
+                                {!_.isEmpty(website.data) ?
+                                    <p className={'mt-3 text-white leading-7'}>
+                                        <i className="fab fa-whatsapp text-white mr-2"/>
+                                        {website.data[0].whatsapp}
+                                    </p> : <></>
+                                }
                             </p>
                         </div>
                         <div className={'lg:w-1/3  md:w-1/2 mb-4 w-full flex flex-col items-center'}>
@@ -36,7 +47,7 @@ const Footer = () => {
                                     </li>
                                     <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}>
                                         <Link href={"/career"}><a>Career</a></Link>
-                                        </li>
+                                    </li>
                                     <li className={'border-b border-black border-opacity-20 text-white pr-4 py-2'}>
                                         <Link href={"/contact"}><a>Contact</a></Link>
                                     </li>
@@ -48,16 +59,16 @@ const Footer = () => {
                         <div className={'lg:w-1/3  w-full  '}>
                             <a className="flex flex-col justify-center lg:flex-row  title-font font-medium items-center md:justify-start justify-center text-gray-900 cursor-pointer">
                                 <img className={'h-16'} src="static/image/rain-logo.png" alt="#"/>
-                                <h3 className={'text-center text-sm lg:text-lg text-white italic'}>Tissue & Paper
-                                    Industries
-                                    Ltd</h3>
+                                <h3 className={'text-center text-sm lg:text-lg text-white italic'}>
+                                    Rainbow Group of Industries
+                                </h3>
 
                             </a>
                             <p className={'mt-3 text-center text-white leading-7'}>
-                                Talis nuclear vexatum iacere tandem dignuss amicitia est.
-                                Talis nuclear vexatum iacere tandem dignuss amicitia amicitia est.
-                                Talis nuclear vexatum iacere tandem dignuss amicitia est.
+                                {!_.isEmpty(website.data) ? website.data[0].footerText : ""}
                             </p>
+
+
                         </div>
 
                     </div>
@@ -68,7 +79,7 @@ const Footer = () => {
                         <div
                             className={'md:w-1/2 w-full flex flex-wrap items-center justify-center sm:justify-start mt-4 '}>
                             <a className="flex title-font font-medium items-center justify-center sm:justify-start text-gray-900 cursor-pointer">
-                                <img className={'h-16'} src="static/image/rain-logo.png" alt="#"/>
+                                <img className={'h-16'} src="static/image/rainbow_group_logo-1.png" alt="#"/>
                                 <span className="ml-3 text-sm text-white"> <i
                                     className="far fa-copyright"/> 2021 </span>
                             </a>
@@ -78,16 +89,20 @@ const Footer = () => {
                         </div>
 
                         <span className="inline-flex  sm:ml-auto   mt-4 items-center justify-center sm:justify-start">
-                        <a className=" h-8 w-8 border rounded-full flex justify-center items-center  cursor-pointer">
+                        <a href={!_.isEmpty(website.data) ? website.data[0].facebook : ""} target={"_blank"} rel={'noreferrer'}
+                           className=" h-8 w-8 border rounded-full flex justify-center items-center  cursor-pointer">
                             <i className="fab fa-facebook-f text-white"/>
                         </a>
-                        <a className="ml-3 h-8 w-8 border rounded-full flex justify-center items-center cursor-pointer">
+                        <a href={!_.isEmpty(website.data) ? website.data[0].instagram : ""} target={"_blank"} rel={'noreferrer'}
+                           className="ml-3 h-8 w-8 border rounded-full flex justify-center items-center cursor-pointer">
                             <i className="fab fa-instagram text-white"/>
                         </a>
-                        <a className="ml-3 h-8 w-8 border rounded-full flex justify-center items-center cursor-pointer ">
+                        <a href={!_.isEmpty(website.data) ? website.data[0].twitter : ""} target={'_blank'} rel={'noreferrer'}
+                           className="ml-3 h-8 w-8 border rounded-full flex justify-center items-center cursor-pointer ">
                             <i className="fab fa-twitter text-white"/>
                         </a>
-                        <a className="ml-3 h-8 w-8 border rounded-full flex justify-center items-center cursor-pointer">
+                        <a href={!_.isEmpty(website.data) ? website.data[0].linkedin : ""} target={"_blank"} rel={'noreferrer'}
+                           className="ml-3 h-8 w-8 border rounded-full flex justify-center items-center cursor-pointer">
                             <i className="fab fa-linkedin-in text-white"/>
                         </a>
                     </span>

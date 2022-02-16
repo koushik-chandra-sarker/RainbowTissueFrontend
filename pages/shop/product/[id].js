@@ -13,7 +13,7 @@ import {authenticated, getUserFromLocalStorage} from "../../../services/common/A
 import Swal from 'sweetalert2'
 import Link from "next/link";
 import styles from "../Index.module.scss";
-import {Pagination, Rating} from "@mui/material";
+import {CircularProgress, Pagination, Rating} from "@mui/material";
 import {frontend_static_url, store_base_url} from "../../../constants";
 import ReviewCard from "./reviewCard";
 import {getRatingsByProductId, getRatingsObject, getReview, saveReview} from "../../../services/store/review/Action";
@@ -191,7 +191,7 @@ const Product = () => {
 
             {
                 product.loading ?
-                    <></>
+                    <div className={'flex h-52 items-center justify-center p-4'}><CircularProgress/></div>
                     :
                     <>
                         {

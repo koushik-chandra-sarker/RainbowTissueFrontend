@@ -40,6 +40,7 @@ const ContentSlider = () => {
 
     return (
         <div>
+            {/*product category:start*/}
             <section className={classnames(styles.tabs, '')}>
                 {
                     !_.isEmpty(productCat.data) ?
@@ -47,7 +48,7 @@ const ContentSlider = () => {
                             <span
                                 key={`cat-${i}`}
                                 onClick={() => handleTab(item.id, i)}
-                                className={classnames(styles.tab, activePanel === i ? "opacity-100" : "bg-opacity-50", 'bg-primary transition ease-linear hover:bg-opacity-80 cursor-pointer')}
+                                className={classnames(styles.tab, activePanel === i ? "opacity-100" : "bg-opacity-20", 'bg-primary uppercase transition ease-linear hover:bg-opacity-50 cursor-pointer')}
                                 data-target={`tab_panel${i}`}
                             >
                                 {item.name}
@@ -56,6 +57,7 @@ const ContentSlider = () => {
                         <></>
                 }
             </section>
+            {/*product category:end*/}
             <section className={classnames(styles.tab_panel, 'mt-8')}>
                 {
                     !_.isEmpty(productCat.data) ?
@@ -63,9 +65,14 @@ const ContentSlider = () => {
                             <div key={`product-${i}`}
                                  className={classnames(styles.panel_item, 'animate__animated ', activePanel === i ? `${styles.active} ` : " ")}
                             >
-                                <div className={'flex flex-row justify-between items-center py-8'}>
-                                    <h4 className={classnames('text-gray-900 h-auto text-center uppercase text-2xl sm:text-4xl')}>{item.name}</h4>
-                                    <img className={classnames('h-16')} src="static/image/rain-logo.png" alt=""/>
+                                <div className={'flex flex-row md:flex-nowrap flex-wrap justify-between items-center py-8'}>
+                                    <div className={"leading-10"}>
+                                        <p className={classnames('text-primary h-auto uppercase text-xl sm:text-3xl ')}>{item.name}</p>
+                                        <p className={"text-primary italic"}>Removing all negativities of our society</p>
+                                    </div>
+                                    <div className={"md:w-auto w-full flex justify-end md:block "}>
+                                        <img className={classnames('h-16')} src="static/image/rain-logo.png" alt=""/>
+                                    </div>
                                 </div>
                                 <div className={'bg-primary p-8'} dangerouslySetInnerHTML={{__html: item.description}}/>
                                 <img className={'-mt-0.5'} src="static/image/wave-small-height.svg" alt=""/>

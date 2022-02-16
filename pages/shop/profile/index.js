@@ -155,15 +155,14 @@ const Index = () => {
         return (
             <div>
                 {profile.loading ?
-                    <>
-
-                    </> :
+                    <div className={'flex h-52 items-center justify-center p-4'}><CircularProgress/></div>
+                    :
                     <>
                         <Header/>
                         <section className={'xl:w-7/12 lg:w-10/12 w-11/12 mx-auto  border-2 rounded-2xl my-16'}>
 
                             <div
-                                className="flex flex-wrap md:text-base text-sm border-b-2 border-gray-100 rounded-t-2xl justify-content-start px-4 pt-4 text-gray-500 profile bg-gray-50">
+                                className="flex flex-wrap cursor-pointer md:text-base text-sm border-b-2 border-gray-100 rounded-t-2xl justify-content-start px-4 pt-4 text-gray-500 profile bg-gray-50">
                                 {
                                     tab.map((v, i) => (
                                         <div

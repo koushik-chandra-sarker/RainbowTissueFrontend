@@ -12,6 +12,7 @@ import {store_base_url} from "../../../constants";
 import _ from "lodash";
 import useOutsideClicked from "../../../hooks/useOutsideClicked";
 import {authenticated} from "../../../services/common/Action";
+import useProfile from "../../../hooks/useProfile";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -21,7 +22,8 @@ const Header = () => {
 
     const dispatch = useDispatch()
     const router = useRouter()
-    const loggedIn = useSelector(store => store.IsLoggedIn)
+    const loggedIn = authenticated()
+    const profile = useSelector(store => store.profile);
     const totalCart = useSelector(store => store.totalCart)
     const [searchKey, setSearchKey] = useState("")
     const productList = useSelector(state => state.products);
@@ -146,11 +148,23 @@ const Header = () => {
                                     <Menu.Button
                                         className="bg-gray-800 flex text-sm rounded-full focus:outline-none ring-2 ring-offset-2 ring-offset-yellow-600 ring-yellow-600">
                                         <span className="sr-only">Open user menu</span>
-                                        <img
-                                            className="h-8 w-8 rounded-full"
-                                            src={'/static/image/default_avatar.jpg'}
-                                            alt=""
-                                        />
+                                        {
+                                            profile.data ?
+                                                !_.isEmpty(profile.data.profilePicture)?
+
+                                                <img
+                                                    className="h-8 w-8 rounded-full"
+                                                    src={profile.data.profilePicture}
+                                                    alt=""/> :
+                                                <img
+                                                    className="h-8 w-8 rounded-full"
+                                                    src="/static/image/default_avatar.jpg"
+                                                    alt=""/> :
+                                                <img
+                                                    className="h-8 w-8 rounded-full"
+                                                    src="/static/image/default_avatar.jpg"
+                                                    alt=""/>
+                                        }
                                     </Menu.Button>
                                 </div>
                                 <Transition

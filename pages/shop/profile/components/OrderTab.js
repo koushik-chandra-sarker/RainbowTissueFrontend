@@ -49,7 +49,8 @@ const OrderTab = () => {
                                                 <h2>Order #{order.id}</h2>
                                                 <h3><Chip label={order.status} size="small" variant="outlined" /></h3>
                                                 <h3>Total: {order.total}</h3>
-                                                <h3>Date: {order.date}</h3>
+                                                <h3>{order.status==="delivered"?'Delivered':'EDD'} : {!_.isEmpty(order.deliveryDate)?order.deliveryDate:'Wait for approve'}</h3>
+                                                <h3>Order Date: {order.createdDate}</h3>
                                             </div>
 
                                         </AccordionSummary>
