@@ -4,7 +4,7 @@ const Preloader = () => {
         <div className={'preloader'}>
             <div className={'content_main'}>
                  <div className={'content'}>
-                <img src={'/static/image/rain-logo.png'} alt="Rainbow Logo"/>
+                <img src={'/static/image/logo-with-group.png'} alt="Rainbow Logo"/>
                 <div className="loading">
                     <div className="yellow"/>
                     <div className="red"/>

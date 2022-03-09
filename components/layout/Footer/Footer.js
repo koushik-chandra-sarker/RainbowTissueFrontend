@@ -5,7 +5,6 @@ import _ from "lodash";
 
 const Footer = () => {
     const website = useSelector(state => state.website);
-    console.log(website);
     return (
         <footer>
             <svg id="wave" style={{transform: 'rotate(0deg)', transition: '0.3s'}} viewBox="0 0 1440 110"
@@ -58,8 +57,8 @@ const Footer = () => {
                         </div>
                         <div className={'lg:w-1/3  w-full  '}>
                             <a className="flex flex-col justify-center lg:flex-row  title-font font-medium items-center md:justify-start justify-center text-gray-900 cursor-pointer">
-                                <img className={'h-16'} src="static/image/rain-logo.png" alt="#"/>
-                                <h3 className={'text-center text-sm lg:text-lg text-white italic'}>
+                                <img className={'h-16 rounded-xl'} src="static/image/logo-with-group-white.png" alt="#"/>
+                                <h3 className={'text-center text-sm lg:text-lg text-white italic ml-2'}>
                                     Rainbow Group of Industries
                                 </h3>
 

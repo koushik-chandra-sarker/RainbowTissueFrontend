@@ -11,6 +11,7 @@ import {store_base_url} from "../../constants";
 import Link from "next/link";
 import {isPreloaderActive} from "../../services/preloader/PreloaderAction";
 import {Transition, Popover} from '@headlessui/react'
+
 const ContentSlider = () => {
     const productCat = useSelector(state => state.category);
     const [activePanel, setActivePanel] = useState(0)
@@ -25,6 +26,7 @@ const ContentSlider = () => {
     }, [])
     const products = useSelector(state => state.products);
     const similarProducts = useSelector(state => state.similarProducts);
+
     function handleTab(catId, i) {
         setActivePanel(i)
         getProducts(catId)
@@ -65,10 +67,12 @@ const ContentSlider = () => {
                             <div key={`product-${i}`}
                                  className={classnames(styles.panel_item, 'animate__animated ', activePanel === i ? `${styles.active} ` : " ")}
                             >
-                                <div className={'flex flex-row md:flex-nowrap flex-wrap justify-between items-center py-8'}>
+                                <div
+                                    className={'flex flex-row md:flex-nowrap flex-wrap justify-between items-center py-8'}>
                                     <div className={"leading-10"}>
                                         <p className={classnames('text-primary h-auto uppercase text-xl sm:text-3xl ')}>{item.name}</p>
-                                        <p className={"text-primary italic"}>Removing all negativities of our society</p>
+                                        <p className={"text-primary italic"}>Removing all negativities of our
+                                            society</p>
                                     </div>
                                     <div className={"md:w-auto w-full flex justify-end md:block "}>
                                         <img className={classnames('h-16')} src="static/image/rain-logo.png" alt=""/>
@@ -89,18 +93,19 @@ const ContentSlider = () => {
                                                                         className="material-icons text-6xl text-primary">emoji_events</span>
                                                                 <p className="leading-relaxed uppercase font-bold text-primary">Milestone</p>
                                                             </Popover.Button>
-                                                            <Transition
-                                                                as={Fragment}
-                                                                enter="transition ease-out duration-200"
-                                                                enterFrom="opacity-0 translate-y-1"
-                                                                enterTo="opacity-100 translate-y-0"
-                                                                leave="transition ease-in duration-150"
-                                                                leaveFrom="opacity-100 translate-y-0"
-                                                                leaveTo="opacity-0 translate-y-1"
-                                                            >
+                                                            {
+                                                                !_.isEmpty(item.milestone) ?
+                                                                    <Transition
+                                                                        as={Fragment}
+                                                                        enter="transition ease-out duration-200"
+                                                                        enterFrom="opacity-0 translate-y-1"
+                                                                        enterTo="opacity-100 translate-y-0"
+                                                                        leave="transition ease-in duration-150"
+                                                                        leaveFrom="opacity-100 translate-y-0"
+                                                                        leaveTo="opacity-0 translate-y-1"
+                                                                    >
 
-                                                                {
-                                                                    !_.isEmpty(item.milestone) ?
+
                                                                         <Popover.Panel
                                                                             className="absolute z-10 w-screen max-w-sm px-4 mt-3 transform -translate-x-1/4 sm:-translate-x-0 left-1/2 sm ">
                                                                             <ul
@@ -113,12 +118,13 @@ const ContentSlider = () => {
                                                                                 ))}
                                                                             </ul>
                                                                         </Popover.Panel>
-                                                                        :
 
-                                                                        <></>
-                                                                }
 
-                                                            </Transition>
+                                                                    </Transition>
+                                                                    :
+
+                                                                    <></>
+                                                            }
                                                         </>
                                                     )}
                                                 </Popover>
@@ -137,18 +143,19 @@ const ContentSlider = () => {
                                                                     UNIQUE FEATURES
                                                                 </p>
                                                             </Popover.Button>
-                                                            <Transition
-                                                                as={Fragment}
-                                                                enter="transition ease-out duration-200"
-                                                                enterFrom="opacity-0 translate-y-1"
-                                                                enterTo="opacity-100 translate-y-0"
-                                                                leave="transition ease-in duration-150"
-                                                                leaveFrom="opacity-100 translate-y-0"
-                                                                leaveTo="opacity-0 translate-y-1"
-                                                            >
+                                                            {
+                                                                !_.isEmpty(item.uniqueFeature) ?
+                                                                    <Transition
+                                                                        as={Fragment}
+                                                                        enter="transition ease-out duration-200"
+                                                                        enterFrom="opacity-0 translate-y-1"
+                                                                        enterTo="opacity-100 translate-y-0"
+                                                                        leave="transition ease-in duration-150"
+                                                                        leaveFrom="opacity-100 translate-y-0"
+                                                                        leaveTo="opacity-0 translate-y-1"
+                                                                    >
 
-                                                                {
-                                                                    !_.isEmpty(item.uniqueFeature) ?
+
                                                                         <Popover.Panel
                                                                             className="absolute z-50 w-screen max-w-sm px-4 mt-3 transform -translate-x-3/4 sm:translate-x-0 left-1/2  ">
                                                                             <ul
@@ -161,12 +168,13 @@ const ContentSlider = () => {
                                                                                 ))}
                                                                             </ul>
                                                                         </Popover.Panel>
-                                                                        :
 
-                                                                        <></>
-                                                                }
 
-                                                            </Transition>
+                                                                    </Transition>
+                                                                    :
+
+                                                                    <></>
+                                                            }
                                                         </>
                                                     )}
                                                 </Popover>
@@ -182,18 +190,18 @@ const ContentSlider = () => {
                                                                 <p className="leading-relaxed uppercase font-bold text-primary">SOURCE
                                                                     OF RAW MATERIAL</p>
                                                             </Popover.Button>
-                                                            <Transition
-                                                                as={Fragment}
-                                                                enter="transition ease-out duration-200"
-                                                                enterFrom="opacity-0 translate-y-1"
-                                                                enterTo="opacity-100 translate-y-0"
-                                                                leave="transition ease-in duration-150"
-                                                                leaveFrom="opacity-100 translate-y-0"
-                                                                leaveTo="opacity-0 translate-y-1"
-                                                            >
+                                                            {
+                                                                !_.isEmpty(item.rawMaterial) ?
+                                                                    <Transition
+                                                                        as={Fragment}
+                                                                        enter="transition ease-out duration-200"
+                                                                        enterFrom="opacity-0 translate-y-1"
+                                                                        enterTo="opacity-100 translate-y-0"
+                                                                        leave="transition ease-in duration-150"
+                                                                        leaveFrom="opacity-100 translate-y-0"
+                                                                        leaveTo="opacity-0 translate-y-1"
+                                                                    >
 
-                                                                {
-                                                                    !_.isEmpty(item.rawMaterial) ?
                                                                         <Popover.Panel
                                                                             className="absolute z-50  max-w-xs px-4 mt-3 transform   ">
                                                                             <ul
@@ -206,12 +214,12 @@ const ContentSlider = () => {
                                                                                 ))}
                                                                             </ul>
                                                                         </Popover.Panel>
-                                                                        :
 
-                                                                        <></>
-                                                                }
+                                                                    </Transition>
+                                                                    :
 
-                                                            </Transition>
+                                                                    <></>
+                                                            }
                                                         </>
                                                     )}
                                                 </Popover>
@@ -227,18 +235,17 @@ const ContentSlider = () => {
                                                                 <p className="leading-relaxed uppercase font-bold text-primary ">EXPORT
                                                                     MARKET</p>
                                                             </Popover.Button>
-                                                            <Transition
-                                                                as={Fragment}
-                                                                enter="transition ease-out duration-200"
-                                                                enterFrom="opacity-0 translate-y-1"
-                                                                enterTo="opacity-100 translate-y-0"
-                                                                leave="transition ease-in duration-150"
-                                                                leaveFrom="opacity-100 translate-y-0"
-                                                                leaveTo="opacity-0 translate-y-1"
-                                                            >
-
-                                                                {
-                                                                    !_.isEmpty(item.exportMarket) ?
+                                                            {
+                                                                !_.isEmpty(item.exportMarket) ?
+                                                                    <Transition
+                                                                        as={Fragment}
+                                                                        enter="transition ease-out duration-200"
+                                                                        enterFrom="opacity-0 translate-y-1"
+                                                                        enterTo="opacity-100 translate-y-0"
+                                                                        leave="transition ease-in duration-150"
+                                                                        leaveFrom="opacity-100 translate-y-0"
+                                                                        leaveTo="opacity-0 translate-y-1"
+                                                                    >
                                                                         <Popover.Panel
                                                                             className="absolute z-50 w-screen max-w-xs px-4 mt-3 transform -translate-x-3/4 sm:transform-x-0 left-1/2  ">
                                                                             <ul
@@ -251,12 +258,11 @@ const ContentSlider = () => {
                                                                                 ))}
                                                                             </ul>
                                                                         </Popover.Panel>
-                                                                        :
+                                                                    </Transition>
+                                                                    :
 
-                                                                        <></>
-                                                                }
-
-                                                            </Transition>
+                                                                    <></>
+                                                            }
                                                         </>
                                                     )}
                                                 </Popover>
@@ -324,16 +330,20 @@ const ContentSlider = () => {
                                                                     <Link href={`/shop/product/${slide.id}`}>
                                                                         <a className={'text-center py-2 px-3 mt-1 bg-primary transition ease-linear hover:bg-secondary'}
                                                                            href="#">
-                                                                            <button onClick={handlePreloader}>Details</button>
+                                                                            <button onClick={handlePreloader}>Details
+                                                                            </button>
                                                                         </a>
                                                                     </Link>
                                                                 </div>
                                                             </SplideSlide>
                                                         )) :
-                                                        <div className={'text-primary h-40 -ml-64 flex justify-center items-center'}> Product Not Available</div>
+                                                        <div
+                                                            className={'text-primary h-40 -ml-64 flex justify-center items-center'}> Product
+                                                            Not Available</div>
                                                 }
                                             </Splide>
                                         </div>
+
                                         {/*left section:end*/}
                                         {/*right section:start*/}
                                         <div className={classnames('w-full md:w-9/12 p-3')}>
@@ -393,7 +403,8 @@ const ContentSlider = () => {
                                                                     <Link href={`/shop/product/${product.id}`}>
                                                                         <a className={'text-center py-2 px-3 mt-1 bg-primary transition ease-linear hover:bg-secondary'}
                                                                            href="#">
-                                                                            <button onClick={handlePreloader}>Details</button>
+                                                                            <button onClick={handlePreloader}>Details
+                                                                            </button>
                                                                         </a>
                                                                     </Link>
                                                                 </div>
@@ -401,7 +412,9 @@ const ContentSlider = () => {
                                                             </SplideSlide>
                                                         ))
                                                         :
-                                                        <div className={'text-primary h-40 flex justify-center items-center'}> Product Not Available</div>
+                                                        <div
+                                                            className={'text-primary h-40 flex justify-center items-center'}> Product
+                                                            Not Available</div>
                                                 }
 
                                             </Splide>

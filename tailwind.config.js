@@ -14,12 +14,10 @@ module.exports = {
         },
         extend: {
             colors: {
-
                 'primary': '#1993e7',
                 'primary-dark': '#196be7',
                 'secondary': '#ecc94b',
                 "description": "#1475b7",
-
             },
             spacing: {
                 100: '28rem',

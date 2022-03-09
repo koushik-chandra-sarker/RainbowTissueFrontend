@@ -105,6 +105,7 @@ const Product = () => {
                 cart.user = user.pk
                 cart.product = product.data.id
                 addCart(cart).then(response => {
+                    console.log(response)
                     if (response.data.message === 'success') {
                         dispatch(getTotalCartByRequestedUser())
                         Swal.fire({
@@ -127,7 +128,7 @@ const Product = () => {
             Swal.fire({
                 title: "If you want to add product to cart, Please login first",
                 text: 'Are you want to login now.',
-                icon: 'success',
+                icon: 'info',
                 confirmButtonText: 'Yes',
                 cancelButtonText: "Latter",
                 showCancelButton: true
