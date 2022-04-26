@@ -41,7 +41,7 @@ const Career = () => {
                             !_.isEmpty(website.data) ?
                                 <>
                                     <section className="w-full bg-center bg-cover relative sm:h-128 h-72"
-                                             style={{backgroundImage: "url(static/image/careerBanner.jpeg"}}>
+                                             style={{backgroundImage: "url(/static/image/careerBanner.jpeg"}}>
                                         <div className="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
                                             <div className="text-center">
                                                 <h1 className="text-2xl font-semibold text-white uppercase lg:text-3xl">Build Your
@@ -54,7 +54,7 @@ const Career = () => {
                                             </div>
                                         </div>
                                         <div className={'absolute w-full h-max sm:-bottom-1 -bottom-0'}>
-                                            <img src="static/image/wave.svg" alt=""/>
+                                            <img src="/static/image/wave.svg" alt=""/>
                                         </div>
 
                                     </section>

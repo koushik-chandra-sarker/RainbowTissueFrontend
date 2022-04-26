@@ -75,11 +75,11 @@ const ContentSlider = () => {
                                             society</p>
                                     </div>
                                     <div className={"md:w-auto w-full flex justify-end md:block "}>
-                                        <img className={classnames('h-16')} src="static/image/rain-logo.png" alt=""/>
+                                        <img className={classnames('h-16')} src="/static/image/rain-logo.png" alt=""/>
                                     </div>
                                 </div>
                                 <div className={'bg-primary p-8'} dangerouslySetInnerHTML={{__html: item.description}}/>
-                                <img className={'-mt-0.5'} src="static/image/wave-small-height.svg" alt=""/>
+                                <img className={'-mt-0.5'} src="/static/image/wave-small-height.svg" alt=""/>
                                 category description section:start
                                 <section className="text-gray-600 body-font">
                                     <div className="container px-5 py-24 mx-auto">

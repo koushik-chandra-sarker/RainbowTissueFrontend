@@ -33,7 +33,7 @@ const Header = () => {
                 <label htmlFor="menu-icon" />
                 <Link href={"/"}>
                 <div className={classnames(styles.logo, 'flex items-center cursor-pointer')}>
-                    <img className={'sm:h-20 h-14'} src="static/image/logo-with-group.png" alt="Rainbow Tissue logo"/>
+                    <img className={'sm:h-20 h-14'} src="/static/image/logo-with-group.png" alt="Rainbow Tissue logo"/>
                     <div>
                         {/*<h4 className={'text-sm sm:text-xl text-primary font-extrabold'}>Rainbow</h4>*/}
                         <p className={'text-xs sm:text-base text-gray-600 sm:w-full w-32 italic'}>

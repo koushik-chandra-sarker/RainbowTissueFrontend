@@ -57,7 +57,7 @@ const Footer = () => {
                         </div>
                         <div className={'lg:w-1/3  w-full  '}>
                             <a className="flex flex-col justify-center lg:flex-row  title-font font-medium items-center md:justify-start justify-center text-gray-900 cursor-pointer">
-                                <img className={'h-16 rounded-xl'} src="static/image/logo-with-group-white.png" alt="#"/>
+                                <img className={'h-16 rounded-xl'} src="/static/image/logo-with-group-white.png" alt="#"/>
                                 <h3 className={'text-center text-sm lg:text-lg text-white italic ml-2'}>
                                     Rainbow Group of Industries
                                 </h3>
@@ -78,7 +78,7 @@ const Footer = () => {
                         <div
                             className={'md:w-1/2 w-full flex flex-wrap items-center justify-center sm:justify-start mt-4 '}>
                             <a className="flex title-font font-medium items-center justify-center sm:justify-start text-gray-900 cursor-pointer">
-                                <img className={'h-16'} src="static/image/rainbow_group_logo-1.png" alt="#"/>
+                                <img className={'h-16'} src="/static/image/rainbow_group_logo-1.png" alt="#"/>
                                 <span className="ml-3 text-sm text-white"> <i
                                     className="far fa-copyright"/> 2021 </span>
                             </a>

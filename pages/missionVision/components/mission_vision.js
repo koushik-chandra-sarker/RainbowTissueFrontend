@@ -32,7 +32,7 @@ const MissionVision = () => {
                             <div>
                                 {/*banner*/}
                                 <section className="w-full bg-center bg-cover h-64 md:h-140 relative"
-                                         style={{backgroundImage: "url(static/image/mission&vision1.jpg)"}}>
+                                         style={{backgroundImage: "url(/static/image/mission&vision1.jpg)"}}>
                                     <div
                                         className="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
                                         <div className="text-center hidden sm:block">
@@ -43,7 +43,7 @@ const MissionVision = () => {
                                         </div>
                                     </div>
                                     <div className={'absolute w-full h-max -bottom-0 md:-bottom-1'}>
-                                        <img src="static/image/wave.svg" alt=""/>
+                                        <img src="/static/image/wave.svg" alt=""/>
                                     </div>
                                 </section>
                                 {/*banner end*/}
