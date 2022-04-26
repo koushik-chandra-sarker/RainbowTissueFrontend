@@ -128,7 +128,7 @@ const CategoryFilter = () => {
                                                         <li key={`product-category-${offer.offerTitle}`}>
                                                             <Link href={`/shop/product/${offer.id}`}
                                                                   className="block px-2 py-3">
-                                                                {offer.offerTitle}
+                                                                <a>{offer.offerTitle} </a>
                                                             </Link>
                                                         </li>
                                                     )) : <></>
@@ -281,7 +281,7 @@ const CategoryFilter = () => {
                                                             <li key={`product-category-${offer.offerTitle}`}>
                                                                 <Link href={`/shop/product/${offer.id}`}
                                                                       className="block px-2 py-3">
-                                                                    {offer.offerTitle}
+                                                                    <a>{offer.offerTitle}</a>
                                                                 </Link>
                                                             </li>
                                                         ))
