@@ -7,5 +7,5 @@ export const base_static_url = "https://admin.rainbowtissuepaper.com"
 // export const base_static_url = "http://127.0.0.1:8000"
 export const WEBSITE_NAME = "Rainbow Group"
 
-export const frontend_static_url = "https://admin.rainbowtissuepaper.com/rainbow-site"
-// export const frontend_static_url = "http://127.0.0.1:3000/"
+export const frontend_static_url = "rainbowtissuepaper.com"
+// export const frontend_static_url = "http://127.0.0.1:3000"

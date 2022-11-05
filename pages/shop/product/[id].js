@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import Header from "../components/header";
 import Router, {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import {getAverageRating, getProduct, getSimilarProductList} from "../../../services/store/product/ProductAction";
+import {getAverageRating} from "../../../services/store/product/ProductAction";
 import _ from "lodash";
 import {toast} from "react-toastify";
 import {addCart, getTotalCartByRequestedUser} from "../../../services/store/cart/Action";
@@ -18,14 +18,17 @@ import {frontend_static_url, store_base_url} from "../../../constants";
 import ReviewCard from "./reviewCard";
 import {getRatingsByProductId, getRatingsObject, getReview, saveReview} from "../../../services/store/review/Action";
 import {isPreloaderActive} from "../../../services/preloader/PreloaderAction";
+import {getProduct, getSimilarProductList} from "../../../services/store/product/ProductApi";
+import Head from "next/head";
 
 const limit = 2
-const Product = () => {
+const Product = (props) => {
     const router = useRouter();
     let id = router.query.id
     const dispatch = useDispatch()
-    const product = useSelector(store => store.product)
-    const similarProducts = useSelector(state => state.similarProducts);
+    // const product = useSelector(store => store.product)
+    const [product, setProduct] = useState(props.product)
+    const [similarProducts, setSimilarProducts] = useState(props.similarProducts)
     const reviews = useSelector(store => store.reviews);
     const ratings = useSelector(store => store.ratings);
     const user = getUserFromLocalStorage()
@@ -46,19 +49,17 @@ const Product = () => {
     })
     useEffect(() => {
         if (id !== undefined) {
-            dispatch(getProduct(id))
-            dispatch(getSimilarProductList(`${store_base_url}/product/?active=true&limit=4&random=true`))
             getReviewPaginated(id)
             dispatch(getRatingsByProductId(id))
         }
     }, [id])
     useEffect(() => {
-        if (!_.isEmpty(product.data.images)) {
-            setProductBigImage(product.data.images[0].image)
+        if (!_.isEmpty(product.images)) {
+            setProductBigImage(product.images[0].image)
         }
         setCartItem({
             ...cartItem,
-            total: product.data.discount_price !== 0 ? product.data.discount_price : product.data.price
+            total: product.discount_price !== 0 ? product.discount_price : product.price
         })
 
     }, [product])
@@ -72,38 +73,38 @@ const Product = () => {
 
     function handleQuantity(value) {
         let q = Number(cartItem.quantity) + (value)
-        if (q > product.data.stock) {
+        if (q > product.stock) {
             toast.error(`Product Available ${cartItem.product.stock}`, {autoClose: 10000, theme: "colored"});
             return
         }
-        let total = product.data.discount_price !== 0 ? product.data.discount_price * q : product.data.price * q
+        let total = product.discount_price !== 0 ? product.discount_price * q : product.price * q
         if (q > 0) {
             setCartItem({...cartItem, quantity: q, total: total})
         }
     }
 
     function handleQuantityByInput(value) {
-        if (value > product.data.stock) {
-            toast.error(`Product Available ${product.data.stock}`, {autoClose: 10000, theme: "colored"});
+        if (value > product.stock) {
+            toast.error(`Product Available ${product.stock}`, {autoClose: 10000, theme: "colored"});
             return
         }
         if (value > 0) {
-            let total = product.data.discount_price !== 0 ? product.data.discount_price * value : product.data.price * value
+            let total = product.discount_price !== 0 ? product.discount_price * value : product.price * value
             setCartItem({...cartItem, quantity: value, total: total})
             // const quantity = value-cartItem.quantity
-            // summaryCalc(product.data.discount_price !==0 ? product.data.discount_price*(quantity): product.data.price*(quantity),quantity)
+            // summaryCalc(product.discount_price !==0 ? product.discount_price*(quantity): product.price*(quantity),quantity)
         }
     }
 
 
     function handleCart() {
-        if(auth){
+        if (auth) {
             const user = getUserFromLocalStorage();
             let cart = cartItem;
 
             if (user !== null) {
                 cart.user = user.pk
-                cart.product = product.data.id
+                cart.product = product.id
                 addCart(cart).then(response => {
                     console.log(response)
                     if (response.data.message === 'success') {
@@ -123,8 +124,7 @@ const Product = () => {
                     }
                 })
             }
-        }
-        else{
+        } else {
             Swal.fire({
                 title: "If you want to add product to cart, Please login first",
                 text: 'Are you want to login now.',
@@ -188,6 +188,26 @@ const Product = () => {
 
     return (
         <>
+            <Head>
+                <title>
+                    Rainbow | {product && product.name}
+                </title>
+                <meta
+                    name="description"
+                    content={product && product.shortDescription}
+                    key="desc"
+                />
+                <meta property="og:title" content={product && product.name}/>
+                <meta property="og:type" content="video.movie"/>
+                <meta property="og:url" content={`${frontend_static_url}${props.url}`}/>
+                <meta property="og:image" content={product && product.thumbnail}/>
+
+                <meta property="twitter:title" content={product && product.name}/>
+                <meta property="twitter:type" content="video.movie"/>
+                {/*<meta property="twitter:url" content="https://www.imdb.com/title/tt0117500/"/>*/}
+                <meta property="twitter:image" content={product && product.thumbnail}/>
+
+            </Head>
             <Header/>
 
             {
@@ -196,7 +216,7 @@ const Product = () => {
                     :
                     <>
                         {
-                            !_.isEmpty(product.data) ?
+                            !_.isEmpty(product) ?
                                 <>
                                     {/* product view */}
                                     <div
@@ -236,8 +256,8 @@ const Product = () => {
 
                                                 >
                                                     {
-                                                        !_.isEmpty(product.data.images) ?
-                                                            product.data.images.map((slide, key) => (
+                                                        !_.isEmpty(product.images) ?
+                                                            product.images.map((slide, key) => (
                                                                 <SplideSlide key={`product-slider-${slide.id}`}
                                                                              className={activeThumbnail === key ? "active" : ''}>
                                                                     <div
@@ -255,25 +275,27 @@ const Product = () => {
                                         {/* product image end */}
                                         {/* product content */}
                                         <div>
-                                            <h2 className="md:text-3xl text-2xl font-medium uppercase mb-2">{product.data.name}</h2>
+                                            <h2 className="md:text-3xl text-2xl font-medium uppercase mb-2">{product.name}</h2>
                                             <d2iv className="flex items-center mb-4">
                                                 <Rating
                                                     className={'col-span-3 sm:col-span-4 xl:col-span-2'}
                                                     name="simple-controlled"
-                                                    value={getAverageRating(product.data.reviews)}
+                                                    value={getAverageRating(product.reviews)}
                                                     readOnly
                                                     size={"small"}
                                                     // onChange={(event, newValue) => {
                                                     //     setValue(newValue);
                                                     // }}
                                                 />
-                                                <div className="text-xs text-gray-500 ml-3">({product.data.reviews? product.data.reviews.length:0})</div>
+                                                <div
+                                                    className="text-xs text-gray-500 ml-3">({product.reviews ? product.reviews.length : 0})
+                                                </div>
                                             </d2iv>
                                             <div className="space-y-2">
                                                 <p className="text-gray-800 font-semibold space-x-2">
                                                     <span>Availability: </span>
                                                     {
-                                                        product.data.stock > 0 ?
+                                                        product.stock > 0 ?
                                                             <span className="text-green-600">In Stock</span>
                                                             :
                                                             <span className="text-red-600">Out Of Stock</span>
@@ -288,8 +310,8 @@ const Product = () => {
                                                     <span className="text-gray-800 font-semibold">Category: </span>
                                                     <span className="text-gray-600">
                                                         {
-                                                            !_.isEmpty(product.data.category) ?
-                                                                product.data.category.map((cat, i) => (
+                                                            !_.isEmpty(product.category) ?
+                                                                product.category.map((cat, i) => (
                                                                     <Fragment key={`product-view-cat-${i}`}>
                                                                         {
                                                                             i > 0 ? <>, {cat.name}</> : cat.name
@@ -302,10 +324,10 @@ const Product = () => {
 
                                                 </p>
                                                 {
-                                                    product.data.sku &&
+                                                    product.sku &&
                                                     <p className="space-x-2">
                                                         <span className="text-gray-800 font-semibold">SKU: </span>
-                                                        <span className="text-gray-600">{product.data.sku}</span>
+                                                        <span className="text-gray-600">{product.sku}</span>
                                                     </p>
                                                 }
 
@@ -313,19 +335,19 @@ const Product = () => {
                                             </div>
                                             <div className="mt-4 flex items-baseline gap-3">
                                                 {
-                                                    !(product.data.discount_price === 0) ?
+                                                    !(product.discount_price === 0) ?
                                                         <>
                                                             <span
-                                                                className="text-primary font-semibold text-xl">{product.data.currency} {product.data.discount_price}</span>
+                                                                className="text-primary font-semibold text-xl">{product.currency} {product.discount_price}</span>
                                                             <span
-                                                                className="text-gray-500 text-base line-through">{product.data.currency} {product.data.price}</span>
+                                                                className="text-gray-500 text-base line-through">{product.currency} {product.price}</span>
                                                         </>
                                                         : <span
-                                                            className="text-gray-500 text-base line-through">{product.data.currency} {product.data.price}</span>
+                                                            className="text-gray-500 text-base line-through">{product.currency} {product.price}</span>
                                                 }
                                             </div>
                                             <div className="mt-4"
-                                                 dangerouslySetInnerHTML={{__html: product.data.shortDescription}}/>
+                                                 dangerouslySetInnerHTML={{__html: product.shortDescription}}/>
                                             {/* quantity */}
                                             <div className="mt-4">
                                                 <h3 className="text-base text-gray-800 mb-1">Quantity</h3>
@@ -340,8 +362,8 @@ const Product = () => {
                                                         type={'number'}
                                                         className="h-8 w-16 focus:outline-none text-center flex items-center justify-center cart_quantity"
                                                         value={cartItem.quantity}
-                                                        min="1" max={product.data.stock}
-                                                        maxLength={product.data.stock.length}
+                                                        min="1" max={product.stock}
+                                                        maxLength={product.stock.length}
                                                     />
                                                     <div
                                                         onClick={() => handleQuantity(1)}
@@ -369,14 +391,15 @@ const Product = () => {
                                             <div className="flex space-x-3 mt-4">
                                                 <p className={'flex items-center'}>Share: </p>
                                                 <a target={"_blank"}
-                                                   href={`https://www.facebook.com/sharer.php?u=${frontend_static_url}/shop/product/${product.data.id}`}
+                                                   href={`https://www.facebook.com/sharer.php?u=${frontend_static_url}/shop/product/${product.id}`}
                                                    className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
                                                    rel="noreferrer">
                                                     <i className="fab fa-facebook-f"/>
                                                 </a>
                                                 <a target={"_blank"}
-                                                   href={`https://twitter.com/share?url=${frontend_static_url}/shop/product/${product.data.id}`}
-                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center" rel="noreferrer">
+                                                   href={`https://twitter.com/share?url=${frontend_static_url}/shop/product/${product.id}`}
+                                                   className="text-gray-400 hover:text-gray-500 h-8 w-8 rounded-full border border-gray-300 flex items-center justify-center"
+                                                   rel="noreferrer">
                                                     <i className="fab fa-twitter"/>
                                                 </a>
                                                 {/*<a href="#"*/}
@@ -398,7 +421,7 @@ const Product = () => {
                                         {/* details button end */} {/* details content */}
                                         <div className="w-full pt-6">
                                             <div className={' text-base text-gray-600'}
-                                                 dangerouslySetInnerHTML={{__html: product.data.description}}/>
+                                                 dangerouslySetInnerHTML={{__html: product.description}}/>
                                             {/* details table */}
                                             {/*<table
                                                 className="table-auto border-collapse w-full text-left text-gray-600 text-sm mt-6">
@@ -433,7 +456,8 @@ const Product = () => {
 
                                         {
                                             !_.isEmpty(ratingsCalculated) &&
-                                            <div className={'flex flex-wrap sm:flex-nowrap sm:pt-10 pt-4 pb-4 border-b'}>
+                                            <div
+                                                className={'flex flex-wrap sm:flex-nowrap sm:pt-10 pt-4 pb-4 border-b'}>
                                                 <div className={'sm:w-1/6 pt-4'}>
                                                     <h1 className={'sm:text-4xl text-2xl'}>{ratingsCalculated.avegareRatings}<span
                                                         className={'sm:text-2xl text-xl text-gray-400'}>/5</span></h1>
@@ -557,8 +581,8 @@ const Product = () => {
                                             products</h2>
                                         <div className=" flex flex-wrap">
                                             {
-                                                !_.isEmpty(similarProducts.data.results) ?
-                                                    similarProducts.data.results.map((product, key) => (
+                                                !_.isEmpty(similarProducts.results) ?
+                                                    similarProducts.results.map((product, key) => (
                                                         <div key={`product-view-similar-product-${key}`}
                                                              className="lg:w-1/4 md:w-1/3 sm:w-1/2 w-full p-1 cursor-pointer animate__animated animate__fadeIn">
                                                             <div className={'border border-primary p-3'}>
@@ -653,6 +677,19 @@ const Product = () => {
     );
 
 };
+
+export async function getServerSideProps(context) {
+    const {id} = context.query;
+    const response = await getProduct(id)
+    const product = await response.data
+    const similarProductsResponse = await getSimilarProductList(`${store_base_url}/product/?active=true&limit=4&random=true`)
+    const similarProducts = await similarProductsResponse.data
+    const url = context.resolvedUrl
+    return {
+        props: {product, similarProducts, url}, // will be passed to the page component as props
+    }
+}
+
 
 export default Product;
 

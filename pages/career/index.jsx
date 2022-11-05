@@ -7,6 +7,7 @@ import _ from "lodash";
 import {getJobList} from "../../services/job/JobAction";
 import Link from "next/link";
 import CareerCard from "./components/careerCard";
+import Head from "next/head";
 const Career = () => {
     const website = useSelector(state => state.website);
     const job = useSelector(s => s.job)
@@ -40,6 +41,17 @@ const Career = () => {
                         {
                             !_.isEmpty(website.data) ?
                                 <>
+                                    <Head>
+                                        <title>
+                                            Rainbow | Career
+                                        </title>
+                                        <meta
+                                            name="description"
+                                            content="Rainbow Pulp & Paper Industries Ltd. is a unit of Rainbow Group of Industries which is one of the largest Tissue and Paper producers in Bangladesh. Rainbow Pulp & Paper Industries Ltd ensures quality products by importing the world's finest raw materials & using famous European Record Technology and sophisticated GSM control machines."
+                                            key="desc"
+                                        />
+
+                                    </Head>
                                     <section className="w-full bg-center bg-cover relative sm:h-128 h-72"
                                              style={{backgroundImage: "url(/static/image/careerBanner.jpeg"}}>
                                         <div className="flex items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">

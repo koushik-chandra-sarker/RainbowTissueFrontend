@@ -6,6 +6,7 @@ import _ from "lodash";
 import {toast} from "react-toastify";
 import {sendMail} from "../../services/mail/MailAction";
 import {CircularProgress} from "@mui/material";
+import Head from "next/head";
 
 const Contact = () => {
     const website = useSelector(state => state.website);
@@ -40,6 +41,17 @@ const Contact = () => {
 
     return (
         <>
+            <Head>
+                <title>
+                    Rainbow | Contact
+                </title>
+                <meta
+                    name="description"
+                    content="Contact us for any query. We are always ready to help you."
+                    key="desc"
+                />
+
+            </Head>
 
             {website.loading ?
                 <>

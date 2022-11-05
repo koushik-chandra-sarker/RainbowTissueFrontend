@@ -2,6 +2,8 @@ import React from 'react';
 import {useSelector} from 'react-redux'
 import Skeleton from '@mui/material/Skeleton';
 import _ from 'lodash';
+import {frontend_static_url} from "../../../constants";
+import Head from "next/head";
 
 const About = () => {
     const website = useSelector(state => state.website);
@@ -30,6 +32,17 @@ const About = () => {
                     {
                         !_.isEmpty(website.data) ?
                             <>
+                                <Head>
+                                    <title>
+                                        Rainbow | About
+                                    </title>
+                                    <meta
+                                        name="description"
+                                        content="Rainbow Pulp & Paper Industries Ltd. is a unit of Rainbow Group of Industries which is one of the largest Tissue and Paper producers in Bangladesh. Rainbow Pulp & Paper Industries Ltd ensures quality products by importing the world's finest raw materials & using famous European Record Technology and sophisticated GSM control machines."
+                                        key="desc"
+                                    />
+
+                                </Head>
                                 <section className="w-full bg-center bg-cover h-64 md:h-128 relative"
                                          style={{backgroundImage: `url(${!_.isEmpty(website.data[0].aboutCoverPhoto)?website.data[0].aboutCoverPhoto:"/static/image/about.jpg"})`}}>
                                     <div
