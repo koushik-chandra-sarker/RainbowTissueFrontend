@@ -18,7 +18,7 @@
     "axios": "^0.24.0",
     "cors": "^2.8.5",
     "lodash": "^4.17.21",
-    "next": "11.1.2",
+    "next": "12.1.0",
     "next-images": "^1.8.1",
     "next-redux-wrapper": "^7.0.5",
     "nextjs-cors": "^2.1.0",
