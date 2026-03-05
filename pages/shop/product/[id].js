@@ -485,7 +485,7 @@ const Product = () => {
                                             <h2 className={'text-sm border-b border-gray-200 font-roboto text-gray-800 pb-3 font-medium'}>
                                                 Product Reviews
                                             </h2>
-                                            <section classNauthame={'w-full'}>
+                                            <section className={'w-full'}>
                                                 {/*comment*/}
                                                 {
                                                     auth ?
