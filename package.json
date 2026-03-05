@@ -1,7 +1,7 @@
 {
   "name": "rainbow-tissue",
   "version": "0.1.0",
-  "homepage": "https://rainbowgroup-bd.com",
+  "homepage": "https://rainbowtissuepaper.com",
   "private": true,
   "scripts": {
     "dev": "next dev",
